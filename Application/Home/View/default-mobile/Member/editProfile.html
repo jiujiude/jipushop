@@ -1,0 +1,55 @@
+<extend name="Base/common" />
+<block name="header">
+{:hook('mobileTopNav',array('title'=>$meta_title))}
+</block>
+
+<block name="body">
+ <style>.bar-tab{display: none;}</style>
+
+  <form action="__SELF__" method="POST" class="input-group manage">
+      <div class="input-row">
+        <label>昵称：</label>
+        <input type="text" name="nickname" value="{$profile.nickname}" placeholder="请输入昵称">
+      </div>
+      <div class="input-row set-avatar">
+        <label>头像：</label>
+        <a href="javascript:;" class="btn-upload Z_upload_avatar">
+          <!-- 上传成功后，i标签替换为图片 -->
+          <notempty name="profile.avatar">
+            <img src="{:SITE_URL}{:get_image_thumb($profile['avatar'], 200, 200)}" alt="">
+          <else/>
+            <i class="icon icon-camera-add Z_upload_add"></i>
+          </notempty>
+        </a>
+        <span class="text-info tips">大小：200*200像素</span>
+      </div>
+      <div class="input-row">
+        <label>性别：</label>
+        <div class="select">
+          <select name="sex" class="form-control" style="width: 100px;">
+            <option value="0"{:$profile['sex'] == 0 ? ' selected' : ''}>保密</option>
+            <option value="1"{:$profile['sex'] == 1 ? ' selected' : ''}>男</option>
+            <option value="2"{:$profile['sex'] == 2 ? ' selected' : ''}>女</option>
+          </select>
+        </div>
+      </div>
+      <div class="content-padded">
+        <input type="hidden" name="avatar_serverid" value="">
+        <button class="btn btn-block btn-positive">保存设置</button>
+      </div>
+  </form>
+</block>
+<block name="script">
+  <script>
+    C.WECHAT_CONFIG = {:get_jsapi_config('chooseImage,uploadImage')};
+    seajs.use('wechat', function(wechat){
+      $('.Z_upload_avatar').on('tap', function(){
+        wechat.chooseImage(function(source_path, server_id){
+          $('.Z_upload_add').remove();
+          $('.Z_upload_avatar').html('<img src="'+ source_path +'" alt="">');
+          $('input[name="avatar_serverid"]').val(server_id);
+        });
+      });
+    });
+  </script>
+</block>

@@ -1,0 +1,82 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>退款列表</h2>
+  </div>
+
+  <div class="cf">
+    <div class="fl">
+      <gt name="alipay_count" value="0">
+        <a class="btn" href="{:U('Refund/alipay')}" target="_blank">支付宝批量退款<span class="badge">{$alipay_count}</span></a>
+      <else/>
+        <a class="btn disabled" href="#">支付宝批量退款<span class="badge">{$alipay_count}</span></a>
+      </gt>（支付宝订单支持批量退款，每次退款数量不超过50笔。）
+    </div>
+  </div>
+
+  <!-- 数据表格 -->
+  <div class="data-table">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>退款订单ID</th>
+          <th>用户UID</th>
+          <th>支付方式</th>
+          <th>退款金额</th>
+          <th>状态</th>
+          <th>退款订单号</th>
+          <th>退款订单类型</th>
+          <th>交易订单号</th>
+          <th>添加时间</th>
+          <th width="150">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <notempty name="_list">
+          <volist name="_list" id="vo">
+            <tr>
+              <td>{$vo.id}</td>
+              <td>{$vo.order_id} <a href="{:U('Order/view', array('id' => $vo['order_id']))}" target="_blank">[订单详情]</a></td>
+              <td><a href="{:U('User/view', array('id' => $vo['uid']))}">{$vo.uid}</td>
+              <td>{$vo.payment_type_text}</td>
+              <td>{$vo.amount} 元</td>
+              <td>{$vo.refund_status_text}</td>
+              <td>{$vo.refund_no}</td>
+              <td>{$vo.refund_type_text}</td>
+              <td>{$vo.trade_no}</td>
+              <td>{$vo.create_time|time_format}</td>
+              <td>
+                <if condition="$vo.refund_status eq 0">
+                  <if condition="in_array($vo['payment_type'], array('wechatpay', 'offline'))">
+                  <a href="javascript:;" onclick="UI.load('{:U('deal?ids='.$vo['id'])}', '请确认退款')">[单笔退款]</a>
+                  <else/>
+                  <a href="{:U('alipay?ids='.$vo['id'])}" target="_blank">[单笔退款]</a>
+                  </if>
+                <else/>
+                <span class="text-cancel">已退款完毕</span>
+                </if>
+              </td>
+            </tr>
+          </volist>
+        <else/>
+          <tr><td colspan="11" class="text-center">暂无退款记录!</td></tr>
+        </notempty>
+      </tbody>
+    </table> 
+  </div>
+
+  <!-- 分页 -->
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //导航高亮
+    highlight_subnav("{:U('Refund/index')}");
+  </script>
+</block>

@@ -1,0 +1,21 @@
+<div class="form-box">
+  <div class="control-group">
+    <label class="control-label" for="mobile">手机号码：</label>
+    <div class="controls">
+      <input name="mobile" type="text" class="text-inline input-sm J_bind_mobile" placeholder="请填写手机号码" maxlength="11" errormsg="手机号码长度为11位" nullmsg="请填写手机号码">
+      <a href="javascript:member.send_bind_code();" class="btn btn-positive send-code J_sendCode">发送校验码</a>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="randcode">校验码：</label>
+    <div class="controls">
+      <input name="randcode" type="text" class="text-inline input-sm J_mobile_randcode" placeholder="请填写收到的校验码" maxlength="6" errormsg="手机校验码为6位数字" nullmsg="请填写收到的校验码">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">&nbsp;</label>
+    <div class="controls">
+      <a href="javascript:;" class="btn btn-positive send-code J_mobile_validate_bind">提交验证</a>
+    </div>
+  </div>
+</div>

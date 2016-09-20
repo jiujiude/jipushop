@@ -1,0 +1,37 @@
+<div class="form-box form-horizontal order-comment-box">
+  <div class="form-group">
+    <label class="col-xs-3 control-label">评价星级：</label>
+    <div class="col-xs-8">
+      <div class="stars J_comment_star">
+        <span class="icon-star-large icon-star-large-blank J_star"></span>
+        <span class="icon-star-large icon-star-large-blank J_star"></span>
+        <span class="icon-star-large icon-star-large-blank J_star"></span>
+        <span class="icon-star-large icon-star-large-blank J_star"></span>
+        <span class="icon-star-large icon-star-large-blank J_star"></span>
+      </div>
+      <div class="star_info hide J_mi_starInfo">质量不太好</div>
+      <div class="star_info hide J_mi_starInfo">商品一般般</div>
+      <div class="star_info hide J_mi_starInfo">其实还不错</div>
+      <div class="star_info hide J_mi_starInfo">质量很好</div>
+      <div class="star_info hide J_mi_starInfo">超高品质</div>
+
+      <div class="validate-error hide J_star_error">
+        <span class="">您还没有对商品评星哦。</span>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label">评价内容：</label>
+    <div class="col-xs-8">
+      <div class="form-info">{$data.content}</div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  // 初始化评价星标
+  var star_amount = '{$data['star_amount']}';
+  for(var i = 0; i < star_amount; i++){
+    $('.J_comment_star').find('.J_star').eq(i).addClass('icon-star-large-full').removeClass('icon-star-large-blank');
+  }
+  $('.J_mi_starInfo').eq(star_amount).show();
+</script>

@@ -1,0 +1,284 @@
+<?php
+/**
+ * 购物车模型
+ * @version 2014102014
+ * @author Max.Yu <max@jipu.com>
+ */
+
+namespace Home\Model;
+
+use Think\Model\RelationModel;
+use Home\Model\Item;
+
+class CartModel extends RelationModel{
+
+  /**
+   * 自动验证规则
+   * @var array
+   * @author Max.Yu <max@jipu.com>
+   */
+  protected $_validate = array(
+  );
+
+  /**
+   * 自动完成规则
+   * @var array
+   * @author Max.Yu <max@jipu.com>
+   */
+  protected $_auto = array(
+    array('uid', 'is_login', self::MODEL_INSERT, 'function'),
+    array('create_time', 'getCreateTime', self::MODEL_INSERT, 'callback'),
+    array('update_time', NOW_TIME, self::MODEL_BOTH),
+  );
+
+  /**
+   * 获取购物车商品列表
+   * @param array $map 查询条件参数
+   * @param string $order 排序规则
+   * @param boolean $count 是否返回总数
+   * @param string $field 字段 true-所有字段
+   * @param string $limit 分页参数
+   * @return array 商品列表
+   * @author Max.Yu <max@jipu.com>
+   */
+  public function lists($map = array(), $field = true, $order = '`id` DESC', $limit = '10'){
+    $list = $this->field($field)->where($map)->order($order)->limit($limit)->select();
+    if($list && is_array($list)){
+      $dis_prices = array();
+      foreach($list as $key => &$value){
+        //复购优惠金额
+        if(!in_array($value['item_id'], $dis_prices)){
+          $dis_price = A('Fugou', 'Event')->getDisPriceByUser($value['item_id'], UID);
+        }else{
+          $dis_price = $dis_prices[$value['item_id']];
+        }
+        $value['dis_price'] = $dis_price;
+        $value['price'] = sprintf('%.2f', $value['price'] - $dis_price);
+        
+        if($value['thumb']){
+          //规格图片
+          $pic = get_cover(M('PropertyOption')->getFieldByCode($value['item_code'], 'pic'), 'path');
+          //不存在则为封面图片
+          $value['cover_path'] = $pic ? $pic : get_cover($value['thumb'], 'path');
+          $value['subAmount'] = sprintf("%.2f", $value['quantity'] * $value['price']);
+          $value['spec'] = unserialize($value['spec']);
+        }
+        //库存
+        $list[$key]['stock'] = get_item_stock($value['item_id'], $value['item_code']);
+      }
+    }
+    return $list;
+  }
+
+  /**
+   * 统计当前用户购物车商品个数（total_num），商品总数量（total_quantity），商品总金额（total_amount），商品总重量(total_weight)
+   * @return array 统计信息
+   * @author Max.Yu <max@jipu.com>
+   */
+  public function doCount(){
+    $map['uid'] = UID;
+    $result = array('total_num' => 0, 'total_quantity' => 0, 'total_amount' => 0.00, 'total_weight' => 0.00);
+    $data = $this->where($map)->field('SUM(quantity) AS total_quantity, SUM(quantity*price) AS total_amount, SUM(quantity*weight) AS total_weight')->find();
+    if($data['total_quantity']){
+      $result['total_num'] = $this->where($map)->count();
+      $result['total_quantity'] = $data['total_quantity'];
+      $result['total_amount'] = sprintf("%.2f", $data['total_amount']);
+      $result['total_weight'] = sprintf("%.2f", $data['total_weight']);
+      $free_delivery = sprintf(C('DELIVERY_FREE_AMOUNT') - $result['total_amount']);
+      $result['free_delivery'] = $free_delivery > 0 ? $free_delivery : 0;
+    }
+    return $result;
+  }
+
+  /**
+   * 统计用户cookie中购物车商品个数（total_num），商品总数量（total_quantity），商品总金额（total_amount），商品总重量(total_weight)
+   * @return array 统计信息
+   * @author Max.Yu <max@jipu.com>
+   */
+  public function doCountCookie(){
+    $result = array('total_num' => 0, 'total_quantity' => 0, 'total_amount' => 0.00, 'total_weight' => 0.00);
+    if(cookie('__cart__') !== null){
+      $currentItems = json_decode(cookie('__cart__'), true);
+      foreach($currentItems as $key => &$value){
+        $total_quantity[] = $value['quantity'];
+        $total_amount[] = $value['quantity'] * $value['price'];
+        $total_weight[] = $value['quantity'] * $value['weight'];
+      }
+      $data['total_quantity'] = array_sum($total_quantity);
+      if($data['total_quantity']){
+        $result['total_num'] = count($currentItems);
+        $result['total_quantity'] = $data['total_quantity'];
+        $result['total_amount'] = sprintf("%.2f", array_sum($total_amount));
+        $result['total_weight'] = sprintf("%.2f", array_sum($total_weight));
+        $free_delivery = sprintf(C('DELIVERY_FREE_AMOUNT') - $result['total_amount']);
+        $result['free_delivery'] = $free_delivery > 0 ? $free_delivery : 0;
+      }
+      return $result;
+    }
+  }
+
+  /**
+   * 判断当前加入购物车的商品是否已经在（当前用户）的购物车中了
+   * @param int $item_id 商品id
+   * @return boolean fasle不存在，true存在
+   * @author Max.Yu <max@jipu.com>
+   */
+  public function isExist($item_code){
+    $where['item_code'] = $item_code;
+    $where['uid'] = UID;
+    $data = $this->where($where)->count();
+    if($data){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  /**
+   * 商品加入购物车
+   * @param int $item_id 商品id
+   * @param int $quantity 购买数量
+   * @param int $uid 用户uid
+   * @return boolean fasle失败，true成功
+   * @author Max.Yu <max@jipu.com>
+   */
+  public function addCart($item_code, $item_id, $quantity, $price, $specifiction, $uid ,$sdp_code){
+    if(empty($item_id)){
+      return false;
+    }
+    //限购判断
+    $quota_num = get_quota_num($item_id);
+    $item_exists = $this->field('sum(quantity) sum')->where(array('uid' => $uid, 'item_id' => $item_id))->find();
+    if(($item_exists['sum'] + $quantity) > $quota_num){
+      $this->error = '超出限购数量';
+      return false;
+    }
+
+    $where['item_code'] = $item_code;
+    $where['uid'] = $uid;
+    $isExist = $this->where($where)->count();
+    if($isExist){
+      //修改数量
+      $status = $this->where($where)->setInc('quantity', $quantity);
+      if($status === false){
+        return false;
+      }
+      //更新统计
+      $this->updateCount();
+    }else{
+      //加入新产品
+      $data = M('Item')->where('id = '.$item_id)->field('name, number, weight, delivery_id, thumb, supplier_id')->find();
+      $data['uid'] = $uid;
+      $data['item_code'] = $item_code;
+      $data['item_id'] = $item_id;
+      $data['quantity'] = $quantity;
+      $data['price'] = $price;
+      $data['spec'] = serialize($specifiction);
+      $data['sdp_code'] = $sdp_code;
+      //获取数据对象
+      $data = $this->create($data);
+      if(empty($data)){
+        return false;
+      }
+      $id = $this->add();
+      if(!$id){
+        return false;
+      }
+      //更新统计
+      $this->updateCount();
+    }
+    return true;
+  }
+
+  /**
+   * 将cookie中的商品数据加入购物车
+   * @author Max.Yu <max@jipu.com>
+   */
+  public function addCartCookie(){
+    $cookieCart = cookie('__cart__');
+    if($cookieCart !== null){
+      $cookieItems = json_decode($cookieCart, true);
+      foreach($cookieItems as $key => $value){
+        $this->addCart($value['item_code'], $value['item_id'], $value['quantity'], $value['price'], $value['spec'], UID);
+      }
+      cookie('__cart__', null);
+    }
+  }
+
+  /**
+   * 修改购物车数据
+   * @return boolean 修改结果，fasle失败，true成功
+   * @author Max.Yu <max@jipu.com>
+   */
+  public function updateCart($where, $data){
+    $data = $this->where($where)->setField($data);
+    if(!$data){
+      return false;
+    }else{
+      /* 更新统计 */
+      $this->updateCount();
+      return $data;
+    }
+  }
+
+  /**
+   * 删除购物车数据
+   * @param array $map 查询条件
+   * @return boolean 删除结果
+   * @author Max.Yu <max@jipu.com>
+   */
+  public function remove($map){
+    $result = $this->where($map)->delete();
+    /* 更新统计 */
+    if($result){
+      $this->updateCount();
+    }
+    return $result;
+  }
+
+  /**
+   * 购物车商品按供应商格式化处理
+   * @param array $list 商品序列
+   * @return array 格式化的结果
+   * @author Max.Yu <max@jipu.com>
+   */
+  public function formatBySupplier($list = array()){
+    $new_list = array();
+    if($list){
+      foreach($list as $item){
+        $sp_id = $item['supplier_id'];
+        if(!isset($new_list[$sp_id])){
+          $new_list[$sp_id] = array(
+            'supplier_id' => $sp_id,
+            'supplier_name' => get_supplier_text($sp_id)
+          );
+        }
+        $new_list[$sp_id]['item'][] = $item;
+      }
+    }
+    return $new_list;
+  }
+
+  /**
+   * 更新当前用户购物车统计数据
+   * @return array 更新结果
+   * @author Max.Yu <max@jipu.com>
+   */
+  protected function updateCount(){
+    $map['uid'] = UID;
+    $count = $this->where($map)->count();
+    $result = D('Usercount')->setKeyValue(UID, 'cart_count', $count);
+    return $result;
+  }
+
+  /**
+   * 创建时间不写则取当前时间
+   * @return integer 时间戳
+   * @author Max.Yu <max@jipu.com>
+   */
+  protected function getCreateTime(){
+    $create_time = I('post.create_time');
+    return $create_time ? strtotime($create_time) : NOW_TIME;
+  }
+
+}

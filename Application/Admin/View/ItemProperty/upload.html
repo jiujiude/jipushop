@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>jquery-from图片上传示例</title>
+<style type="text/css">
+  body {
+    font-size:12px;
+  }
+
+  .btn {
+    position: relative;
+    overflow: hidden;
+    margin-right: 4px;
+    display:inline-block;
+    *display:inline;
+    padding:4px 10px 4px;
+    line-height:18px;
+    *line-height:20px;
+    color:#fff;
+    text-align:center;
+    vertical-align:middle;
+    cursor:pointer;
+    background-color:#5bb75b;
+    border:1px solid #cccccc;
+    border-color:#e6e6e6 #e6e6e6 #bfbfbf;
+    border-bottom-color:#b3b3b3;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+    border-radius:4px;
+  }
+
+  .btn input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    border: solid transparent;
+    opacity: 0;
+    filter:alpha(opacity=0);
+    cursor: pointer;
+  }
+
+  .progress {
+    float: left;
+    position:relative;
+    margin-left:200px;
+    margin-top:-22px;
+    width:40px;
+    padding: 1px;
+    border-radius:3px;
+    display:none
+  }
+
+  .bar {
+    background-color: green;
+    display:block;
+    width:0%;
+    height:20px;
+    border-radius: 3px;
+  }
+
+  .percent {
+    position:absolute;
+    height:20px;
+    display:inline-block;
+    top:3px;
+    left:2%;
+    color:#fff
+  }
+
+  .files {
+    height:22px;
+    line-height:22px;
+    margin:10px 0
+  }
+
+  .delimg {
+    margin-left:20px;
+    color:#090;
+    cursor:pointer
+  }
+</style>
+<script type="text/javascript" language="javascript" src="__JS__/jquery/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" language="javascript" src="__JS__/jquery/jquery.form.js"></script>
+</head>
+
+<body>
+  <form method="post" class="form-horizontal">
+  <span class="btn" id="btn">
+  <span>选择图片</span>
+  <input id="fileupload_btn" type="file" name="mypic" />
+  </span> 
+  <span class="progress">
+      <span class="bar"></span><span class="percent">0%</span >
+  </span>
+  </form>
+  <script type="text/javascript" language="javascript">
+    $(function () {
+      var bar = $('.bar');
+      var percent = $('.percent');
+      var progress = $(".progress");
+      var files = $(".files");
+      var btn = $("#btn span");
+
+      $("#fileupload_btn").change(function(){
+        $("#fileupload_btn").wrap("<form id='myupload_btn' action='{:U()}' method='post' enctype='multipart/form-data'></form>");
+        $("#myupload_btn").ajaxSubmit({
+          dataType:  'json',
+          beforeSend: function() {
+            progress.show();
+            var percentVal = '0%';
+            bar.width(percentVal);
+            percent.html(percentVal);
+            btn.html("上传中...");
+          },
+          uploadProgress: function(event, position, total, percentComplete) {
+            var percentVal = percentComplete + '%';
+            bar.width(percentVal);
+            percent.html(percentVal);
+          },
+          success: function(data) {
+            alert(data.mypic.id);
+            //$("#[_id]").val(data.path);
+            btn.html("上传成功");
+            $theValue = $("#fileupload_btn").parent().html();
+            $("#fileupload_btn").parent().parent().find("#myupload_btn").remove();
+            $("#btn").append($theValue);
+          },
+          error:function(xhr){
+            btn.html("上传失败");
+            bar.width('0')
+            files.html(xhr.responseText);
+            $theValue = $("#fileupload_btn").parent().html();
+            $("#fileupload_btn").parent().parent().find("#myupload_btn").remove().html($theValue);
+            $("#btn").append($theValue);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

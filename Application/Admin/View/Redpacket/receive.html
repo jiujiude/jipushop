@@ -1,0 +1,73 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>红包信息</h2>
+  </div>
+  <!-- 按钮工具栏 -->
+  <div class="cf mb-20">
+    <div class="fl">
+      <a class="btn" href="{:U('index')}">返回列表</a>
+    </div>
+  </div>
+  <div class="order-box">
+    <p>
+      <strong>发送人：</strong>{:get_nickname($info['uid'])}
+      <span class="sep"></span>
+      <strong>发送数量：</strong>{$info.quantity}
+      <span class="sep"></span>
+      <strong>红包金额：</strong>{$info.amount}元
+    <p>
+      <strong>领取数量：</strong>{$quantity}
+      <span class="sep"></span>
+      <strong>领取金额：</strong>{$amount}元
+    </p>
+    </div>
+  <!-- 数据表格 -->
+  <div class="data-table">
+    <p></p>
+    <table>
+      <thead>
+        <tr>
+          <th>领取编号</th>
+          <th>领取人</th>
+          <th onclick = "redpacket.amountSort('{:I('sort')}', {$info.id})"><a id="J_amount_sort" class="text-success">领取金额</a></th>
+          <th>状态</th>
+          <th>答谢语</th>
+          <th>领取时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <notempty name="lists">
+          <volist name="lists" id="vo">
+            <tr>
+              <td><a href="{:U('index', array('id'=>$vo['id']))}">{$vo.id}</a></td>
+              <td><eq name="vo.uid" value="0">粉丝(匿名)<else/><a href="{:U('index', array('id'=>$vo['id'], 'uid'=>$vo['uid']))}">{:get_nickname($vo['uid'])}</a></eq>
+              </td>
+              <td>{$vo.amount}</td>
+              <td><eq name="vo.uid" value="0">未激活<else/><span class="text-success">已激活</span></eq></td>
+              <td>{$vo.msg}</td>
+              <td>{:time_format($vo['create_time'])}</td>
+            </tr>
+          </volist>
+        <else/>
+          <tr><td colspan="5" class="text-center"> 暂无红包领取数据! </td></tr>
+        </notempty>
+      </tbody>
+    </table> 
+  </div>
+
+  <!-- 分页 -->
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script>
+    (function(){
+      redpacket.amountSort("{:I('sort')}", {$info.id});
+    })();
+  </script>
+</block>

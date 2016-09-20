@@ -1,0 +1,119 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+      <h2>查看收款单</h2>
+  </div>
+  <div class="order-box">
+    <p>
+      <strong>支付编号：</strong>{$info.payment_sn}
+    </p>
+    <p>
+      <strong>付款方式：</strong>{$info.payment_type_text}
+      <eq name="info.is_use_finance" value="1"> <if condition="$info['payment_type_text']">+</if> 账户余额</eq>
+      <eq name="info.is_use_coupon" value="1"> + 优惠券</eq>
+      <eq name="info.is_use_card" value="1"> + 礼品卡 </eq>
+      <gt name="info.use_score" value="0"> + 积分抵扣 </gt>
+      <gt name="info.manjian" value="0"> + 满减优惠 </gt>
+      <span class="sep"></span>
+      <strong>付款金额：</strong><span class="text-danger">&yen;{:$info['payment_amount'] + $info['finance_amount']}</span> 元
+      <span class="sep"></span>
+      <strong>付款用户：</strong><a href="{:U('User/view', array('id' => $info['uid']))}">{$info.uid|get_nickname}</a>
+      <span class="sep"></span>
+      <strong>付款时间：</strong>{$info.create_time|time_format}
+    </p>
+    <notempty name="info.memo">
+    <p>
+      <strong>备注信息：</strong>{$info.memo}
+    </p>
+    </notempty>
+  </div>
+
+  <div class="sub-title">
+    <h3>订单信息</h3>
+  </div>
+  <div class="order-box">
+    <volist name="order_lists" id="vo">
+      <p>
+        <strong>订单编号：</strong><a href="{:U('Order/view', array('id'=>$vo['id']))}">{$vo.order_sn}</a>
+        <span class="sep"></span>
+        <strong>下单时间：</strong>{$vo.create_time|time_format}
+      </p>
+    </volist> 
+  </div>
+  
+  <div class="order-item-table">    
+    <div class="sub-title">
+      <h3>订单明细</h3>
+    </div>
+    <table class="dynamic-table">
+      <thead>
+        <tr>
+          <th>商品编号</th>
+          <th>商品名称</th>
+          <th>商品规格</th>
+          <th width="100">商品价格</th>
+          <th width="100">商品数量</th>
+          <th width="100">小计</th>
+        </tr>
+      </thead>
+      <tbody>
+        <volist name="orderItemInfo" id="vo">
+        <tr>
+          <td><a href="{:U('/Item/detail?id='.$vo['item_id'])}" target="_blank">{$vo.number}</a></td>
+          <td class="aleft">
+            <a href="{:U('/Item/detail', array('id' => $vo['item_id']))}" target="_blank">
+              <img src="__ROOT__{:get_image_thumb(get_cover($vo['thumb'], 'path'), 100, 100)}" class="goods-thumb" alt="{$vo.name}">
+            </a>
+            <a href="{:U('/Item/detail?id='.$vo['item_id'])}" target="_blank">{$vo.name}</a>
+          </td>
+          <td>{$vo.spec|default='无'}</td>
+          <td>￥{$vo.price}</td>
+          <td>{$vo.quantity}</td>
+          <td>￥{$vo.subtotal}</td>
+        </tr>
+        </volist>
+      </tbody>
+    </table> 
+  </div>
+
+  <!-- 结算合计 -->
+  <div class="cf order-detail-total clearfix mb-20">
+    <dl class="total-list">
+      <dt>商品共计：</dt><dd>{$orderCount['total_quantity']} 件</dd>
+      <dt>商品总价：</dt><dd>{$info.id|get_count_payment_price} 元</dd>
+      <dt>物流运费：</dt><dd>{:get_count_payment_price($info['id'], 'delivery_fee')} 元</dd>
+      <dt>价格合计：</dt><dd>{:sprintf("%.2f", get_count_payment_price($info['id']) + get_count_payment_price($info['id'], 'delivery_fee'))}元</dd>
+
+      <eq name="info.is_use_coupon" value="1">
+        <dt>优惠券支付：</dt><dd>-{$info.coupon_amount} 元</dd>
+      </eq>
+      <eq name="info.is_use_card" value="1">
+        <dt>礼品卡支付：</dt><dd>-{$info.card_amount} 元</dd>
+      </eq>
+      <gt name="info.use_score" value="0">
+        <dt>积分抵扣：</dt><dd>-{$info.score_amount} 元</dd>
+      </gt>
+      <gt name="info.manjian" value="0">
+        <dt>满减优惠：</dt><dd>-{$info.manjian} 元</dd>
+      </gt>
+      <dt>实际支付：</dt><dd><b style="margin-right:0;">&yen; {:sprintf('%.2f', $info['finance_amount'] + $info['payment_amount'])}</b></dd>
+      <p class="text-right text-cancel">
+        （<if condition="$info['finance_amount'] gt 0">余额：{$info.finance_amount} 元</if>
+        <if condition="$info['finance_amount'] gt 0 AND $info['payment_amount'] gt 0">+</if>
+        <if condition="$info['payment_amount'] gt 0">
+          <if condition="$info['payment_type']">{$info.payment_type_text}<else />第三方</if>：{$info.payment_amount} 元</b>
+        </if>）
+      </p>
+    </dl>
+  </div>
+
+  <div><a href="{$Think.cookie.__forward__}" class="btn btn-return">返 回</a></div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //导航高亮
+    highlight_subnav("{:U('index')}");
+  </script>
+</block>

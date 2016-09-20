@@ -1,0 +1,91 @@
+<div class="user-account-edit">
+  <ul class="nav nav-tabs">
+    <li class="<if condition="$type eq 'alipay'"> active</if>"><a href="javascript:$.ui.load('{:U('', 'type=alipay')}', '添加提现账户');">绑定支付宝</a></li>
+    <li class="<if condition="$type eq 'bankcard'"> active</if>"><a href="javascript:$.ui.load('{:U('', 'type=bankcard')}', '添加提现账户');">绑定银行卡</a></li>
+  </ul>
+  <form action="{:U('UserAccount/update')}" class="col-xs-12 form-horizontal J_ajax-form" method="POST">
+    <switch name="type">
+      <case value="alipay">
+        <div class="form-group">
+          <label for="inputName" class="col-xs-3 control-label">您的姓名：</label>
+          <div class="col-xs-6">
+            <input type="text" name="name" class="form-control" id="inputName" placeholder="您的姓名">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputNumber" class="col-xs-3 control-label">支付宝账户：</label>
+          <div class="col-xs-6">
+            <input type="text" name="account" class="form-control" id="inputNumber" placeholder="支付宝账户">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputReNumber" class="col-xs-3 control-label">确认支付宝账户：</label>
+          <div class="col-xs-6">
+            <input type="text" name="reaccount" class="form-control" id="inputReNumber" placeholder="确认支付宝账户">
+          </div>
+        </div>
+      </case>
+      <case value="bankcard">
+        <div class="form-group">
+          <label for="inputName" class="col-xs-3 control-label">持卡人姓名：</label>
+          <div class="col-xs-4">
+            <input type="text" name="name" class="form-control" id="inputName" placeholder="持卡人姓名">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputNumber" class="col-xs-3 control-label">请选择银行：</label>
+          <div class="col-xs-4">
+            <select name="bankname" class="form-control">
+              <option value="">请选择银行</option>
+              <volist name="lists" id="vo">
+                <option value="{$key}">{$vo}</option>
+              </volist>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputNumber" class="col-xs-3 control-label">卡号：</label>
+          <div class="col-xs-6">
+            <input type="text" name="account" class="form-control" id="inputNumber" placeholder="请您输入卡号">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputReNumber" class="col-xs-3 control-label">确认卡号：</label>
+          <div class="col-xs-6">
+            <input type="text" name="reaccount" class="form-control" id="inputReNumber" placeholder="请您再次输入卡号">
+          </div>
+        </div>
+      </case>
+      <default/>
+    </switch>
+    <div class="form-group form-inline">
+      <label for="verify" class="col-xs-3 control-label">图形验证码</label>
+      <div class="col-xs-9">
+        <input type="text" name="verify" id="verify" class="form-control input-4x randcode J_mobile_randcode" placeholder="请输入验证码" maxlength="4" errormsg="请输入4位验证码" nullmsg="请输入验证码" datatype="*4-4">
+        <img style="margin-left: 4px; width: 138px; height: 42px;" class="verifyimg J_reload_verify" title="点击更换" src="{:U('User/verify')}">
+      </div>
+    </div>
+    <div class="form-group form-inline">
+      <label for="inputReNumber" class="col-xs-3 control-label">短信验证码：</label>
+      <div class="col-xs-9">
+        <input type="hidden" name="username" class="J_mobile" value="{$user.mobile}" id="Z_input_username" placeholder="您的手机号" errormsg="请填写正确的手机" nullmsg="请填写手机" datatype="m">
+        <input type="tel" name="randcode" class="input-4x form-control J_mobile_randcode" maxlength="6" placeholder="短信验证码">
+        <a href="javascript:;" class="btn J_mobile_randcode_button">获取验证码</a>
+        <p class="form-info">您将通过手机号： <span class="text-danger">{$user.mobile|get_hidden_mobile}</span> 进行身份验证！</p>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-xs-6 col-xs-offset-3">
+        <input type="hidden" name="type" value="{$type}">
+        <button type="submit" class="btn btn-large J_form_submit btn-positive ajax-post">确 定</button>
+      </div>
+    </div>
+  </form>
+</div>
+<block name="script">
+  <script type="text/javascript">
+    seajs.use(['user'], function(user){
+      user.getRandCode('withdrawbind');
+    });
+  </script>
+</block>

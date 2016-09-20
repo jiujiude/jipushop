@@ -1,0 +1,306 @@
+<extend name="Base/user"/>
+
+<block name="breadcrumb">
+  <ul class="breadcrumb">
+    <li><a href="{:U('/')}">首页</a></li>
+    <li><a href="{:U('Member/Order')}">我的订单</a></li>
+    <li class="active">订单详情</li>
+  </ul>
+</block>
+
+<block name="body">
+  <div class="user-box">
+    <h3>订单详情</h3>
+    
+    <div class="box-bd">
+      <div class="order-detail-tables">
+        <table class="order-detail-table">
+          <thead>
+            <tr>
+              <th class="column-info" colspan="7">
+                <div class="column-content">
+                  订单号：{$data.order_sn}
+                  <span class="sep">|</span>
+                  下单时间：{$data['create_time']|time_format}
+                  <i class="pull-right color-999">
+                    合计： 1个包裹 {$data['total_quantity']} 件商品
+                  </i>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+          <php>$rows = count($data['items']);</php>
+            <volist name="data.items" id="vl">
+            <tr>
+              <td class="column-detail">
+                <ul class="order-goods-list">
+                  
+                    <li <eq name="key" value="0">class="first"</eq>>
+                      <a href="{:U('Item/detail', array('id' => $vl['item_id']))}" class="pic" target="_blank"><img src="__ROOT__{:get_image_thumb($vl['cover_path'], 60, 60)}" width="60" class="goods-thumb" alt="{$vl.name}"></a>
+                      <h5><a target="_blank" href="{:U('Item/detail', array('id' => $vl['item_id']))}" class="goods-name">{$vl.name}</a><if condition="$vl[price] eq 0"><span class="text-danger">（赠品）</span></if></h5>
+                      <span class="color-999">{:custom_unserialize($vl['spec'], 1, '，')}</span>
+                    </li>
+                </ul>
+              </td>
+              <td width="100" class="text-center">
+                <span class="text-danger">&yen; {$vl.price}</span>
+                <gt name="vl.fugou_dis_price" value="0">
+                  <span class="price-tip">老客户立减</span>
+                </gt>
+              </td>
+              <td width="100" class="text-center color-999">
+                <i class="icon icon-close"></i> {$vl.quantity}
+                <if condition="$vl['memo']">
+                  <br />({$vl.memo})
+                </if>
+              </td>
+              
+              <if condition="$data.o_status eq 202">
+                <td width="150" class="text-center">
+                <notempty name="vl.is_comment">
+                  <a href="javascript:comment.detail({$data.uid}, {$vl.item_id}, {$data['id']});" class="btn btn-sm btn-default">评价详情</a>
+                <else/>
+                  <a href="javascript:comment.add({$vl.item_id}, {$data['id']});" class="btn btn-sm btn-positive">立即评价</a>
+                </notempty>
+              </td>
+              </if>
+            
+            <if condition="$key eq 0">
+              <td class="column-action" rowspan="{$rows}">
+                <em class="msg">{$data.o_status|get_order_status_text}</em>
+                <div class="text-center order-info order-action">
+                  <switch name="data.o_status">
+                    <case value="201">
+                      <a href="javascript:order.confirm({$data['id']});" class="btn btn-positive">确认收货</a>
+                    </case>
+                    <case value="301">
+                      <a href="javascript:UI.load('{:U('Order/reShip',array('order_id' => $data['id']))}','退货信息');" class="btn">立即退货</a>
+                    </case>
+                    <case value="302">
+                      <a href="javascript:$.ui.load('{:U('Order/reShip',array('order_id' => $data['id']))}','退货物流信息');">退货物流</a>
+                    </case>
+                    <case value="0">
+                        <a href="{:U('Order/preview', array('order_sn' => $data['order_sn']))}" class="btn btn-sm btn-positive"><i class="icon icon-recharge"></i> 立即支付</a>
+                        <a href="javascript:order.setStatus({$data['id']}, 'cancel');" class="btn btn-sm btn-default" id="cancleBtn" title="取消订单"><i class="icon icon-round-close"></i> 取消订单</a></em>
+                    </case>
+                  </switch>
+                  <switch name="data.o_status">
+                    <case value="200|201">
+                    <empty name='data.refuse_message' >
+                      <a class="msg" href="javascript:order.refund({$data['id']});">申请退货/退款</a>
+                    </empty>
+                    </case>
+                    <case value="202">
+                     <empty name='data.refuse_message' >
+                      <if condition="$data.complete_time gt time()-7*24*3600">
+                        <a  class="msg" href="javascript:order.refund({$data['id']});">申请退货/退款</a>
+                      </if>
+                      </empty>
+                    </case>
+                    <case value="300">
+                      <a class="msg" href="javascript:order.unrefund({$data['id']});">撤销退款申请</a>
+                    </case>
+                  </switch>
+                </div>
+              </td>
+            </if>
+            </tr>
+            </volist>
+            <tr>
+              <td class="column-delivery" colspan="7">
+                <div class="order-delivery-status">
+                  <ol class="order-delivery-steps clearfix">
+                    <li class="step step-first step-now">
+                      <div class="progress">
+                        <span class="text">下单</span>
+                      </div>
+                      <div class="info">{$data.create_time|time_format}</div>
+                    </li>
+                    <li class="step <gt name="data.o_status" value="0">step-now</gt>">
+                      <div class="progress"><span class="text">付款</span></div>
+                      <gt name="data.o_status" value="0"><div class="info">{$data.payment_time|time_format}</div></gt>
+                    </li>
+                    <li class="step <gt name="data.o_status" value="0">step-now</gt>">
+                      <div class="progress"><span class="text">配货</span></div>
+                      <gt name="data.o_status" value="0"><div class="info">{$data.payment_time|time_format}</div></gt>
+                    </li>
+                    <li class="step <gt name="data.shipping_time" value="0">step-now</gt>">
+                      <div class="progress"><span class="text">出库</span></div>
+                      <gt name="data.shipping_time" value="0"><div class="info">{$data.shipping_time|time_format}</div></gt>
+                    </li>
+                    <switch name="data.o_status">
+                      <case value="300|301|302">
+                       <li class="step step-last step-now">
+                          <div class="progress"><span class="text">退款中</span></div>
+                        </li>
+                      </case>
+                      <case value="303">
+                        <li class="step step-last step-now">
+                          <div class="progress"><span class="text">已退款</span></div>
+                        </li>
+                      </case>
+                      <case value="404">
+                        <li class="step step-last step-now">
+                          <div class="progress"><span class="text">订单取消</span></div>
+                        </li>
+                      </case>
+                    </switch>
+                    <lt name="data.o_status" value="300">
+                      <li class="step step-last <eq name="data.o_status" value="202">step-now</eq>">
+                        <div class="progress"><span class="text">交易成功</span></div>
+                        <eq name="data.o_status" value="202"><div class="info">{$data.complete_time|time_format}</div></eq>
+                      </li>
+                    </lt>
+                  </ol>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="order-detail-total clearfix">
+        <gt name="data.Ship.id" value="0">
+          <dl class="delivery-info">
+            <dd>快递公司：{$data.Ship.delivery_name}</dd>
+            <dd>快递单号：{$data.Ship.delivery_sn}</dd>
+            <dd class="delivery-log hide J_delivery_log"></dd>
+          </dl>
+        </gt>
+        <dl class="total-list">
+          <dt>商品总价：</dt>
+          <dd>&yen; {$data.total_price}</dd>
+          <dt>+ 运费总额：</dt>
+          <dd>&yen; {$data.delivery_fee}</dd>
+          <gt name="data.payment.coupon_amount" value="0">
+            <dt>- 优惠券抵扣：</dt>
+            <dd>&yen; {$data.payment.coupon_amount}</dd>
+          </gt>
+          <gt name="data.payment.card_amount" value="0">
+            <dt>- 礼品卡抵扣：</dt>
+            <dd>&yen; {$data.payment.card_amount}</dd>
+          </gt>
+          <gt name="data.payment.score_amount" value="0">
+            <dt>- 积分抵扣：</dt>
+            <dd>&yen; {$data.payment.score_amount}</dd>
+          </gt>
+          <gt name="data.payment.manjian" value="0">
+            <dt>- 满减优惠：</dt>
+            <dd>&yen; {$data.payment.manjian}</dd>
+          </gt>
+          <if condition="$data['discount_amount'] gt 0">
+            <dt>- 优惠金额：</dt>
+            <dd>&yen; {$data.discount_amount}</dd>
+          </if>
+          <php>$amount = $data['finance_amount'] + $data['total_amount'];</php>
+          <if condition="$data['payment_time'] gt 0">
+            <dt>实际支付：</dt>
+            <dd class="text-price">{:sprintf('%.2f', $amount)}</dd>
+            <gt name="amount" value="0">
+            <p class="amount-info">
+              ( <if condition="$data['finance_amount'] gt 0">余额：{$data.finance_amount} 元</if>
+              <if condition="$data['finance_amount'] gt 0 AND $data['total_amount'] gt 0">+</if>
+              <gt name="data.total_amount" value="0">
+                {$data.payment.payment_type|get_payment_type_text}：{$data.total_amount}</b> 元
+              </gt>
+              )
+            </p>
+            </gt>
+            <else />
+            <dt>还需支付金额：</dt>
+            <dd class="text-price">{:sprintf('%.2f', $amount)}</dd>
+            <gt name="amount" value="0">
+              <p class="amount-info">
+                （<if condition="$data['finance_amount'] gt 0">余额：{$data.finance_amount} 元</if>
+                <if condition="$data['finance_amount'] gt 0 AND $data['total_amount'] gt 0">+</if>
+                <gt name="data.total_amount" value="0">
+                  第三方支付：{$data.total_amount}</b> 元
+                </gt>）
+              </p>
+            </gt>
+          </if>
+        </dl>
+      </div>
+    </div>
+
+    <div class="order-delivery-address">
+      <div id="changeAddress" class="order-text-section">
+        <h4>收货信息 </h4>
+        <table class="order-text-table">
+          <tbody>
+            <tr>
+              <th>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</th>
+              <td>{$data.ship.ship_uname}</td>
+            </tr>
+            <tr>
+              <th>联系电话：</th>
+              <td>{$data.ship.ship_mobile}</td>
+            </tr>
+            <tr>
+              <th>收货地址：</th>
+              <td>{$data.ship.ship_area}, {$data.ship.ship_address}</td>
+            </tr>
+          </tbody>
+        </table>
+        <notempty name='data.memo'>
+
+        <h4>订单备注 </h4>
+        <table class="order-text-table">
+          <tbody>
+              <tr>
+              <volist name='data.memo' id='vo'>
+              <th>备注（{$key}）：</th>
+              <td>{$vo}</td>
+              </volist>
+            </tr>
+          </tbody>
+        </table>
+
+        </notempty>
+        <notempty name='data.invoice_des'>
+     
+        <h4>发票信息 </h4>
+        <table class="order-text-table">
+          <tbody>
+            <volist name='data.invoice_des' id='vo'>
+              <tr>
+              <th>{$key}：</th>
+              <td>{$vo}</td>
+            </tr>
+            </volist>
+          </tbody>
+        </table>
+    
+        </notempty>
+        <notempty name='data.realname'>
+     
+        <h4>实名信息备案 </h4>
+        <table class="order-text-table">
+          <tbody>
+              <tr>
+              <th>真实姓名：</th>
+              <td>{$data.realname}</td>
+              </tr>
+              <tr>
+              <th>身份证号：</th>
+              <td>{$data.idcard}</td>
+              </tr>
+          </tbody>
+        </table>
+    
+        </notempty>
+      </div>   
+      <div class="order-text-section"></div>
+    </div>
+  </div>
+</block>
+<block name="script">
+  <script>
+    var order, comment;
+    seajs.use(['order', 'comment', 'delivery'], function(o, c, delivery){
+      order = o;
+      comment = c;
+      delivery.getDeliveryInfo("{$data.Ship.delivery_name}", "{$data.Ship.delivery_sn}");
+    });
+  </script>
+</block>

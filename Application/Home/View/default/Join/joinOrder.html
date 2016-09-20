@@ -1,0 +1,68 @@
+<extend name="Base/member"/>
+<block name="breadcrumb"></block>
+<block name="body">
+<script>
+    seajs.use('join', function(join){
+      join.listsBind();
+      $('.jiathis_button_cqq').bind('mousedown',function(){
+        myshare(this);
+      });
+      $('.jiathis_button_tsina').bind('mousedown',function(){
+        myshare(this);
+      });
+      $('.jiathis_button_weixin').bind('mousedown',function(){
+        myshare(this);
+      });
+      $('.jiathis_button_qzone').bind('mousedown',function(){
+        myshare(this);
+      });
+      // $('.jiathis_button_tqq').bind('mousedown',function(){
+      //   myshare(this);
+      // });
+      $('.jiathis_button_renren').bind('mousedown',function(){
+        myshare(this);
+      });
+      function myshare(obj){
+
+        var goodsname = $(obj).parent('.jiathis_style_24x24').find('.goodsname').val();
+        var sumary = $(obj).parent('.jiathis_style_24x24').find('.sumary').val();
+        var goodsurl = $(obj).parent('.jiathis_style_24x24').find('.goodsurl').val();
+        var imgurl = $(obj).parent('.jiathis_style_24x24').find('.imgurl').val();
+        jiathis_config  = {
+          url:goodsurl,
+          title:goodsname,
+          summary:sumary,
+          pic:imgurl,
+          } 
+      }
+    });
+  </script>
+
+<script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js" charset="utf-8"></script>
+
+  <div class="user-box">
+    <div class="user-order">
+      <h3>拼团
+        <small>
+          <ul class="box-nav clearfix">
+            <li {$tab['all']}><a href="{:U('Join/joinOrder', array('type' => 'all'))}">全部</a></li>
+            <li {$tab['reg']}><a href="{:U('Join/joinOrder', array('type' => 'reg'))}">我的领团</a></li>
+            <li {$tab['join']}><a href="{:U('Join/joinOrder', array('type' => 'join'))}">我的参团</a></li>
+          </ul>
+        </small>
+      </h3>
+      <notempty name="list">
+        <div class="list">
+          <include file="joinList" />
+        </div>
+        <div class="page">{$_page}</div>
+      <else/>
+        <p class="list-empty">您暂时没有拼团。<a href="{:U('Item/search')}">挑挑喜欢的商品去</a></p>
+      </notempty>
+    </div>
+  </div>
+</block>
+<block name="script">
+  
+
+</block>

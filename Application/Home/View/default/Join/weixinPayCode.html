@@ -1,0 +1,8 @@
+<div class="text-center">
+  <img src="{$data.qrcode_src}" id="J_weixinpay_qrcode">
+</div>
+<script>
+  seajs.use('join', function(join){
+    join.weixinPay({$data.id});
+  }); 
+</script>

@@ -1,0 +1,17 @@
+<div class="order-comment-box">
+  <div class="stars" id="Z_comment_star">
+    <span class="icon-star-large icon-star-large-blank Z_star"></span>
+    <span class="icon-star-large icon-star-large-blank Z_star"></span>
+    <span class="icon-star-large icon-star-large-blank Z_star"></span>
+    <span class="icon-star-large icon-star-large-blank Z_star"></span>
+    <span class="icon-star-large icon-star-large-blank Z_star"></span>
+  </div>
+  <textarea class="text-area" rows="5" placeholder="请您输入评价内容" id="Z_comment_content" disabled="true">{$data.content}</textarea>
+  <input type="hidden" name="item_id" id="Z_comment_itemid" value="{$data.item_id}">
+  <a href="javascript:;" class="btn btn-block" id="Z_comment_close">关闭</a>
+</div>
+<script>
+  seajs.use('comment', function(comment){
+    comment.setStar('{$data.star_amount}');
+  });
+</script>

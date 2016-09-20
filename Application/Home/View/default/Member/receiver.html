@@ -1,0 +1,74 @@
+<extend name="Base/member"/>
+
+<block name="breadcrumb">
+  <ul class="breadcrumb">
+    <li><a href="{:U('/')}">首页</a></li>
+    <li class="active">我的收货地址</li>
+  </ul>
+</block>
+
+<block name="body">
+  <div class="user-box">
+    <h3>我的收货地址</h3>
+    <div class="row" id="J_address_list">
+      <volist name="lists" id="vo">
+        <div class="col-xs-4 address-item J_address_item" data-id="{$vo.id}" data-name="{$vo.name}" data-mobile="{$vo.mobile}" data-province="{$vo.province}" data-district="{$vo.district}" data-city="{$vo.city}" data-area="{$vo.area}" data-address="{$vo.address}" data-zipcode="{$vo.zipcode}" data-is_default="{$vo.is_default}">
+          <dl>
+            <dt><strong>{$vo.name}</strong></dt>
+            <dd>
+              <p><eq name="vo.is_default" value="1"><em class="text-danger">[默认]</em></eq>{$vo.area}{$vo.address}({$vo.zipcode})</p>
+              <p class="tel">{$vo.mobile}</p>
+              <span class="edit-btn btn btn-xs btn-positive J_edit_address" data-id="{$vo.id}">修改</span>
+              <span class="edit-btn btn btn-xs btn-negative J_del_address" data-id="{$vo.id}">删除</span>
+            </dd>
+            <dd style="display:none">
+              <input type="radio" name="receiver_id" class="J_receiver_id" value="{$vo.id}" <eq name="vo.is_default" value="1">checked="checked"</eq>>
+            </dd>
+          </dl>
+        </div>
+      </volist>
+      <div class="col-xs-4 address-item use-new-addr J_address_item J_add_address" id="useNewAddr" data-state="off">
+        <dl>
+          <span class="icon icon-add"></span>使用新地址
+        </dl>
+      </div>
+    </div>
+    <div class="address-edit-box" id="J_address_edit_box">
+      <div class="bd">
+        <input type="hidden" name="id" id="J_address_id" value="">
+        <div class="item">
+          <input type="text" name="name" id="J_input_name" class="input" placeholder="收货人姓名" maxlength="15" value="">
+          <p class="tip-msg tipMsg" style="display: none;"></p>
+        </div>
+        <div class="item">
+          <input type="text" name="mobile" id="J_input_mobile" class="input" placeholder="手机号码" maxlength="11" value="">
+          <p class="tip-msg tipMsg" style="display: none;"></p>
+        </div>
+        <div class="item item-area" id="J_address_area">加载中...</div>
+        <div class="item">
+          <textarea name="address" class="input-area" id="J_input_address" placeholder="路名或街道地址，门牌号"></textarea>
+          <p class="tip-msg tipMsg" style="display: none;"></p>
+        </div>
+        <div class="item">
+          <input type="text" name="zipcode" id="J_input_zipcode" class="input" placeholder="邮政编码" maxlength="6" value="">
+          <p class="tip-msg tipMsg" style="display: none;"></p>
+        </div>
+        <div class="item set-default">
+          <label for="J_is_default"><input type="checkbox" name="is_default" id="J_is_default" value="1">设为默认收货地址</label>
+          <p class="tip-msg tipMsg" style="display: none;"></p>
+        </div>
+      </div>
+      <div class="ft clearfix">
+        <button type="button" class="btn btn-sm" id="J_edit_address_cancel">取消</button>
+        <a href="javascript:;" class="btn btn-sm btn-positive" id="J_edit_address_ok">保存</a>
+      </div>
+    </div>
+  </div>
+</block>
+<block name="script">
+  <script>
+    seajs.use(['receiver'], function(receiver){
+      receiver.init();
+    });
+  </script>
+</block>

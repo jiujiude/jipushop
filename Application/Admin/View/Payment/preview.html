@@ -1,0 +1,63 @@
+<div class="boxpage-div">
+  <div class="boxpage-line">
+    <label class="fl">支付单号：</label>
+    <div class="fl">{$data.payment_sn}</div>
+  </div>
+  <div class="boxpage-line border-top">
+    <label class="fl">商品总价格：</label>
+    <div class="fl"><span class="text-danger">&yen;{$data.payment_item_price}</span></div>
+  </div>
+  <gt name="data.delivery_price" value="0">
+  <div class="boxpage-line  border-top">
+    <label class="fl">+ 总运费：</label>
+    <div class="fl">
+      <span class="text-danger">&yen;{$data.delivery_price}</span>
+    </div>
+  </div>
+  </gt>
+  <gt name="data.coupon_amount" value="0">
+  <div class="boxpage-line border-top">
+    <label class="fl">- 优惠券抵扣：</label>
+    <div class="fl"><span class="text-danger">&yen;{$data.coupon_amount}</span></div>
+  </div>
+  </gt>
+  <gt name="data.card_amount" value="0">
+  <div class="boxpage-line  border-top">
+    <label class="fl">- 礼品卡抵扣：</label>
+    <div class="fl"><span class="text-danger">&yen;{$data.card_amount}</span></div>
+  </div>
+  </gt>
+  <gt name="data.score_amount" value="0">
+  <div class="boxpage-line  border-top">
+    <label class="fl">- 积分抵扣：</label>
+    <div class="fl"><span class="text-danger">&yen;{$data.score_amount}</span></div>
+  </div>
+  </gt>
+  <gt name="data.manjian" value="0">
+  <div class="boxpage-line  border-top">
+    <label class="fl">- 满减优惠：</label>
+    <div class="fl"><span class="text-danger">&yen;{$data.manjian}</span></div>
+  </div>
+  </gt>
+  <gt name="data.system_discount" value="0">
+  <div class="boxpage-line  border-top">
+    <label class="fl">- 平台优惠：</label>
+    <div class="fl"><span class="text-danger">&yen;{$data.system_discount}</span></div>
+  </div>
+  </gt>
+  <div class="boxpage-line border-top">
+    <label class="fl">实际支付：</label>
+    <div class="fl">
+      <span class="text-danger" style="font-size:22px;">&yen;{:sprintf('%.2f', $data['payment_amount'] + $data['finance_amount'])}</span>
+      <span class="text-cancel">（<if condition="$data['finance_amount'] gt 0">余额：{$data.finance_amount} 元</if>
+        <if condition="$data['finance_amount'] gt 0 AND $data['payment_amount'] gt 0">+</if>
+        <if condition="$data['payment_amount'] gt 0">
+          <if condition="!is_array($info['payment_type_text'])">{:get_payment_type_text($data['payment_type'])}<else />第三方</if>：{$data.payment_amount}</b> 元
+        </if>）
+      </span>
+    </div>
+  </div>
+  <div class="boxpage-line boxpage-menu">
+    <button class="btn ajax-post btn-close" onclick="$('.J_modal_close').click();" data-target-form="rechange-add-form">关闭</button>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+<extend name="Base/common" />
+<block name="header">
+{:hook('mobileTopNav',array('title'=>$meta_title))}
+</block>
+
+<block name="body">
+<style>
+    .bar-tab{display: none;}
+</style>
+  <div class="control-action Z_binded">
+    <p class="user-bind-text">
+      现账号：<span class="text-success">{$user.mobile}</span>
+    </p>
+  </div>
+  <form action="__SELF__" method="post" class="Z_bind-form">
+    <div class="control-group">
+      <input name="mobile" type="text" class="Z_mobile" id="mobile" value="" placeholder="请输入绑定的手机号" style=" font-size:16px;word-spacing:8px; letter-spacing: 1px;" maxlength="11"  autocomplete="off" data-check_status="1" <eq name="user.mobile_bind_status" value="1" > data-old="{$user.mobile}"</eq>>
+    </div>
+    <div id="Z_bind_verify" class="control-group">
+      <input type="text" name="verify" id="verify" maxlength="4" placeholder="图形验证码" style=" font-size:16px;word-spacing:8px; letter-spacing: 1px;">
+      <img class="verifyimg J_reload_verify" style="width: 86px; height: 30px; position: absolute; right: 10px; top:8px;" title="点击更换" src="{:U('User/verify')}">
+    </div>
+    <div class="control-group">
+      <input type="tel" name="randcode" class="Z_mobile_randcode" maxlength="6" placeholder="短信验证码" style=" font-size:16px;word-spacing:8px; letter-spacing: 1px;">
+      <a href="javascript:;" class="btn btn-primary btn-randcode Z_mobile_randcode_button">获取验证码</a>
+    </div>
+    <div class="control-action">
+      <input type="submit" class="btn btn-block btn-positive Z_submit" value="确定" >
+    </div>
+  </form>
+</block>
+<block name="script">
+  <script type="text/javascript">
+    seajs.use(['user'], function(user){
+      user.getRandCode('setMobile');
+    });
+  </script>
+</block>

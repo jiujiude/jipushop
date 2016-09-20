@@ -1,0 +1,13 @@
+<volist name="lists" id="vo">
+  <li class="table-view-cell padded-sm">
+    {$vo.memo}
+    <em class="pull-right">
+      <eq name="vo.flow" value="in"><i class="text-success">+{$vo.amount} 元</i></eq>
+      <eq name="vo.flow" value="out"><i class="text-danger">-{$vo.amount} 元</i></eq>
+    </em>
+    <p class="text-info">{$vo.create_time|time_format}</p>
+  </li>
+</volist>
+<script>
+  C.has_more =  '{$_hasmore}';
+</script>

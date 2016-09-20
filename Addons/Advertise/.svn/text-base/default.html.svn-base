@@ -1,0 +1,29 @@
+<notempty name="data">
+  <switch name="modality">
+    <case value="slide">
+      <div id="J_home_slider" class="home-slider">
+        <ul class="item">
+          <volist name="data" id="vo">
+            <li>
+              <a href="{$vo.link}" style="background-image: url({$vo.image_src})" title="{$vo.title}" target="_blank"></a>
+            </li>
+          </volist>
+        </ul>
+        <a class="prev" href="javascript:void(0)"><i class="icon-arrow"></i></a>
+        <a class="next" href="javascript:void(0)"><i class="icon-arrow"></i></a>
+        <div class="nav">
+          <ul>
+            <volist name="data" id="vo">
+              <li></li>
+            </volist>
+          </ul>
+        </div>
+      </div>
+    </case>
+    <case value="image">
+      <a href="{$data.link}"><img src="{$data.image_src}" alt=""></a>
+    </case>
+  </switch>
+<else/>
+  <p>广告尚未设置，请在后台 > 营销 > 广告设置中添加</p>
+</notempty>

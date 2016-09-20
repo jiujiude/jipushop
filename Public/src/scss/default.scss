@@ -1,0 +1,80 @@
+$app-images-path: "../images";
+$iconfont-path: "../fonts";
+$brand-primary: #e91e63;
+$grid-gutter-width: 15px !default;
+$nav-link-padding: 10px 35px;
+
+// Core variables and mixins
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+
+// Reset and dependencies
+@import "bootstrap/normalize";
+// @import "bootstrap/print";
+// @import "bootstrap/glyphicons";
+
+// Core CSS
+@import "bootstrap/scaffolding";
+@import "bootstrap/type";
+// @import "bootstrap/code";
+@import "bootstrap/grid";
+@import "bootstrap/tables";
+@import "bootstrap/forms";
+@import "bootstrap/buttons";
+
+
+// Components
+@import "bootstrap/animations";
+// @import "bootstrap/dropdowns";
+// @import "bootstrap/button-groups";
+@import "bootstrap/input-groups";
+@import "bootstrap/navs";
+@import "bootstrap/navbar";
+@import "bootstrap/breadcrumbs";
+@import "bootstrap/pagination";
+@import "bootstrap/pager";
+@import "bootstrap/labels";
+@import "bootstrap/badges";
+// @import "bootstrap/jumbotron";
+@import "bootstrap/list";
+@import "bootstrap/media";
+@import "bootstrap/thumbnails";
+@import "bootstrap/alerts";
+@import "bootstrap/progress-bars";
+
+// @import "bootstrap/panels";
+// @import "bootstrap/responsive-embed";
+// @import "bootstrap/wells";
+@import "bootstrap/close";
+
+// Components JavaScript
+@import "bootstrap/modals";
+@import "bootstrap/tooltip";
+// @import "bootstrap/popovers";
+// @import "bootstrap/carousel";
+
+// Utility classes
+@import "bootstrap/utilities";
+// @import "bootstrap/responsive-utilities";
+
+
+// Common Module
+@import "bootstrap/module/base.scss"; //基础
+@import "bootstrap/module/common.scss"; //公用
+@import "bootstrap/module/iconfont.scss"; //icon
+@import "bootstrap/module/index.scss"; //首页
+@import "bootstrap/module/item.scss"; //商品
+@import "bootstrap/module/cart.scss"; //购物车
+@import "bootstrap/module/order.scss"; //订单
+@import "bootstrap/module/user.scss"; //用户
+@import "bootstrap/module/activity.scss"; //专题
+@import "bootstrap/module/article.scss"; //文章
+@import "bootstrap/module/coupon.scss"; //优惠券
+@import "bootstrap/module/sdp.scss"; //分销
+@import "bootstrap/module/withdraw.scss"; //提现
+@import "bootstrap/module/shop.scss"; //分销店铺
+@import "bootstrap/module/union.scss"; //推广联盟
+@import "bootstrap/module/message.scss"; //站内消息
+
+// Module
+@import "bootstrap/style/default";

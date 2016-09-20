@@ -1,0 +1,96 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>待开票订单列表</h2>
+  </div>
+
+  <form action="{:U('add')}" method="post">
+  <!-- 按钮工具栏 -->
+  <div class="cf">
+    <div class="fl">
+      <button id="submit" name="submit" class="btn" type="submit">申请发票</button>
+      （可开票商品共计: <font color="red">{$orderCount['total_quantity']}</font> 件&nbsp;&nbsp;&nbsp;&nbsp;可开票金额共计: <font color="red">￥{$orderCount['total_amount']}</font>）
+    </div>
+
+    <!-- 高级搜索 -->
+    <div class="search-form fr cf">
+      <div class="sleft">
+        <input type="text" name="keywords" class="search-input" value="{:I('keywords')}" placeholder="请输入商品名称或编号">
+        <a class="sch-btn" href="javascript:;" id="search" url="{:U('')}"><i class="btn-search"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 数据表格 -->
+    <div class="data-table table-striped">
+    <table>
+      <thead>
+        <tr>
+          <th width="40" class="row-selected row-selected"><input class="checkall" type="checkbox"/></th>
+          <th width="100">订单编号</th>
+          <th>订单明细</th>
+          <th width="100">订单总额</th>
+          <th width="130">下单时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <volist name="list" id="vo">
+        <tr>
+          <td><input class="orderids" type="checkbox" name="orderids[]" value="{$vo.id}" /></td>
+          <td><a href="{:U('Order/myview?id='.$vo['id'])}">{$vo.order_sn}</a></td>
+          <td style="font-size: 13px; line-height:24px;">{:getOrderItemForInvoice($vo['id'])}</td>
+          <td>￥{$vo.total_amount}</td>
+          <td>{$vo.create_time|time_format}</td>
+        </tr>
+        </volist>
+      </tbody>
+    </table> 
+        <!-- 分页 -->
+        <div class="page">{$_page}</div>
+    </div>
+  </form>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    $(function(){
+      //搜索功能
+      $("#search").click(function(){
+        var url = $(this).attr('url');
+        var query  = $('.search-form').find('input').serialize();
+        query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g,'');
+        query = query.replace(/^&/g,'');
+        if(url.indexOf('?')>0){
+          url += '&' + query;
+        }else{
+          url += '?' + query;
+        }
+        window.location.href = url;
+      });
+
+      //回车自动提交
+      $('.search-form').find('input').keyup(function(event){
+        if(event.keyCode===13){
+          $("#search").click();
+        }
+      });
+
+      //复选框选中与反选
+      $('.checkall').on('change',function(){
+        $(this).closest('table').find('input').prop('checked',this.checked);
+      });
+
+      //判断复选框是否被选中
+      $("#submit").click(function(){
+        if(!$(".orderids").is(":checked")){
+          alert("请勾选需要开票的订单!");
+          return false;
+        }
+      });
+
+      //导航高亮
+      highlight_subnav("{:U('apply')}");
+    });
+  </script>
+</block>

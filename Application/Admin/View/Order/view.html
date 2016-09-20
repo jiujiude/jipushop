@@ -1,0 +1,245 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>查看订单</h2>
+  </div>    
+
+  <!-- 订单信息 -->
+  <div class="order-box">
+    <p>
+      <strong>订单状态：</strong>
+      <switch name="info.o_status">
+        <case value="-1|404"><span class="text-danger">交易取消</span></case>
+        <case value="0"><span class='text-danger'>待付款</span></case>
+        <case value="200"><span class="text-success">待发货</span></case>
+        <case value="201"><span class="text-success">待买家确认收货</span></case>
+        <case value="202"><span class="text-success">交易成功</span></case>
+        <case value="303"><span class="text-success">已退款</span></case>
+        <case value="300|301|302">
+          <span class="text-danger">
+            退款中
+            <if condition="$info['o_status'] eq 301">，待买家退货</if>
+            <if condition="$info['o_status'] eq 302">，买家已退货</if>
+          </span>
+          <a href="javascript:UI.load('{:U('Order/refund',array('order_id' => $info['id']))}','处理退款');">[处理退款]</a>
+        </case>
+      </switch>
+      <gt name="info.o_status" value="0">
+        <span class="sep"></span>
+        <strong>付款状态：</strong>{$info['o_status']>0 ?'<span class="text-success">已付款</span>':'<span class="text-danger">未付款</span>'}
+        <span class="sep"></span>
+        <strong>支付方式：</strong>
+        <gt name="info.o_status" value="0">
+          <if condition="$info.total_amount eq 0">
+            余额支付
+            <else/>
+            {$info.payment_type_text}
+          </if>
+        <else/>
+          -
+        </gt>
+        <span class="sep"></span>
+        <strong>发货状态：</strong>{$info['shipping_time']>0 ?'<span class="text-success">已发货</span>':'<span class="text-danger">未发货</span>'}
+      </gt>
+    </p>
+    <p>
+      <strong>订单编号：</strong>{$info.order_sn} <if condition="$info['payment_time'] gt 0 AND $info['sdp_uid'] gt 0"> <span class="order-sdp">分销</span></if>
+      <span class="sep"></span>
+      <strong>订单总额：</strong><span class="text-danger">{:sprintf('%.2f', $info['total_amount']+$info['finance_amount'])} </span> 元
+      <span class="sep"></span>
+      <strong>下单用户：</strong>
+      <if condition="IS_SUPPLIER">
+        {$info.uid|get_nickname}
+        <else/>
+        <a href="{:U('User/view?id='.$info['uid'])}">{$info.uid|get_nickname}</a>
+      </if>
+      
+      <span class="sep"></span>
+      <strong>下单时间：</strong>{$info.create_time|time_format}
+      <span class="sep"></span>
+      <eq name="info.o_status" value="202">
+        <gt name="info.complete_time" value="0">
+          <strong>交易完成时间：</strong>{$info.complete_time|time_format}
+        </gt>
+      </eq>
+    </p>
+    <p>
+      <strong>收货人姓名：</strong>{$info.ship.ship_uname}
+      <span class="sep"></span>
+      <strong>手机：</strong>{$info.ship.ship_mobile}
+      <notempty name='info.ship.ship_phone'>
+        <span class="sep"></span>
+        <strong>座机：</strong>{$info.ship.ship_phone|default='-'}
+      </notempty>
+      <span class="sep"></span>
+      <strong>地址：</strong>{$info.ship.ship_area}{$info.ship.ship_address}
+      <notempty name='info.delivery_tpl'>
+        <span class="sep"></span>
+        <strong>买家指定：</strong><span class="text-warning">{$info.delivery_tpl}</span>
+      </notempty>
+      <notempty name='info.ship.ship_zipcode'>
+        <span class="sep"></span>
+        <strong>邮编：</strong>{$info.ship.ship_zipcode}
+      </notempty>
+    </p>
+    <php>if(!empty($info['invoice_need'])){</php>
+    <p><strong>发票信息：</strong><span class="text-danger">{$info.invoice_title}</span></p>
+    <php>}</php>
+    <p><strong>备注：</strong><span class="text-danger">
+    <volist name='info.memo' id='vo'>
+    {$key} ---{$vo} &nbsp;&nbsp;&nbsp;&nbsp;
+    </volist>
+    </span></p>
+     <if condition="C('REAL_NAME') eq 1">
+    <p>
+        <strong>真实姓名:</strong>{$info.realname}
+        <span class="sep"></span>
+        <strong>身份证号:</strong>{$info.idcard}
+    </p>
+    </if>
+  </div>
+
+  <div class="order-item-table">
+    <div class="sub-title">
+      <h3>订单明细</h3>
+    </div>
+    <table class="dynamic-table">
+      <thead>
+        <tr>
+          <th width="130">商品编号</th>
+          <th>商品名称</th>
+          <th>商品规格</th>
+          <th width="100">商品价格</th>
+          <th width="100">商品数量</th>
+          <th width="100">小计</th>
+        </tr>
+      </thead>
+      <tbody>
+        <volist name="info.itemList" id="vo">
+        <tr>
+          <td><a href="{:U('/Item/detail?id='.$vo['item_id'])}" target="_blank">{$vo.number}</a></td>
+          <td class="aleft">
+            <a href="{:U('/Item/detail', array('id' => $vo['item_id']))}" target="_blank">
+              <img src="__ROOT__{:get_image_thumb(get_cover($vo['thumb'], 'path'), 100, 100)}" class="goods-thumb" alt="{$vo.name}">
+            </a>
+            <a href="{:U('/Item/detail?id='.$vo['item_id'])}" target="_blank">{$vo.name}</a>
+            <if condition="$vo[price] eq 0"><span class="text-danger">（赠品）</span></if>
+          </td>
+          <td>{$vo.spec|default='无'}</td>
+          <td>
+            &yen;{$vo.price}
+            <gt name="vo.fugou_dis_price" value="0">
+            <br /> <span class="text-danger">老客户优惠价</span>
+            </gt>
+          </td>
+          <td>{$vo.quantity}</td>
+          <td>&yen;{:$vo['sub_total'] > 0 ? $vo['sub_total'] : $vo['subtotal']}
+            <if condition="$vo['memo']">
+              <br /><span class="text-cancel">（{$vo.memo}）</span>
+            </if>
+          </td>
+        </tr>
+        </volist>
+      </tbody>
+    </table> 
+  </div>
+
+  <!-- 结算合计 -->
+  <div class="cf order-detail-total clearfix mb-20">
+    <dl class="total-list">
+      <dt>商品共计：</dt><dd>{$info.itemCount.total_quantity} 件</dd>
+      <dt>商品总金额：</dt><dd>&yen; {$info.total_price}</dd>
+      <eq name="info.is_use_coupon" value="1">
+        <dt>- 优惠券支付：</dt><dd>&yen; {$info.coupon_amount} 元</dd>
+      </eq>
+      <eq name="info.is_use_card" value="1">
+        <dt>- 礼品卡支付：</dt><dd>&yen; {$info.card_amount} 元</dd>
+      </eq>
+      <gt name="info.delivery_fee">
+        <dt>+ 运费总额：</dt><dd>&yen; {$info.delivery_fee}</dd>
+      </gt>
+      <if condition="$info['discount_amount'] gt 0">
+        <dt>- 优惠金额：</dt><dd>&yen; {$info.discount_amount}</dd>
+      </if>
+      <php>$amount = $info['finance_amount'] + $info['total_amount'];</php>
+      <dt>{$info['payment_time'] > 0 ? '实际支付' : '实际应付'}：</dt><dd><b style="margin-right:0;">&yen; {:sprintf('%.2f', $amount)}</b></dd>
+      <if condition="$info['payment_time'] gt 0 AND $amount gt 0">
+        <p class="text-right text-cancel">
+          （<if condition="$info['finance_amount'] gt 0">余额：{$info.finance_amount} 元</if>
+          <if condition="$info['finance_amount'] gt 0 AND $info['total_amount'] gt 0">+</if>
+          <gt name="info.total_amount" value="0">
+            <if condition="!is_array($info['payment_type_text'])">{$info.payment_type_text}<else />第三方</if>：{$info.total_amount}</b> 元
+          </gt>
+          ）
+        </p>
+      </if>
+    </dl>
+  </div>
+  
+  <!-- 分销 -->
+  <if condition="$info.sdp_shop and get_cashback_amount($info['id'])">
+    <div class="sub-title">
+      <h3>分销信息</h3>
+    </div>
+    <div class="order-box">
+      <p>
+        <strong>店铺ID：</strong>
+        {$info.sdp_shop.uid}
+        
+        <span class="sep"></span>
+        <strong>店铺名称：</strong>
+        <a href="{:U('Shop/index', array('uid' => $info['sdp_shop']['uid']))}">{$info.sdp_shop.name|default="尚未设置店名"}</a>
+        
+        <span class="sep"></span>
+        <strong>店家：</strong>
+        <a href="{:U('User/view?id='.$info['sdp_shop']['uid'])}">{$info.sdp_shop.uid|get_nickname}</a>
+      </p>
+      <p>
+        <strong>返现金额：</strong>
+        <span class="text-danger">{$info.id|get_cashback_amount}</span> 元
+      </p>
+    </div>
+  </if>
+  
+  <!-- 发货信息 -->
+  <gt name="info['delivery']" value="0">
+    <div class="sub-title">
+      <h3>发货信息</h3>
+    </div>
+    <div class="order-box">
+      <p>
+        <strong>物流公司：</strong>{$info.delivery.delivery_name}
+        <span class="sep"></span>
+        <strong>物流单号：</strong>{$info.delivery.delivery_sn}
+        <a href="https://www.baidu.com/s?wd={$info.delivery.delivery_name}%20{$info.delivery.delivery_sn}" target="_blank">[追踪]</a>
+        <span class="sep"></span>
+        <strong>发货日期：</strong>{$ship.create_time|time_format}
+      </p>
+      <notempty name="ship.memo">
+      <p>
+        <strong>备注信息：</strong>{$ship.memo}
+      </p>
+      </notempty>
+    </div>
+  </gt>
+  
+  <div>
+    <eq name="info['o_status']" value="200">
+        <a href="{:U('Ship/add?order_id='.$info['id'])}" class="btn submit-btn">发 货
+        <notempty name='info.delivery_type'>
+          （{$info.delivery_type}）
+        </notempty>
+        </a>
+    </eq>
+    <a href="{$Think.cookie.__forward__}" class="btn btn-return">返 回</a>
+    <a href="{:U('Order/printItem?id='.$info['id'])}" target="_blank" class="btn btn-block fr btn-default btn-xlarge">打印商品清单</a>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //导航高亮
+    highlight_subnav("{:U('index')}");
+  </script>
+</block>

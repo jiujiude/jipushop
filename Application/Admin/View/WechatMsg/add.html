@@ -1,0 +1,130 @@
+<extend name="Public/base" />
+
+<block name="body">
+  <div class="form-fl">
+    <div class="main-title"><h2>添加消息回复</h2></div>
+    <form id="form" action="{:U('update')}" method="post" class="form-horizontal">
+      <input type="hidden" name="type" value="{$data.type}">
+      <input type="hidden" name="mid" value="{$mid}">
+      <!-- <input type="hidden" name="event" value="normal"> -->
+      <div class="form-item cf">
+        <label class="item-label">事件类型<span class="check-tips"></span></label>
+        <div class="controls">
+          <select name="event1" >
+            <option value="normal">发送文字事件</option>
+            <option value="subscribe" >关注公众号事件</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-item cf">
+        <label class="item-label">消息类型<span class="check-tips"></span></label>
+        <div class="controls">
+          <select name="option" class="J_selecttype">
+            <option value="text">文本消息</option>
+            <option value="single">图文消息</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-item cf J_keyword">
+        <label class="item-label">关键词<span class="check-tips">（指用户输入的关键词，如用户输入“米”，则回复与米有关的内容）</span></label>
+        <div class="controls">
+          <input type="text" name="keyword" class="text input-mid" value="">
+        </div>
+      </div>
+
+      <div class="form-item cf J_single">
+        <label class="item-label">图文<span class="check-tips">（<a href="javascript:;" onclick="itm.managePage()">选择</a>）</span></label>
+        <div class="controls">
+          {:hook('imageTextMsg', array('name'=> 'event', 'event'=>$data['event']))}
+        </div>
+      </div>
+
+      <div class="form-item cf J_text">
+        <label class="item-label">消息内容<span class="check-tips">（显示在内容处）</span></label>
+        <div class="controls">
+          <textarea name="content" class="textarea input-large J_content" rows="9" style="width:450px;"></textarea>
+        </div>
+      </div>
+      
+      <div class="form-item cf">
+        <button class="btn submit-btn ajax-post hidden" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+        <a class="btn btn-return" href="{:U('WechatMsg/index')}">返 回</a>
+      </div>
+    </form>
+  </div>
+
+  <div class="form-fr">
+    <div class="wechat">
+      <div class="tool-bar">{:C('WECHAT_NAME')}</div>
+      <div class="main-field">
+        <switch name="data.option">
+          <case value="singel">
+            <div class="msg-list">
+              <ul>
+                <li class="singel">
+                  <a href="">
+                    <p class="title"><span class="J_title_view">这里是消息标题</span></p>
+                    <img src="__IMG__/no_cover.png" class="thumb-lg J_attach_view" alt="">
+                    <p class="desc"><span class="J_desc_view">这里是消息摘要信息</span></p>
+                    <p class="more">阅读全文</p>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </case>
+          <case value="multi">
+            <div class="msg-list">
+              <ul>
+                <li class="first">
+                  <a href="">
+                    <img src="__IMG__/no_cover.png" class="thumb-lg" alt="">
+                    <p class="title"><span>消息标题</span></p>
+                  </a>
+                </li>
+                <li>
+                  <a href="">
+                    <img src="__IMG__/no_cover.png" class="thumb-sm" alt="">
+                    <p class="title">消息标题</p>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </case>
+          <default />
+        </switch>
+      </div>
+      <div class="side-bar J_menulist">
+        <ul>
+          <volist name="data.tree" id="vo">
+            <li class="item-{$data.num}">
+            <a href="{$vo.url}" target="_blank"><notempty name='vo.sub'><i class="icon"></i></notempty>{$vo.title}</a>
+              <notempty name='vo.sub'>
+                <div class="sub_button">
+                  <ul>
+                    <volist name="vo.sub" id="vl">
+                      <li><a href="{$vl.url}" target="_blank">{$vl.title}</a></li>
+                    </volist>
+                  </ul>
+                  <span class="arrow-bottom"></span>
+                </div>
+              </notempty>
+            </li>
+          </volist>
+        </ul>
+      </div>
+    </div>
+    <p class="preview">预览</p>
+  </div>
+</block>
+
+<block name="script">
+  <script src="__JS__/lib/wechat.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    $(function(){
+      wechat_msg.init();
+      highlight_subnav('{:U("WechatMsg/index")}');
+      $('.J_single').hide();
+      $('input[name=type]').val('text');
+    });
+  </script>
+</block>

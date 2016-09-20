@@ -1,0 +1,48 @@
+<?php
+/**
+ * 复购优惠事件类
+ * @version 2015102015
+ * @author Max.Yu <max@winhu.com>
+ */
+
+namespace Home\Event;
+
+class FugouEvent{
+
+  /**
+   * 获取商品复购优惠金额
+   * @author Max.Yu <max@winhu.com>
+   */
+  public function getDisPrice($item_id = 0){
+    $map = array(
+      'item_id' => $item_id,
+      'status' => 1
+    );
+    $dis_price = M('Fugou')->where($map)->getField('dis_price');
+    return $dis_price? : 0;
+  }
+
+  /**
+   * 获取用户复购优惠
+   * @author Max.Yu <max@winhu.com>
+   */
+  public function getDisPriceByUser($item_id = 0, $uid = 0){
+    $dis_price = 0;
+    if($uid > 0){
+      $dis_price = $this->getDisPrice($item_id);
+      if($dis_price > 0){
+        $map = array(
+          'o_status' => 202,
+          'status' => 1,
+          'uid' => $uid
+        );
+        $buy_order_count = M('Order')->where('FIND_IN_SET('.$item_id.', item_ids)')->where($map)->count();
+        if($buy_order_count == 0){
+          $dis_price = 0;
+        }
+      }
+    }
+    return $dis_price;
+  }
+
+}

@@ -1,0 +1,27 @@
+<form action="{:U('update')}" method="POST" class="J_edit_user">
+<input type="hidden" value="{$member.uid}" name="uid"/>
+<div class="boxpage-div">
+  <div class="boxpage-line">
+    <label class="fl">当前昵称：</label>
+    <div class="fl">{$member.uid|get_nickname}</div>
+  </div>
+  <div class="boxpage-line">
+    <label class="fl">新的昵称：</label>
+    <div class="fl">
+      <input type="text" name="nickname" class="text" value="" autocomplete="off" placeholder="请输入昵称,不修改请留空">
+    </div>
+  </div>
+  <div class="boxpage-line">
+    <label class="fl">新的密码：</label>
+    <div class="fl">
+      <input type="password" name="password" class="text" value="" autocomplete="off">
+    </div>
+  </div>
+  <div class="boxpage-line boxpage-menu">
+    <button class="btn ajax-post" data-target-form="J_edit_nickname">确定修改</button>
+  </div>
+</div>
+</form>
+<script>
+  ajaxpost.init('.J_edit_user');
+</script>

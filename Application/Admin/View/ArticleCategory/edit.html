@@ -1,0 +1,84 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>{:isset($info['id'])?'编辑':'新增'}分类</h2>
+  </div>
+  <form action="{:U()}" method="post" class="form-horizontal">
+    <!-- 基础 -->
+    <div id="tab1" class="tab-pane in tab1">
+      <div class="form-item">
+        <label class="item-label">上级分类<span class="check-tips"></span></label>
+        <div class="controls">
+          <input type="text" class="text input-large" disabled="disabled" value="{$category['name']|default='无'}"/>
+        </div>
+      </div>
+      <div class="form-item">
+        <label class="item-label">
+          分类名称<span class="check-tips">（名称不能为空）</span>
+        </label>
+        <div class="controls">
+          <input type="text" name="name" class="text input-large" value="{$info.name|default=''}">
+        </div>
+      </div>
+      <div class="form-item">
+        <label class="item-label">
+          分类标识<span class="check-tips">（英文字母）</span>
+        </label>
+        <div class="controls">
+          <input type="text" name="ename" class="text input-large" value="{$info.ename|default=''}">
+        </div>
+      </div>
+      <div class="form-item">
+        <label class="item-label">
+          是否显示<span class="check-tips">（该分类是否在前台显示）</span>
+        </label>
+        <div class="controls">
+          <label class="inline radio"><input type="radio" name="is_display" value="1" checked>显示</label>
+          <label class="inline radio"><input type="radio" name="is_display" value="0">不显示</label>
+        </div>
+      </div>
+      <div class="form-item">
+        <label class="item-label">
+          排序<span class="check-tips">（仅对当前层级分类有效）</span>
+        </label>
+        <div class="controls">
+          <input type="text" name="sort" class="text input-small" value="{$info.sort|default=0}">
+        </div>
+      </div>
+      <div class="form-item">
+        <label class="item-label">网页关键字</label>
+        <div class="controls">
+          <label class="textarea input-large">
+            <textarea name="meta_keywords">{$info.meta_keywords|default=''}</textarea>
+          </label>
+        </div>
+      </div>
+      <div class="form-item">
+        <label class="item-label">网页描述</label>
+        <div class="controls">
+          <label class="textarea input-large">
+            <textarea name="meta_description">{$info.meta_description|default=''}</textarea>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="form-item">
+      <input type="hidden" name="id" value="{$info.id|default=''}">
+      <input type="hidden" name="pid" value="{:isset($category['id'])?$category['id']:$info['pid']}">
+      <button type="submit" id="submit" class="btn submit-btn ajax-post" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+  </form>
+</block>
+
+<block name="script">
+  <script src="__JS__/module.js"></script>
+  <script type="text/javascript">
+    <present name="info.id">
+      Core.setValue("is_display", {$info.is_display|default=1});
+    </present>
+    //导航高亮
+    highlight_subnav("{:U('ArticleCategory/index')}");
+  </script>
+</block>

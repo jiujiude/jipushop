@@ -1,0 +1,63 @@
+<a href="javascript:;" class="btn btn-mini btn-return J_item_select{$param.name}">选择商品</a>
+<input type="hidden" name="{$param.name}" id="J_itemsel_input{$param.name}" value="{$param.items}">
+<span class="item-sum J_itemsel_tip{$param.name}"></span>
+<script>
+var itemSel{$param.name} = {
+  index : '{:addons_url("ItemSel://ItemSel/index?type=".$param["type"]."&param_name=".$param["name"]."&item_list=".$param["show"]."&active=".$param["active"])}',
+  load: function(){
+    UI.load(this.index , '选择商品');
+  },
+  manage: function(){
+    var items = $('input[name="{$param.name}"]').val();
+    var url = this.index;
+    if(items === ''){
+      $('.modal-title').text('选择商品');
+    }
+    url = url + (url.indexOf('?') > -1 ? '&' : '?') + 'items=' + items;
+    UI.load(url, '已选择商品');
+  },
+  search: function(param){
+    var url = this.index;
+    url = url + (url.indexOf('?') > -1 ? '&' : '?') + param;
+    UI.load(url);
+  },
+  selSum: function(){
+    var itemsel = $('#J_itemsel_input{$param.name}').val(),
+        tip_text = '';
+    sum = itemsel === '' ? 0 : itemsel.split(',').length;
+    if('{$param.type}' == 'radio'){
+      if(sum > 0){
+        //单选
+        tip_text = '...';
+        url = '{:addons_url("ItemSel://ItemSel/getItemInfo")}';
+        $.get(url, {item_id: itemsel}, function(data){
+          html = '<span class="show-iteminfo">'+ (data.thumb !== '' ? '<img src="'+ data.thumb +'" width="32">': '') + data.name + '（ID：'+ data.id +'）</span>';
+          html+= '<a href="javascript:itemSel{$param.name}.load();" class="btn btn-default">重新选择</a>';
+          $('.J_itemsel_tip{$param.name}').html(html);
+          $('.J_item_select{$param.name}').hide();
+        }, 'json');
+      }
+    }else{
+      
+      tip_text = '已选择 <strong class="text-danger">'+ sum +'</strong> 件商品 (<a href="javascript:itemSel{$param.name}.manage();">管理</a>)';
+      if(sum === 0){
+        tip_text = "<empty name='param.empty_tip'>尚未选择商品<else/>{$param.empty_tip}</empty>";
+      }
+    }
+    $(function(){
+      var changed_fun = {$param.changed_fun|default="''"};
+      if(changed_fun && typeof changed_fun === 'function'){
+        changed_fun();
+      }
+    });
+    
+    $('.J_itemsel_tip{$param.name}').html(tip_text);
+  }
+};
+//绑定选择事件
+$('.J_item_select{$param.name}').click(function(){
+  itemSel{$param.name}.load();
+});
+//统计选择商品数量
+itemSel{$param.name}.selSum();
+</script>

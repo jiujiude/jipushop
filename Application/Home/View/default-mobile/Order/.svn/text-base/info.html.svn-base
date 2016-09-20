@@ -1,0 +1,16 @@
+<extend name="Base/common"/>
+<block name="header">
+  <header class="bar bar-nav">
+    <h1 class="title">支付成功</h1>
+  </header>
+</block>
+<block name="body">
+  <div class="content-padded jump-msg">
+    <p class="hd"><i class="icon icon-round-check-fill"></i>我们将在24小时内发货！</p>
+    <br />
+    <p class="mt detail text-center">
+      <a href="{:U('Item/msearch')}" class="btn btn-block btn-positive">继续购物</a>
+      <a href="{:U('Member/order')}" class="btn btn-block">查看我的订单</a>
+    </p>
+  </div>
+</block>

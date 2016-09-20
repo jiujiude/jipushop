@@ -1,0 +1,34 @@
+<extend name="Base/common"/>
+<block name="header">
+{:hook('mobileTopNav',array('title'=>$meta_title))}
+</block>
+
+<block name="body">
+
+  <nav class="nav-tabs-wb">
+    <a <if condition="!$type and !I('get.flow')">class="active"</if> href="{:U('')}">全部</a>
+    <a <if condition="$type eq 'sdp_order'">class="active"</if> href="{:U('', 'type=sdp_order')}">分销</a>
+    <a <if condition="(I('get.type') eq 'union') OR (I('get.type') eq 'union_subscribe') OR (I('get.type') eq 'union_order')">class="active"</if> href="{:U('', 'type=union')}">推广</a>
+    <a <if condition="I('get.flow') eq 'out'">class=" active"</if> href="{:U('', 'flow=out')}">支出</a>
+  </nav>
+  <div class="list-bg">
+    <!-- 收支明细列表 -->
+    <notempty name="lists">
+      <ul class=" padding-top padding-bottom" id="Z_load_itemlist">
+        <include file="financeList"/>
+      </ul>
+    <else/>
+      <p class="list-empty">您暂时没有现金收支明细。</p>
+    </notempty>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use('common', function(common){
+//      var url = window.location.href;
+      var url = "{:U('/Member/finance', array('type' => $_REQUEST['type'], 'flow' => $_REQUEST['flow']))}";
+      common.loadmore(url);
+    });
+  </script>
+</block>

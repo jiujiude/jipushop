@@ -1,0 +1,43 @@
+2016-09-01 17:35:14
+
+'SELECT a.* FROM ccys_distribution a INNER JOIN ccys_union b on b.uid=a.user_id  WHERE ( b.id=2 ) LIMIT 1  '
+2016-09-06 03:35:00
+
+'SELECT a.* FROM ccys_distribution a INNER JOIN ccys_union b on b.uid=a.user_id  WHERE ( b.id=2 ) LIMIT 1  '
+2016-09-13 15:06:24
+
+'SELECT a.* FROM ccys_distribution a INNER JOIN ccys_union b on b.uid=a.user_id  WHERE ( b.id=2 ) LIMIT 1  '
+2016-09-13 17:04:13
+
+'SELECT a.* FROM ccys_distribution a INNER JOIN ccys_union b on b.uid=a.user_id  WHERE ( b.id=23 ) LIMIT 1  '
+2016-09-13 17:39:25
+
+'SELECT a.* FROM ccys_distribution a INNER JOIN ccys_union b on b.uid=a.user_id  WHERE ( b.id=23 ) LIMIT 1  '
+2016-09-14 06:42:07
+
+'SELECT a.* FROM ccys_distribution a INNER JOIN ccys_union b on b.uid=a.user_id  WHERE ( b.id=23 ) LIMIT 1  '
+2016-09-14 20:59:17
+
+'SELECT a.* FROM ccys_distribution a INNER JOIN ccys_union b on b.uid=a.user_id  WHERE ( b.id=23 ) LIMIT 1  '
+2016-09-19 11:29:02
+
+'SELECT a.* FROM ccys_distribution a INNER JOIN ccys_union b on b.uid=a.user_id  WHERE ( b.id=2 ) LIMIT 1  '
+2016-09-19 12:16:45
+
+'SELECT a.* FROM ccys_distribution a INNER JOIN ccys_union b on b.uid=a.user_id  WHERE ( b.id=2 ) LIMIT 1  '
+2016-09-19 13:39:26
+
+'SELECT a.* FROM ccys_distribution a INNER JOIN ccys_union b on b.uid=a.user_id  WHERE ( b.id=2 ) LIMIT 1  '
+2016-09-19 14:20:06
+
+'SELECT a.* FROM ccys_distribution a INNER JOIN ccys_union b on b.uid=a.user_id  WHERE ( b.id=28 ) LIMIT 1  '
+2016-09-19 14:20:14
+
+'SELECT a.* FROM ccys_distribution a INNER JOIN ccys_union b on b.uid=a.user_id  WHERE ( b.id=2 ) LIMIT 1  '
+2016-09-19 21:30:29
+
+'SELECT a.* FROM ccys_distribution a INNER JOIN ccys_union b on b.uid=a.user_id  WHERE ( b.id=28 ) LIMIT 1  '
+2016-09-19 23:22:31
+
+'SELECT a.* FROM ccys_distribution a INNER JOIN ccys_union b on b.uid=a.user_id  WHERE ( b.id=28 ) LIMIT 1  '
+

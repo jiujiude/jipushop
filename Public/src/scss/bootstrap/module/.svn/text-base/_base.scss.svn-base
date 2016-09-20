@@ -1,0 +1,29 @@
+/**
+ * 基础模块：reset
+ */
+html {
+  position: relative;
+  min-height: 100%;
+}
+ul, ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+img {
+  max-width: 100%; 
+}
+i,
+cite, 
+em,
+var,
+address,
+dfn {
+  font-style: normal;
+}
+a,
+a:hover,
+a:focus,
+a:active {
+  text-decoration: none;
+}

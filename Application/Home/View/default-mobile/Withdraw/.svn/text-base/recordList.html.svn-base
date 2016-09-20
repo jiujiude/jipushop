@@ -1,0 +1,18 @@
+<volist name="lists" id="vo">
+   <li class="table-view-cell" style="background-image: url(__IMG__/bank/{$vo.bankname|default='ALIPAY'}.png);">
+    <a href="{:U('detail', array('id' => $vo['id']))}" class="navigate-right">
+      <eq name="vo.type" value="alipay">
+        {$vo.type|get_user_account_text}
+      <else />
+        {:C('BANK_LISTS.'.$vo['bankname'])}
+      </eq><br/>
+      {$vo.account}
+      <em class="money"><i class="text-danger">+ {$vo.amount} 元</i></em>
+      <em class="status">{$vo.status|get_withdraw_text}</em>
+      <p class="text-info">{$vo.create_time|time_format}</p>
+    </a>
+  </li>
+</volist>
+<script>
+  C.has_more =  '{$_hasmore}';
+</script>

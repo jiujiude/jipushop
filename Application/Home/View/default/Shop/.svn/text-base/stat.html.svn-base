@@ -1,0 +1,32 @@
+<extend name="Base/member"/>
+
+<block name="body">
+  <div class="user-box shop">
+    <include file="Sdp/topbar" />
+
+    <ul class="nav nav-tabs">
+      <li class="<if condition="$type eq 'days'"> active</if>"><a href="{:U('', 'type=days')}">按天统计</a></li>
+      <li class="<if condition="$type eq 'months'"> active</if>"><a href="{:U('', 'type=months')}">按月统计</a></li>
+    </ul>
+
+    <div class="shop">
+      <div class="chart-title-pos">返现金额</div>
+      <div class="chart-body">
+        <div id="amount_canvas" style="height:400px"></div>
+      </div>
+      <div class="chart-title-pos">订单量</div>
+      <div class="chart-body">
+        <div id="order_canvas" style="height:400px"></div>
+      </div>
+    </div>
+  </div>
+</block>
+
+<block name="script">
+  <script>
+    seajs.use('shop', function(shop){
+      shop.statChart('amount_canvas', {labels: {$data.labels|json_encode}, datas: {$data.amount_datas|json_encode}});
+      shop.statChart('order_canvas', {labels: {$data.labels|json_encode}, datas: {$data.order_datas|json_encode}});
+    });
+  </script>
+</block>

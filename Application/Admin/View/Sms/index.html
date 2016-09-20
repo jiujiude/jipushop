@@ -1,0 +1,94 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>短信平台（剩余 {$data.user.balance} 条）</h2>
+  </div>
+  <div class="tab-wrap">
+    <ul class="tab-nav nav">
+      <li class="current"><a href="{:U('index')}">账号信息</a></li>
+      <li><a href="{:U('listsTpl')}">模板列表</a></li>
+      <li><a href="{:U('listsSend')}">短信记录</a></li>
+      <li class="fr">
+        <a href="{:U('clearCache', array('name' => 'sms_user_get'))}" class="clear_cache ajax-get">清空缓存</a>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <form action="{:U('setUser')}" method="post" class="form-horizontal">
+          <div class="form-item">
+            <label class="item-label">用户</label>
+            <div class="controls">
+              <input type="text" class="text input-large" disabled name="name" value="{$data.user.nick}">
+            </div>
+          </div>
+          <div class="form-item">
+            <label class="item-label">创建时间</label>
+            <div class="controls">
+              <input type="text" class="text input-large" disabled name="name" value="{$data.user.gmt_created}">
+            </div>
+          </div>
+          <div class="form-item">
+            <label class="item-label">手机号</label>
+            <div class="controls">
+              <input type="text" class="text input-large" disabled name="name" value="{$data.user.mobile}">
+            </div>
+          </div>
+          <div class="form-item">
+            <label class="item-label">邮箱</label>
+            <div class="controls">
+              <input type="text" class="text input-large" disabled name="name" value="{$data.user.email}">
+            </div>
+          </div>
+          <div class="form-item">
+            <label class="item-label">IP白名单</label>
+            <div class="controls">
+              {:str_replace(',', '<br/>', $data['user']['ip_whitelist'])}
+            </div>
+          </div>
+          <div class="form-item">
+            <label class="item-label">api版本号</label>
+            <div class="controls">
+              <input type="text" class="text input-large" disabled name="name" value="{$data.user.api_version}">
+            </div>
+          </div>
+          <div class="form-item">
+            <label class="item-label">短信剩余条数<span class="check-tips">（<a href="//www.yunpian.com/" target="_blank">www.yunpian.com</a>）</span></label>
+            <div class="controls">
+              <input type="text" class="text input-large" disabled name="name" value="{$data.user.balance}">
+            </div>
+          </div>
+          <div class="form-item">
+            <label class="item-label">提醒阈值<span class="check-tips">（剩余条数低于该值时提醒）</span></label>
+            <div class="controls">
+              <input type="text" class="text input-large" name="alarm_balance" value="{$data.user.alarm_balance}">
+            </div>
+          </div>
+          <div class="form-item">
+            <label class="item-label">紧急联系人</label>
+            <div class="controls">
+              <input type="text" class="text input-large" name="emergency_contact" value="{$data.user.emergency_contact}">
+            </div>
+          </div>
+          <div class="form-item">
+            <label class="item-label">紧急联系人电话</label>
+            <div class="controls">
+              <input type="text" class="text input-large" name="emergency_mobile" value="{$data.user.emergency_mobile}">
+            </div>
+          </div>  
+        <div class="form-item">
+          <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+          <button class="btn btn-return" onclick="javascript:history.back(-1);
+                    return false;">返 回</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    $(function(){
+      highlight_subnav(Core.U('/Admin/Sms/index'));
+    });
+  </script>
+</block>

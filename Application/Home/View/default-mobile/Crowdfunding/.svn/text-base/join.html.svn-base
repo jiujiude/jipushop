@@ -1,0 +1,82 @@
+<extend name="Base/common"/>
+
+<block name="header">
+  <header class="bar bar-nav">
+    <a href="javascript:window.history.back(-1);" class="pull-left icon icon-arrow-left"></a>
+    <a href="{:U('Index/index')}" class="pull-right icon icon-home"></a>
+    <h1 class="title">参与众筹</h1>
+  </header>
+</block>
+
+<block name="body">
+  <div class="crowdfunding">
+    <notempty name="info">
+      <!-- 商品信息 -->
+      <div class="info">
+        <div class="hd">来自{$info.ship_uname}的众筹订单</div>
+        <div class="bd">
+          <img src="{$info.OrderItem.cover_path}" class="img" width="60" height="60">
+          <h5 class="name">{$info.OrderItem.name}</h5>
+          <div class="detail">
+            <p>{$info.ship|get_short=16}</p>
+            <p>{$info.ship_uname} {$info.ship_mobile}</p>
+            <p><span class="text-danger"><em class="yen">&yen;</em>{$info.total_amount}</span></p>
+            <a href="{:U('Item/detail',array('id'=>$info['OrderItem']['item_id']))}" class="btn">查看商品</a>
+          </div>
+        </div>
+      </div>
+      <!-- 付款人信息 -->
+      <div class="content-padded">
+        <form action="{:U('Pay/crowdfundingPay')}" id="Z_crowdfunding_pay" method="post" data-ajax="false">
+          <!-- 付款人为自己时不显示姓名 -->
+          <neq name="info.is_self" value="1">
+            <div class="control-group">
+              <input type="text" name="username" class="first Z_crowdfunding_username" placeholder="请输入您的姓名">
+            </div>
+          </neq>
+          <div class="control-group">
+            <div class="money Z_fund_money">
+              <div class="num">
+                <span class="pull-left">付款金额：</span>
+                <a href="javascript:;" data-value="{$info.surplus_amount}" class="minus Z_minus_update">-</a>
+                <input type="number" class="money-input" style="padding: 0px;" name="pay_money" value="1" min="0.01" onkeyup="crowdfunding.update('edit', {$info.surplus_amount});">
+                <a href="javascript:;" data-value="{$info.surplus_amount}" class="plus Z_plus_update">+</a>
+                <span class="pull-right tips">差<em class="text-danger">{$info.surplus_amount}元</em></span>
+              </div>
+            </div>
+          </div>
+          <div class="control-group">
+            <select name="payment_type" class="last">
+              <option value="wechatpay" selected="selected">微信支付</option>
+              <option value="alipaywap">支付宝支付</option>
+            </select>
+          </div>
+          <neq name="info.is_self" value="1">
+            <div class="control-group">
+              <input type="text" name="msg" placeholder="给TA留言" class="last" value="找我付款，代价你懂得。">
+            </div>
+          </neq>
+          <input type="hidden" name="id" value="{$info.id}">
+          <input type="hidden" name="crowdfunding_id" value="{$info.crowdfunding_id}">
+          <input type="hidden" name="open_id" value="{$info.open_id}">
+          <div class="control-action">
+            <a href="javascript:;" class="btn btn-block btn-positive Z_crowdfunding_pay">立即支付</a>
+            <a href="{:U('Item/detail', array('id' => $info['OrderItem']['item_id']))}" class="btn btn-block">我也要去玩</a>
+            <a href="javascript:;" class="btn btn-block Z_help_pay">找小伙伴帮TA付款</a>
+          </div>
+        </form>
+      </div>
+    <else/>
+      <a href="{:U('Index/index')}" class="btn btn-block btn-positive">亲，请先下单</a>
+    </notempty>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use('crowdfunding', function(crowdfunding) {
+      crowdfunding.init();
+      crowdfunding.progress("{$info['percent']}", "{$info['id']}", "{$info['order_id']}");
+    });
+  </script>
+</block>

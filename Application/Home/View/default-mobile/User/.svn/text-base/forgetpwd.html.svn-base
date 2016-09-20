@@ -1,0 +1,29 @@
+<extend name="Base/common" />
+
+<block name="body">
+  <form action="{:U('User/resetpwd')}" method="post" id="Z_forget_form">
+    <div class="control-group">
+      <input type="tel" name="mobile" class="Z_mobile" value="" placeholder="您的手机号" errormsg="请填写正确的手机" nullmsg="请填写手机" datatype="m">
+    </div>
+    <div class="control-group">
+      <input type="text" name="verify" id="verify" maxlength="4" placeholder="图形验证码">
+      <img class="verifyimg J_reload_verify" style="width: 86px; height: 30px; position: absolute; right: 10px; top:8px;" title="点击更换" src="{:U('verify')}">
+    </div>
+    <div class="control-group">
+      <input type="tel" name="randcode" class="Z_mobile_randcode" maxlength="6" placeholder="短信验证码">
+      <a href="javascript:;" class="btn btn-primary btn-randcode Z_mobile_randcode_button">获取验证码</a>
+    </div>
+    <div class="control-action">
+      <button type="submit" class="btn btn-positive btn-block">提交</button>
+    </div>
+    <p class="control-tips">如无法自助处理，<br>请联系客服：<a href="tel:{:C('WEB_SITE_TEL')}" class="text-danger">{:C('WEB_SITE_TEL')}</a>，<br/>我们协助您找回密码！</p>
+  </form>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use('user', function(user){
+      user.getRandCode('forgetpwd');
+    });
+  </script>
+</block>

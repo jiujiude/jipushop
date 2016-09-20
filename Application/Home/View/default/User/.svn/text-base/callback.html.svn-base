@@ -1,0 +1,131 @@
+<extend name="Base/page" />
+
+<block name="body">
+  <div class="row page-wrap">
+    <div class="login-form">
+      <legend>
+        第三方登录
+      </legend>
+      <div class="alert alert-success alert-dismissable fadeIn" role="alert">
+        <img src="{$user.avatar}" width="50" height="50" />
+        欢迎您，{$user.nickname}，您的{$user.typename}帐号授权成功！简单设置即可直接登录。
+      </div>
+      
+      <!--tabs-->
+      <div>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="active"><a href="#reg" aria-controls="reg" role="tab" data-toggle="tab">注册</a></li>
+          <li role="presentation"><a href="#bind" aria-controls="bind" role="tab" data-toggle="tab">绑定</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+          
+          <div role="tabpanel" class="tab-pane active" id="reg">
+            <form class="col-xs-8 form-horizontal" action="{:U('User/register')}" method="post">
+              <input type="hidden" name="oauth_type" value="{$type}">
+              <input type="hidden" name="type_uid" value="{$oauth.type_uid}">
+              <input type="hidden" name="oauth_token" value="{$oauth.oauth_token}">
+              <input type="hidden" name="oauth_token_secret" value="{$oauth.oauth_token_secret}">
+              <input type="hidden" name="avatar" value="{$user.avatar}">
+              <input type="hidden" name="oauth_signature" value="{$user.signature}" >
+              <fieldset>
+                <div class="form-group">
+                  <label for="inputUser" class="col-xs-3 control-label">手机</label>
+                  <div class="col-xs-6">
+                    <input type="text" name="username" id="inputUser" class="form-control J_mobile" maxlength="11" placeholder="手机号" ajaxurl="{:U('User/checkUsername')}" errormsg="您输入的手机号格式不正确" nullmsg="请输入手机号" datatype="m" value="">
+                  </div>
+                </div>
+                <if condition="C('REGISTER_MOBILE_VALID') eq 1">
+                  <div class="form-group">
+                    <label for="inputRandcode" class="col-xs-3 control-label">短信验证码</label>
+                    <div class="col-xs-9">
+                      <input type="text" name="randcode" id="inputRandcode" class="form-control text-inline randcode J_mobile_randcode" placeholder="请输入短信验证码" maxlength="6" errormsg="短信验证码为6位数字" nullmsg="请输入短信验证码" datatype="*" value="">
+                      <a class="btn btn-positive btn-send-code J_mobile_randcode_button">发送验证码</a>
+                    </div>
+                  </div>
+                </if>
+                <div class="form-group">
+                  <label for="password" class="col-xs-3 control-label">密码</label>
+                  <div class="col-xs-6">
+                    <input type="password" name="password" id="password"  class="form-control" placeholder="请输入密码"  errormsg="密码为6-20位" nullmsg="请输入密码" datatype="*6-20">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="repassword" class="col-xs-3 control-label">确认密码</label>
+                  <div class="col-xs-6">
+                    <input type="password" name="repassword" id="repassword" class="form-control" placeholder="请再次输入密码" recheck="password" errormsg="您两次输入的密码不一致" nullmsg="请输入确认密码" datatype="*6-20">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="verify" class="col-xs-3 control-label">验证码</label>
+                  <div class="col-xs-6">
+                    <input type="text" name="verify" id="verify" class="form-control" placeholder="请输入验证码" maxlength="4" errormsg="请输入4位验证码" nullmsg="请输入验证码" datatype="*4-4">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-xs-3 control-label"></label>
+                  <div class="col-xs-6">
+                    <img class="verifyimg J_reload_verify" title="点击更换" src="{:U('verify')}">
+                    <a href="javascript:;" class="J_reload_verify">看不清？换一个。</a>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-xs-6 col-xs-offset-3">
+                    <button class="btn btn-block btn-positive">注 册</button>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+          
+          <div role="tabpanel" class="tab-pane" id="bind">
+              <form class="col-xs-8 form-horizontal" action="{:U('User/bind')}" method="post">
+                <input type="hidden" name="oauth_type" value="{$type}" >
+                <input type="hidden" name="oauth_token" value="{$oauth.oauth_token}" >
+                <input type="hidden" name="oauth_token_secret" value="{$oauth.oauth_token_secret}" >
+                <input type="hidden" name="type_uid" value="{$oauth.type_uid}" >
+                <input type="hidden" name="avatar" value="{$user.avatar}" >
+                <input type="hidden" name="oauth_signature" value="{$user.signature}" >
+                <fieldset>
+                  <div class="form-group">
+                    <label for="mobile" class="col-xs-3 control-label">手机</label>
+                    <div class="col-xs-6">
+                      <input type="text" name="username" id="mobile" class="form-control" placeholder="请输入注册手机" errormsg="请输入正确的手机号" nullmsg="请输入手机" datatype="e|m" value="">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="password" class="col-xs-3 control-label">密码</label>
+                    <div class="col-xs-6">
+                      <input type="password" name="password" id="password" class="form-control" placeholder="请输入密码" errormsg="密码为6-20位" nullmsg="请输入密码" datatype="*6-20">
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox" name="remember" value="1" checked="checked">{:C('USER_AUTO_LOGIN_DAYS')}天内自动登录
+                        </label>
+                        <a href="{:U('User/forgetpwd')}" class="pull-right">忘记密码？</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-xs-6 col-xs-offset-3">
+                      <button class="btn btn-block btn-positive">绑 定</button>
+                    </div>
+                  </div>
+                </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use('user', function(user){
+      user.getRandCode('register');
+      user.tabs();
+    });
+  </script>
+</block>

@@ -1,0 +1,49 @@
+<form action="{:U('deal?ids='.$data['id'])}" method="POST" class="order-refund-form">
+<input type="hidden" value="{:UID}" name="uid"/>
+<div class="boxpage-div">
+  <div class="boxpage-line">
+    <label class="fl">下单用户：</label>
+    <div class="fl">
+      <gt name="data.order.uid" value="0">
+        {$data.order.uid|get_nickname}
+      <else/>
+        游客
+      </gt>
+    </div>
+  </div>
+  <div class="boxpage-line">
+    <label class="fl">订单号：</label>
+    <div class="fl">{$data.order.order_sn}</div>
+  </div>
+  <div class="boxpage-line">
+    <label class="fl">付款时间：</label>
+    <div class="fl">{$data.order.payment_time|time_format}</div>
+  </div>
+  <div class="boxpage-line">
+    <label class="fl">金额：</label>
+    <div class="fl">
+      <b class="text-danger">{$data.order.total_amount}</b> 元
+      （{$data.payment_type_text}）
+    </div>
+  </div>
+  <div class="boxpage-line">
+    <label class="fl">请确认：</label>
+    <div class="fl">
+      <label>
+        <input type="checkbox" name="torefund" value="1"> 
+        <if condition="$data.payment_type eq 'wechatpay'">
+        确认对该笔订单退款
+        <else/>
+        确认已线下退款
+        </if>
+      </label>
+    </div>
+  </div>
+  <div class="boxpage-line boxpage-menu">
+    <button class="btn">确定操作</button>
+  </div>
+</div>
+</form>
+<script>
+  ajaxpost.init('.order-refund-form');
+</script>

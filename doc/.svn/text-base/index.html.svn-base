@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Jipuhop开发文档</title>
+		<style>
+			/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+sup {
+   vertical-align: super;
+   font-size: smaller;
+}
+
+sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+
+/* Generic styles */
+body {
+	background: #f5f5f5;
+  color: #444;
+  font-family: 'Microsoft Yahei','Book Antiqua',Palatino,FreeSerif,serif;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6,
+code, pre,
+ul, ol,
+p,
+hr {
+  margin: 1.5em 0 0.5em 0;
+}
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.5em;
+}
+
+ul, ol,
+p,
+hr {
+	line-height: 2em;
+}
+
+code, pre {
+  line-height: 1.5em;
+}
+
+*:first-child {
+	margin-top: 0;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+	font-weight: bold;
+}
+
+h1 {
+	font-size: 3.5em;
+}
+
+h2 {
+	font-size: 2.5em;
+}
+
+h3 {
+	font-size: 2em;
+}
+
+h4 {
+	font-size: 1.5em
+}
+
+h5 {
+	font-size: 1.2em;
+}
+
+h6 {
+	font-size: 1em;
+}
+
+/* Lists */
+ul, ol {
+	padding-left: 2em;
+}
+
+ul {
+	list-style-type: disc;	
+}
+
+ol {
+	list-style-type: decimal;
+}
+
+/* Code and pre */
+code, pre {
+	font-family: "Bitstream Vera Sans Mono", "Courier", monospace;
+}
+code {
+	background: none repeat scroll 0 0 #F8F8FF;
+  border: 1px solid #DEDEDE;
+  border-radius: 3px 	;
+  padding: 0 0.2em;
+}
+pre {
+	border-left: 5px solid #eee;
+	margin-left: 2em;	
+	padding-left: 1em;
+}
+pre > code {
+	background: transparent;
+	border: none;
+	padding: 0;
+  word-wrap: break-word;
+}
+
+/* Links */
+a {
+  color: #e91e63;
+}
+
+a:visited {
+  color: #666;
+}
+
+/* Inlines */
+strong {
+	font-weight: bold;
+}
+
+em {
+	font-style: italic;
+}
+
+/* Container */
+.container {
+	background: #FFF;
+	padding: 30px 50px;
+	margin: 0 auto;
+	width: 700px;
+}
+
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h2 id="jipushop-">jipushop开发文档</h2>
+<h3 id="-">快速开始</h3>
+<p>用于快速测试jipushop3，系统自带项目的测试数据，可直接配置数据进行测试。</p>
+<ol>
+<li>执行根目录下的jipushop3.sql；</li>
+<li><p>修改<code>/Application/Common/Conf/config.php</code>第51行的数据库配置信息：  </p>
+<p> &#39;DB_TYPE&#39;   =&gt; &#39;mysql&#39;, //数据库类型<br> &#39;DB_HOST&#39;   =&gt; &#39;127.0.0.1&#39;, //服务器地址<br> &#39;DB_NAME&#39;   =&gt; &#39;jipushop3&#39;, //数据库名<br> &#39;DB_USER&#39;   =&gt; &#39;root&#39;, //用户名<br> &#39;DB_PWD&#39;    =&gt; &#39;123456&#39;,  //密码<br> &#39;DB_PORT&#39;   =&gt; &#39;3306&#39;, //端口<br> &#39;DB<em>PREFIX&#39; =&gt; &#39;jipushop</em>&#39;, //数据库表前缀，测试时请勿修改</p>
+</li>
+<li><p>下载系统附件包<a href="./Uploads.zip">Uploads.zip</a>，放于根目录下；</p>
+</li>
+<li>修改系统根目录下的<code>Runtime</code>，<code>Uploads</code>，<code>Data</code>目录权限为777；</li>
+<li>
+<p>默认自带测试商品数据，后台管理账号密码：</p>
+<p> 账号：jipushop<br> 密码：123456  </p>
+</li>
+</ol>
+<p>注意：测试前请先在“后台 &gt; 系统 &gt; 系统设置 &gt; 基本设置”中的公众号设置选项卡中，配置你的微信公众号信息。</p>
+<h3 id="-">安装说明</h3>
+<p>安装环境：PHP &gt;= 5.3，Mysql &gt;= 5.5。<br>根据安装程序即可完成安装，我们内置了一个开发者账号。  </p>
+<pre><code>账号：jipushop
+密码：123456
+</code></pre><p>可以在<code>/Application/Install/Common/function.php</code>第214行的<code>register_root()</code>方法中进行修改，开发者账号拥有系统的所有权限。</p>
+<h3 id="-">后台使用说明</h3>
+<p>后台使用请参照doc目录下的<a href="./jipushop后台使用指南.doc">《jipushop后台使用指南》</a>。</p>
+<h3 id="-">开发说明</h3>
+<ul>
+<li>项目基于<a href="http://onethink.cn/">OneThink1.1</a>二次开发，更多信息请参照<a href="http://document.onethink.cn/manual_1_0.html">OT开发文档</a>。</li>
+<li>doc目录为文档说明目录，线上部署请删除。</li>
+</ul>
+<h3 id="-">前端构建说明</h3>
+<ol>
+<li>PC前端基于<a href="https://github.com/twbs/bootstrap">Bootstrap3.3</a>二次开发，移动前端基于<a href="https://github.com/twbs/ratchet">Ratchet</a>二次开发。</li>
+<li>前端CSS采用sass编写，所有的sass源码在/Public/src目录下。</li>
+<li>前端构建采用grunt，请先安装node；  </li>
+<li>运行<code>npm install</code>安装grunt构建工具；  </li>
+<li><p>运行<code>grunt &lt;task name&gt;</code>构建对应项目，说明：</p>
+<p> grunt dist-css //构建所有CSS模块<br> grunt dist-install //构建系统安装模块<br> grunt dist-default //构建默认模板PC版<br> grunt dist-default-mobile //构建默认模板手机版</p>
+</li>
+</ol>
+<h3 id="-">后端文档</h3>
+<ul>
+<li><a href="jipushop-file-structure.html">jipushop项目结构</a></li>
+<li><a href="back-end-code-style.html">后端开发中的编码风格约定</a></li>
+<li><a href="back-end-name-style.html">后端开发中的命名约定</a></li>
+<li><a href="dbdict.html">数据字典说明</a></li>
+<li><a href="rewrite.html">伪静态说明</a></li>
+</ul>
+<h3 id="-">前端文档</h3>
+<ul>
+<li><a href="front-end-grunt.html">前端构建说明</a></li>
+<li><a href="ajax-style.html">Ajax请求编码风格约定</a></li>
+<li><a href="sea-module.html">seajs模块定义说明</a></li>
+<li><a href="/Demo">UI示例文档</a> （需要系统安装成功后才能访问）</li>
+</ul>
+<h3 id="-">编码规范</h3>
+<ul>
+<li><a href="php-style-guide.html">PHP编码规范</a></li>
+<li><a href="css-style-guide.html">CSS编码规范</a></li>
+<li><a href="js-style-guide.html">JavaScript编码规范</a></li>
+</ul>
+<!--
+markdown-html md/jipushop-file-structure.md -o jipushop-file-structure.html &&
+markdown-html md/back-end-code-style.md -o back-end-code-style.html && 
+markdown-html md/back-end-name-style.md -o back-end-name-style.html && 
+markdown-html md/rewrite.md -o rewrite.html && 
+markdown-html md/front-end-grunt.md -o front-end-grunt.html && 
+markdown-html md/ajax-style.md -o ajax-style.html && 
+markdown-html md/sea-module.md -o sea-module.html && 
+markdown-html md/php-style-guide.md -o php-style-guide.html && 
+markdown-html md/css-style-guide.md -o css-style-guide.html && 
+markdown-html md/js-style-guide.md -o js-style-guide.html && 
+markdown-html md/index.md -o index.html
+-->
+		</div>
+
+		<script></script>
+	</body>
+</html>

@@ -1,0 +1,66 @@
+<extend name="Base/member"/>
+
+<block name="body">
+  <div class="user-box shop">
+    <h3 class="title">
+      我的分销
+      <span class="title-right-tip">
+        0 成本开店，真正的免费赚钱！
+      </span>
+    </h3>
+  
+  <div class="sdp">
+    <div class="info">
+      <ul class="clearfix">
+        <li>
+          <p>今日收入<small>(元)</small></p>
+          <h4 class="text-danger">{$data.today_finance|default='0.00'}</h4>
+          <a href="{:U('Shop/detail', array('uid' => UID))}" target="_blank" class="btn btn-sm btn-positive">我的分销店铺</a>
+        </li>
+        <li>
+          <p>累计收入<small>(元)</small></p>
+          <h4 class="text-danger">{$data.total_revenue|default='0.00'}</h4>
+          <a href="{:U('Member/finance/type/sdp_order')}" target="_blank" class="btn btn-sm">收入明细</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 操作菜单 -->
+    <div class="nav">
+      <ul class="clearfix">
+        <li>
+          <a href="{:U('Shop/manage')}">
+            <i class="icon icon-shop"></i>
+            <span>店铺设置</span>
+          </a>
+        </li>
+        <li>
+          <a href="{:U('Shop/item')}">
+            <i class="icon icon-items"></i>
+            <span>商品管理</span>
+          </a>
+        </li>
+        <li>
+          <a href="{:U('Shop/order')}">
+            <i class="icon icon-form"></i>
+            <span>订单管理</span>
+          </a>
+        </li>
+        <li>
+          <a href="{:U('Shop/stat')}">
+            <i class="icon icon-stat"></i>
+            <span>店铺统计</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+  
+</block>
+
+<block name="script">
+  <script>
+  </script>
+</block>

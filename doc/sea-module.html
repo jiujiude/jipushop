@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>seajs模块定义说明</title>
+		<style>
+			/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+sup {
+   vertical-align: super;
+   font-size: smaller;
+}
+
+sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+
+/* Generic styles */
+body {
+	background: #f5f5f5;
+  color: #444;
+  font-family: 'Microsoft Yahei','Book Antiqua',Palatino,FreeSerif,serif;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6,
+code, pre,
+ul, ol,
+p,
+hr {
+  margin: 1.5em 0 0.5em 0;
+}
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.5em;
+}
+
+ul, ol,
+p,
+hr {
+	line-height: 2em;
+}
+
+code, pre {
+  line-height: 1.5em;
+}
+
+*:first-child {
+	margin-top: 0;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+	font-weight: bold;
+}
+
+h1 {
+	font-size: 3.5em;
+}
+
+h2 {
+	font-size: 2.5em;
+}
+
+h3 {
+	font-size: 2em;
+}
+
+h4 {
+	font-size: 1.5em
+}
+
+h5 {
+	font-size: 1.2em;
+}
+
+h6 {
+	font-size: 1em;
+}
+
+/* Lists */
+ul, ol {
+	padding-left: 2em;
+}
+
+ul {
+	list-style-type: disc;	
+}
+
+ol {
+	list-style-type: decimal;
+}
+
+/* Code and pre */
+code, pre {
+	font-family: "Bitstream Vera Sans Mono", "Courier", monospace;
+}
+code {
+	background: none repeat scroll 0 0 #F8F8FF;
+  border: 1px solid #DEDEDE;
+  border-radius: 3px 	;
+  padding: 0 0.2em;
+}
+pre {
+	border-left: 5px solid #eee;
+	margin-left: 2em;	
+	padding-left: 1em;
+}
+pre > code {
+	background: transparent;
+	border: none;
+	padding: 0;
+  word-wrap: break-word;
+}
+
+/* Links */
+a {
+  color: #e91e63;
+}
+
+a:visited {
+  color: #666;
+}
+
+/* Inlines */
+strong {
+	font-weight: bold;
+}
+
+em {
+	font-style: italic;
+}
+
+/* Container */
+.container {
+	background: #FFF;
+	padding: 30px 50px;
+	margin: 0 auto;
+	width: 700px;
+}
+
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h2 id="seajs-">seajs模块定义说明</h2>
+<p>系统前台前端JS采用seajs进行模块化加载，关于seajs更多信息请参照：<a href="http://seajs.org/docs/">http://seajs.org/docs/</a></p>
+<h4 id="-">模块定义的几种方法</h4>
+<pre><code>define(id?, deps?, factory) //define可以接受两个以上参数。字符串 id 表示模块标识，数组 deps 是模块依赖。
+</code></pre><h5 id="1-">1.标准模块定义</h5>
+<pre><code>define(&#39;hello&#39;, [&#39;zepto&#39;], function(require, exports, module) {
+
+  //获取其他模块接口
+  var a = require(&#39;./a&#39;);
+
+  //定义模块代码
+  var hello = {
+
+  }
+
+  //对外提供接口
+  module.exports = hello;
+
+});
+</code></pre><h5 id="2-require-">2.使用 require 获取其他模块提供的接口</h5>
+<pre><code>define(function(require, exports) {
+
+  //获取模块 a 的接口
+  var a = require(&#39;./a&#39;);
+  //调用模块 a 的方法
+  a.doSomething();
+
+});
+</code></pre><h5 id="3-exports-">3.使用 exports 对外提供接口</h5>
+<pre><code>define(function(require, exports) {
+
+  //对外提供 foo 属性
+  exports.foo = &#39;bar&#39;;
+
+  //对外提供 doSomething 方法
+  exports.doSomething = function(){
+
+  };
+
+});
+</code></pre><h5 id="4-return-">4.也可通过 return 直接提供接口</h5>
+<pre><code>define(function(require) {
+
+  //通过 return 直接提供接口
+  return {
+    foo: &#39;bar&#39;,
+    doSomething: function() {}
+  };
+
+});
+</code></pre><h2 id="-">模块编码风格约定</h2>
+<p>模块划分可根据业务模块，如订单(order)，购物车(cart)，用户(user)……</p>
+<h4 id="-init-">模块中的 init() 方法</h4>
+<p>init()方法用于模块初始化，如进行：参数传入，事件绑定，变量赋值等操作。<br>在不接受页面参数传入的情况下，init()方法可以写成自执行函数，如：</p>
+<pre><code>define(function(require, exports) {
+
+  init: function(){
+    dosometing……
+  }(),
+});
+</code></pre><p>这样在页面加载后，init()方法会自动执行。
+另外也可以模块对外提供接口前执行init()方法，如：</p>
+<pre><code>define(&#39;hello&#39;, function(require, exports) {
+
+  init: function(){
+    dosometing……
+  },
+
+  hello.init();
+  module.exports = hello;
+});
+</code></pre><h4 id="-">模块中的方法封装</h4>
+<p>尽量将单一业务逻辑封装成function或对象的形式，做到业务粒度划分清晰，避免在一个对象中实现过多业务逻辑，降低模块内部对象之间的耦合。一个购物车模块的例子如下：</p>
+<pre><code>define(&#39;cart&#39;, function(require, exports, module) {
+
+  //定义模块代码
+  var cart = {
+    /*添加购物车*/
+    add: function(){
+
+    },
+    /*修改购物车*/
+    update: function(){
+
+    },
+    /*删除购物车商品*/
+    remove: function(){
+
+    },
+    /*清空购物车*/
+    clear: function(){
+
+    },
+    /*购物车初始化*/
+    init: function(){
+
+    }()
+  }
+
+  //对外提供接口
+  module.exports = cart;
+
+});
+</code></pre>
+		</div>
+
+		<script></script>
+	</body>
+</html>

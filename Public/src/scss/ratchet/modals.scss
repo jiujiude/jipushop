@@ -1,0 +1,439 @@
+/*//
+// Modals
+// --------------------------------------------------
+
+.modal {
+  position: fixed;
+  top: 0;
+  z-index: 21;
+  width: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  background-color: #fff;
+  opacity: 0;
+  -webkit-transition: -webkit-transform .25s, opacity 1ms .25s;
+     -moz-transition: -moz-transform .25s, opacity 1ms .25s;
+          transition: transform .25s, opacity 1ms .25s;
+  @include transform(translate3d(0, 100%, 0));
+
+  // Active modal
+  &.active {
+    height: 100%;
+    opacity: 1;
+    -webkit-transition: -webkit-transform .25s;
+       -moz-transition: -moz-transform .25s;
+            transition: transform .25s;
+    @include transform(translate3d(0, 0, 0));
+    .content {
+      margin-top: $bar-base-height;
+      padding-top: 0;
+    }
+  }
+}
+// Modal backdrop
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  z-index: 11;
+  width: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  background-color: #000;
+  opacity: .3;
+}
+
+// Modal Message,Modal box, Modal loading
+.modal-message,
+.modal-box,
+.modal-loading {
+  position: fixed;
+  top: 50%;
+  left: 10%;
+  z-index: 1000;
+  margin-top: -50px;
+  width: 80%;
+  min-height: 30px;
+  line-height: 30px;
+  overflow: hidden;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px #666;
+}
+.modal-message {
+  background-color: rgba(0,0,0,.7);
+  color: #fff;
+  box-shadow: none;
+}
+.modal-message .body,
+.modal-box .body {
+  padding: 10px;
+  text-align: center;
+  p {
+    font-size: 16px;
+  }
+}
+.modal-box .footer {
+  .flex-box {
+    border-top: 1px solid #eee;
+  }
+  li {
+    line-height: 40px;
+    text-align: center;
+    a {
+      display: inline-block;
+      width: 100%;
+    }
+    &:first-child {
+      border-right: 1px solid #eee;
+    }
+  }
+}
+.modal-loading {
+  left: 50%;
+  margin: -50px 0 0 -50px;
+  z-index: 1000;
+  padding: 25px;
+  width: 100px;
+  height: 100px;
+  background-color: rgba(0,0,0,.8);
+  box-shadow: none;
+  text-align: center;
+}*/
+
+//
+// Modals
+// --------------------------------------------------
+ 
+.modal {
+  position: fixed;
+  top: 0;
+  z-index: 21;
+  width: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  background-color: #fff;
+  opacity: 0; 
+  -webkit-transition: -webkit-transform .25s, opacity 1ms .25s;
+     -moz-transition: -moz-transform .25s, opacity 1ms .25s;
+          transition: transform .25s, opacity 1ms .25s;
+  @include transform(translate3d(0, 100%, 0));
+
+  // Active modal
+  &.active {
+    height: 100%;
+    opacity: 1;
+    -webkit-transition: -webkit-transform .25s;
+       -moz-transition: -moz-transform .25s;
+            transition: transform .25s;
+    @include transform(translate3d(0, 0, 0));
+    .content {
+      margin-top: $bar-base-height;
+      padding-top: 0;
+    }
+  }
+}
+// Modal backdrop
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  z-index: 11;
+  width: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  background-color: #000;
+  opacity: .3;
+}
+
+// Modal Message,Modal box, Modal loading
+.modal-message,
+.modal-loading {
+  position: fixed;
+  top: 50%;
+  left: 10%;
+  z-index: 1000;
+  margin-top: -50px;
+  width: 80%;
+  min-height: 30px;
+  line-height: 30px;
+  overflow: hidden;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px #666;
+}
+.modal-message {
+  background-color: rgba(0,0,0,.7);
+  color: #fff;
+  box-shadow: none;
+}
+.modal-message .body,
+.modal-box .body {
+  padding: 10px;
+  text-align: center;
+  p {
+    font-size: 16px;
+  }
+}
+.modal-box .footer {
+  .flex-box {
+    border-top: 1px solid #eee;
+  }
+  li {
+    line-height: 40px;
+    text-align: center;
+    a {
+      display: inline-block;
+      width: 100%;
+    }
+    &:first-child {
+      border-right: 1px solid #eee;
+    }
+  }
+}
+.modal-message {
+  background-color: rgba(0,0,0,.75);
+  color: #fff;
+  box-shadow: none; 
+
+  &.modal-confirm {
+    background-color: #fff;
+    color: #333;
+  }
+
+  .body {
+    padding: 10px;
+    text-align: center;
+
+    p {
+      font-size: 16px;
+
+      > .icon {
+        display: block;
+        line-height: 44px;
+        font-size: 36px;
+        
+        &.icon-loading{
+          padding-top: 8px;
+        }
+      }
+    }
+  }
+}
+
+/*confirm*/
+.modal-confirm {
+
+  >.modal-footer {
+    border-top: $border-default;
+/*    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;*/
+    width: 100%;
+    
+    >.btn {
+      line-height: 28px;
+/*      -webkit-box-flex: 1;
+      -webkit-flex: 1;*/
+      width: 50%;
+      display: inline-block;
+
+      &:first-child {
+        border-radius: 0 0 0 3px;
+        border-right: $border-default;
+      }
+    }
+  }
+}
+.modal-loading {
+  left: 50%;
+  margin: -50px 0 0 -50px;
+  z-index: 1000;
+  padding: 25px;
+  width: 100px;
+  height: 100px;
+  background-color: rgba(0,0,0,.8);
+  box-shadow: none;
+  text-align: center;
+}
+
+/*微信分享弹窗*/
+.modal-wechat-share {
+  position: fixed;
+  top: 0;
+  z-index: 99;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  background: #000;
+  opacity: 0.85;
+  
+  > .hd {
+    position: relative;
+    height: 60px;
+    text-align: left;
+    padding: 10px 0 0 10px;
+
+    > .icon-close {
+      color: rgba(255,255,255,.5);
+      font-size: 36px;
+    }
+  }
+
+  > .bd {
+    display: block;
+
+    > p {
+      margin-bottom: 10px;
+      line-height: 30px;
+      font-size: 16px;
+      color: #fff;
+    }
+
+    em[class^='icon-share-'] {
+      display: inline-block;
+      margin-left: 5px;
+      padding: 3px;
+      width: 36px;
+      height: 36px;
+      background-color: #faf8f9;
+      border-radius: 5px;
+      vertical-align: middle;
+
+      &:before {
+        display: inline-block;
+        content: '';
+        width: 30px;
+        height: 30px;
+        background-image: url(../images/wechat-share-icon.png);
+        background-repeat: no-repeat;
+        background-size: 90px auto;
+      }
+    }
+
+    .icon-share-friend {
+      &:before {
+        background-position: 0 0;
+      }
+    }
+
+    .icon-share-timeline {
+      &:before {
+        background-position: -30px 0;
+      }
+    }
+
+    .icon-share-browser {
+      &:before {
+        background-position: -60px 0;
+      }
+    }
+  }
+
+  > .arrow {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    background: url(../images/wechat-share-arrow.png) 0 0 no-repeat;
+    background-size: 80px auto;
+    opacity: .5
+  }
+}
+
+/*选择弹窗*/
+.modal-select {
+  width: 100%;
+  left: 0px;
+  bottom: 0px; 
+  border-radius: 0; 
+  top: initial;
+  background: rgba(0, 0, 0, 0);
+  text-align: center;
+  
+  > a.cancel-btn {
+    display: block;
+    line-height: 48px;
+    height: 48px;
+    background: #F8F8F8;
+  }
+} 
+
+.modal-select {
+  display: none;
+  > ul {
+    margin: 5px 0;
+    padding: 0;
+    
+    > li {
+      line-height: 48px;
+      border-bottom: 1px solid #E9E9E9;
+      background: #FFF;
+      
+      &:last-child {
+        border-bottom: 0;
+      }
+      
+      > a {
+        display: block;
+        padding-left: $bar-side-spacing;
+        padding-right: $bar-side-spacing;
+        line-height: 48px;
+      }
+    }
+  }
+}
+
+/*顶部提示条*/
+.modal-alert {
+  top: 0px;
+  left: 0;
+  width: 100%;
+  margin-top: 0;
+  border-radius: 0;
+  height: 30px;
+  line-height: 30px;
+  z-index: 23;
+  animation: modal-alert 0.5s;
+  -moz-animation: modal-alert 0.5s; /* Firefox */
+  -webkit-animation: modal-alert 0.5s; /* Safari and Chrome */
+  -o-animation: modal-alert 0.5s; /* Opera */
+  
+  background: #fff28f;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+
+  .tip {
+    color: #ef5e37;
+    padding-left: 10px;
+    font-family: iconfont;
+    
+    &:after{
+      padding-top:0;
+      content: '\e603';
+      float: right;
+      margin-right: 8px;
+    }
+  }
+}
+
+@keyframes modal-alert {
+  0% {top: -40px;}
+  70% {top: 4px;}
+  100% {top: 0px;}
+}
+@-moz-keyframes modal-alert {
+  0% {top: -40px;}
+  70% {top: 4px;}
+  100% {top: 0px;}
+}
+@-webkit-keyframes modal-alert {
+  0% {top: -40px;}
+  70% {top: 4px;}
+  100% {top: 0px;}
+}
+@-o-keyframes modal-alert {
+  0% {top: -40px;}
+  70% {top: 4px;}
+  100% {top: 0px;}
+}

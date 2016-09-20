@@ -1,0 +1,71 @@
+/*打印商品清单样式*/
+.print-item-body {
+  padding: 0;
+  min-height: 98%;
+}
+.print-item {
+  position: relative;
+  min-height: 400px;
+  font-family: "宋体";
+  border-top: 1px dashed #ccc;
+}
+.print-item:first-child{
+  border-top: 0;
+}
+.print-item h2 {
+  text-align: center;
+  padding-top: 20px;
+}
+.print-item .qrcode,
+.print-item .logo {
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  text-align: center;
+}
+.print-item .qrcode p {
+  text-align: center;
+  font-size: 12px;
+  padding-top: 3px;
+}
+.print-item .logo {
+  top: 10px;
+  left: 15px;
+  width: 136px;
+}
+.print-item .hd {
+  padding:30px 20px 12px;
+}
+.print-item .hd p {
+  line-height: 20px;
+  font-size: 12px;
+}
+.print-item .hd p .sep {
+  display: inline-block;
+  width: 20px;
+}
+.print-item .bd table {
+  border: 1px solid #333;
+  margin: 0 20px;
+  width: calc(100% - 40px);
+  overflow: hidden;
+}
+.print-item .bd table tr th {
+  padding: 0 7px 0 15px;
+  line-height: 30px;
+  font-size: 14px;
+  text-align: left;
+  border-right: 1px solid #333;
+  font-weight: normal;
+}
+.print-item .bd table tr td {
+  padding: 7px 7px 7px 15px;
+  line-height: 16px;
+  border-right: 1px solid #333;
+  border-top: 1px solid #333;
+  font-size: 12px;
+}
+.print-item footer {
+  padding: 20px;
+  font-size: 12px;
+}

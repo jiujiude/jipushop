@@ -1,0 +1,39 @@
+<extend name="Base/member"/>
+
+<block name="body">
+  <div class="user-box">
+    <h3>个人资料设置</h3>
+    <form action="{:U()}" class="col-xs-8 form-horizontal" method="post">
+      <div class="form-group">
+        <label for="inputNickname" class="col-xs-3 control-label">昵称：</label>
+        <div class="col-xs-6">
+          <input type="text" name="nickname" class="form-control" value="{$profile.nickname}" placeholder="请输入昵称">
+        </div>
+      </div>
+      <div class="form-group avatar">
+        <label for="inputIntro" class="col-xs-3 control-label">头像：</label>
+        <div class="col-xs-8">
+          <span class="btn-upload" id="J_upload_add">
+            {:hook('uploadImages', array('name' => 'avatar_id', 'tpl' => 'Home/one','path' => $profile['avatar']))}
+          </span>
+          <span class="tips">请上传200*200像素的正方形图片</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputIntro" class="col-xs-3 control-label">性别：</label>
+        <div class="col-xs-3">
+          <select name="sex" class="form-control">
+            <option value="0"{:$profile['sex'] == 0 ? ' selected' : ''}>保密</option>
+            <option value="1"{:$profile['sex'] == 1 ? ' selected' : ''}>男</option>
+            <option value="2"{:$profile['sex'] == 2 ? ' selected' : ''}>女</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-xs-6 col-xs-offset-3">
+          <button type="submit" class="btn btn-large btn-positive">保存设置</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</block>

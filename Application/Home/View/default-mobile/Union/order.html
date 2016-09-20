@@ -1,0 +1,25 @@
+  <!-- 统计概况 -->
+  <div class="union-info">
+    <ul class="flex-box">
+      <li>
+        <h4>本月订单数</h4>
+        <p>{$data.this_month|default=0}</p>
+      </li>
+      <li>
+        <h4>上月订单数</h4>
+        <p>{$data.last_month|default=0}</p>
+      </li>
+    </ul>
+    <ul class="flex-box">
+      <li>
+        <h4>总订单数</h4>
+        <p>{$data.total|default=0}</p>
+      </li>
+      <li>
+        <a href="#qrCode" class="qrcode-link">
+          <h4>推广二维码</h4>
+          <img src="__IMG__/qrcode-demo.png" width="24">
+        </a>
+      </li>
+    </ul>
+  </div>

@@ -1,0 +1,61 @@
+<extend name="Base/common"/>
+<block name="header">
+{:hook('mobileTopNav',array('title'=>"现金账户"))}
+</block>
+<block name="body">
+<style>
+    .content{background-color: #fff;margin-top: -1px; padding-bottom: 0;}
+    .bar-tab{display: none;}
+</style>
+  <div class="sdp">
+    <div class="head">
+      <div class="text-center hd">
+        <p>账户余额(元)</p>
+        <h2>{$member.finance}</h2>
+      </div>
+      <div class="text-center bd">
+        <p>可提现金额(元)</p>
+        <h4>
+          {$withdraw_finance}
+          <a href="{:U('Withdraw/add')}" class="btn">提现</a>
+        </h4>
+      </div>
+    </div>
+    
+    <div class="nav">
+      <ul class="flex-box">
+        <li>
+          <a href="{:U('UserAccount/index')}">
+            <i class="icon icon-card"></i>
+            <span>提现账户</span>
+          </a>
+        </li>
+        <li>
+          <a href="{:U('Member/finance')}">
+            <i class="icon icon-form"></i>
+            <span>收支明细</span>
+          </a>
+        </li>
+      </ul>
+      <ul class="flex-box" style="display:none">
+        <li>
+          <a href="{:U('Member/sdp')}">
+            <i class="icon icon-sdp"></i>
+            <span>我的分销</span>
+          </a>
+        </li>
+        <li>
+          <a href="{:U('Member/union')}">
+            <i class="icon icon-link"></i>
+            <span>推广联盟</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</block>
+
+<block name="script">
+  <script>
+  </script>
+</block>

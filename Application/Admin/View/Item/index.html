@@ -1,0 +1,196 @@
+<extend name="Public/base"/>
+
+<block name="style">
+  <link rel="stylesheet" type="text/css" href="__CSS__/order.css" media="all">
+</block>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>商品列表({$_total})</h2>
+  </div>
+
+  <!-- 按钮工具栏 -->
+  <div class="cf">
+    <div class="fl">
+      <div class="btn-group">
+        <a class="btn item_add" href="{:U('Item/add')}">新 增</a>
+      </div>
+      <button class="btn ajax-post confirm" target-form="ids" url="{:U('Item/setStatus',array('status'=>-1))}">删 除</button>
+      <button class="btn ajax-post" target-form="ids" url="{:U('Item/setStatus',array('status'=>1))}">上 架</button>
+      <button class="btn ajax-post confirm" target-form="ids" url="{:U('Item/setStatus',array('status'=>0))}">下 架</button>
+    </div>
+
+    <!-- 高级搜索 -->
+    <form id="J_search_form" action="{:U('index')}" method="GET">
+      <div class="search-form fr cf">
+        <neq name="IS_SUPPLIER" value="1">
+        <div class="fl">
+          <select name="supplier_id">
+            <option value="all">请选择供应商</option>
+            <option value="0">自营</option>
+            <volist name="lists_supplier" id="vo">
+              <option value="{$vo.uid}">{$vo.uid|get_supplier_text}</option>
+            </volist>
+          </select>
+        </div>
+        </neq>
+        <div class="fl">
+          <select name="is_seckill">
+            <option value="0">全部商品</option>
+            <option value="1"<eq name="is_seckill" value="1"> selected</eq>>秒杀商品</option>
+          </select>
+        </div>
+        <div class="fl">
+          <select name="status">
+            <option value="-">全部状态</option>
+            <option value="1" <eq name="_GET.is_seckill" value="1"> selected</eq>>销售中</option>
+            <option value="0" <eq name="_GET.is_seckill" value="0"> selected</eq>>已下架</option>
+          </select>
+        </div>
+        <div class="fl" id="J_itemCategory">
+          <select name="cid_1">
+            <option value="">请选择</option>
+            <volist name="cid_1" id="vo">
+                <option value="{$vo.id}" <if condition="I('cid_1') eq $vo['id']">selected</if>>{$vo.name}</option>
+            </volist>
+          </select>
+          <select name="cid_2">
+            <option value="">请选择</option>
+              <volist name="cid_2._" id="vo">
+                <option value="{$vo.id}" <if condition="I('cid_2') eq $vo['id']">selected</if>>{$vo.name}</option>
+              </volist>
+          </select>
+          <select name="cid_3">
+            <option value="">请选择</option>
+              <volist name="cid_3._" id="vo">
+                <option value="{$vo.id}" <if condition="I('cid_3') eq $vo['id']">selected</if>>{$vo.name}</option>
+              </volist>
+          </select>
+        </div>
+        <div class="sleft">
+          <input type="text" name="keywords" class="search-input" value="{:I('keywords')}" placeholder="请输入商品名称或者编号">
+          <a class="sch-btn" href="javascript:;" id="J_search"><i class="btn-search"></i></a>
+        </div>
+      </div>
+    </form>
+  </div>
+  
+  <table class="order-table-head">
+    <tr>
+      <th width="30">
+         <input class="checkbox check-all" type="checkbox">
+      </th>
+      <th width="365">商品基本信息</th>
+      <th width="105" class="text-center"><a href="{:U('index?_field=price&_order='.$_order)}" title="按售价排序">售价{$_order_icon.price}{$_order_icon_show}</a></th>
+      <th width="70" class="text-center"><a href="{:U('index?_field=sdp&_order='.$_order)}" title="按返现金额排序">返现{$_order_icon.sdp}{$_order_icon_show}</a></th>
+      <th width="75" class="text-center">首页推荐</th>
+      <th width="75"><a href="{:U('index?_field=stock&_order='.$_order)}" title="按库存排序">库存{$_order_icon.stock}{$_order_icon_show}</a></th>
+      <th width="75">购买数</th>
+      <th width="78"><a href="{:U('index?_field=credit&_order='.$_order)}" title="按送积分数量">送积分{$_order_icon.credit}{$_order_icon_show}</a></th>
+      <th>&nbsp;</th>
+      <th width="150" class="text-center">操作</th>
+    </tr>
+  </table>
+  <notempty name="list">
+  <volist name="list" key='key' id="vo">
+      <table class="order-table status-{$vo.status}">
+        <tr>
+          <th colspan="10">
+            <span class="text-cancel">ID：</span>
+            {$vo.id}
+            <span class="split-tab"></span>
+            <span class="text-cancel">商品编号：</span>
+            <a href="{:U('/Item/detail?id='.$vo['id'])}" target="_blank" title="点击商品信息">{$vo.number}</a>
+            <span class="split-tab"></span>
+            <span class="text-cancel">分类：</span>
+            {$vo.category}
+            <neq name="IS_SUPPLIER" value="1">
+            <div class="fr">
+                <span class="text-cancel">供应商：</span>
+                {$vo.supplier_id|get_supplier_text}
+            </div>
+            </neq>
+          </th>
+        </tr>
+        <tr>
+          <td width="20" class="text-center">
+            <input name="ids[]" class="ids" type="checkbox" value="{$vo['id']}"> 
+          </td>
+          <td width="50" class="item-lists text-center">
+            <a href="{:U('/Item/detail?id='.$vo['id'])}" target="_blank"><img src="{:get_image_thumb(get_cover($vo['images'], 'path'), 60, 60)}" title="{$vo.title}"></a>
+          </td>
+          <td width="285">
+            <a href="{:U('edit?id='.$vo['id'])}">{$vo['name']}</a>
+          </td>
+          <td width="90" class="text-center">
+            <input type="text" data-action="{:U('Item/setFieldValue')}" name="price" data-id="{$vo['id']}" title="修改售价" class="text text-right input-mini J_ajax_updatefield" value="{$vo.price}">
+            元
+          </td>
+          <td width="60" class="text-center">
+            <input type="text" data-action="{:U('Item/setFieldValue')}" name="sdp" data-id="{$vo['id']}" title="修改返现金额" class="text text-right input-xmini J_ajax_updatefield" value="{$vo.sdp}">
+            <if condition="$vo['sdp_type'] eq 1">%<else/>元</if>
+          </td>
+          <td width="60" class="text-center">
+            <input type="checkbox" data-action="{:U('Item/setFieldValue')}" data-id="{$vo['id']}" class="J_ajax_updatefield" value="1" name="is_recommend" <eq name="vo.is_recommend" value="1">checked="checked"</eq>>
+          </td>
+          <td width="60" class="text-center">
+            <input type="text" data-action="{:U('Item/setFieldValue')}" name="stock" data-id="{$vo['id']}" title="修改库存" class="text text-right input-xmini J_ajax_updatefield" value="{$vo.stock}">
+            件
+          </td>
+          <td width="60" class="text-center">
+            <input type="text" data-action="{:U('Item/setFieldValue')}" name="buynum" data-id="{$vo['id']}" title="修改已售数量" class="text text-right input-xmini J_ajax_updatefield" value="{$vo.buynum}">
+            件
+          </td>
+          <td width="68" class="text-center">
+            <input type="text" data-action="{:U('Item/setFieldValue')}" name="credit" data-id="{$vo['id']}" title="修改赠送积分数" class="text text-right input-xmini J_ajax_updatefield" value="{$vo.credit}">
+          </td>
+          <td class="text-right">
+            <if condition="$vo['is_seckill']">
+              <i class="icon icon-miaosha" style="color:red"></i>
+            </if>
+            <a href="{:U('ItemComment/index?item_id='.$vo['id'])}">[评价]</a>
+            <a href="{:U('edit?id='.$vo['id'])}">[编辑]</a>
+            <a href="{:U('setStatus?ids='.$vo['id'].'&status='.abs(1-$vo['status']))}" class="ajax-get">[{$vo.status_text}]</a>
+            <a href="{:U('setStatus?status=-1&ids='.$vo['id'])}" class="confirm ajax-get">[删除]</a>
+          </td>
+        </tr>
+      </table>
+  </volist>
+  <else/>
+    <div class="list-empty">
+      暂无商品！
+    </div>
+  </notempty>
+  
+  <!-- 分页 -->
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    $(function(){
+      //导航高亮
+      highlight_subnav("{:U('Item/index')}");
+      Core.setValue('status', '{:I("get.status")}');
+      
+      //隐藏没有分类的下拉框
+      var hideCat = {
+        init : function(){
+          this.hide('cid_2');
+          this.hide('cid_3');
+        },
+        hide : function(name){
+          var obj = $("select[name='" + name + "']");
+          if(obj.children('option').length === 1){
+            obj.hide();
+          }
+        }
+      };
+      hideCat.init();
+    });
+    Core.setValue('supplier_id', '{:I('get.supplier_id', 'all')}');
+  </script>
+</block>

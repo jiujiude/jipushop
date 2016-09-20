@@ -1,0 +1,15 @@
+<extend name="Base/common"/>
+<block name="style">
+  <!-- 引入CSS文件 -->
+</block>
+<block name="body">
+
+
+
+ 
+
+
+</block>
+<block name="script">
+  <!-- 引入JS文件 -->
+</block>

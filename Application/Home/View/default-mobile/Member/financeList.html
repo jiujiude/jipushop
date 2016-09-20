@@ -1,0 +1,20 @@
+<volist name="lists" id="vo">
+  <li class="table-view-cell padded-sm">
+    {$vo.memo}
+      <if condition='$vo.status eq 2'>
+              <em style="color:red">&nbsp;&nbsp;（订单交易失败）</em>
+                </if>
+    <em class="pull-right">
+    <if condition='$vo.status neq 2'>
+      <eq name="vo.flow" value="in"><i class="text-success">+{$vo.amount} 元</i></eq>
+      <eq name="vo.flow" value="out"><i class="text-danger">-{$vo.amount} 元</i></eq>
+      <else />
+         <i class="text-danger" style="color:red">已失效</i>
+     </if>
+    </em>
+    <p class="text-info">{$vo.create_time|time_format}</p>
+  </li>
+</volist>
+<script>
+  C.has_more =  '{$_hasmore}';
+</script>

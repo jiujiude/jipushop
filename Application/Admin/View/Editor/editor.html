@@ -1,0 +1,36 @@
+<input type="hidden" name="parse" value="0">
+<link rel="stylesheet" href="__JS__/kindeditor/default/default.css" />
+<script charset="utf-8" src="__JS__/kindeditor/kindeditor-min.js"></script>
+<script charset="utf-8" src="__JS__/kindeditor/zh_CN.js"></script>
+<script type="text/javascript">
+	var editor_{$editor.id};
+	KindEditor.ready(function(K) {
+		editor_{$editor.id} = K.create('textarea[id="{$editor.id}"]', {
+			allowFileManager : false,
+			themesPath: K.basePath,
+			width: '830px',
+         filterMode: false,
+			height: '{$editor.height}',
+			resizeType: <eq name="editor.resize_type" value="1">1<else />0</eq>,
+			pasteType : 2,
+			urlType : 'absolute',
+			fileManagerJson : '{:U("fileManagerJson")}',
+			//uploadJson : '{:U('uploadJson')}' }
+			uploadJson : '{:addons_url("EditorForAdmin://Upload/ke_upimg")}',
+			extraFileUploadParams: {
+				session_id : '{:session_id()}'
+         }
+		});
+	});
+
+	$(function(){
+		//传统表单提交同步
+		$('textarea[id="{$editor.id}"]').closest('form').submit(function(){
+			editor_{$editor.id}.sync();
+		});
+		//ajax提交之前同步
+		$('button[type="submit"],#submit,.ajax-post,#autoSave').click(function(){
+			editor_{$editor.id}.sync();
+		});
+	})
+</script>

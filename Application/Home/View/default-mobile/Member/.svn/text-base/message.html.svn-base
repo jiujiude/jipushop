@@ -1,0 +1,37 @@
+<extend name="Base/common"/>
+
+<block name="body">
+  <div class="message-list" id="Z_load_itemlist">
+    <notempty name="lists">
+      <include file="messageList"/>
+    <else/>
+      <p class="list-empty">暂无消息记录</p>
+    </notempty>
+  </div>
+  
+  <div id="messageDetail" class="modal">
+    <header class="bar bar-nav">
+      <a class="icon icon-close pull-right" href="#messageDetail"></a>
+      <h1 class="title">消息详情</h1>
+    </header>
+    <div class="content">
+      <div class="message-modal-content">
+        <a href="javascript:;" id="Z_message_delete"><i class="icon icon-remove"></i></a>
+        <h3 class="Z_modal_title"></h3>
+        <p class="Z_modal_desc">时间：2015-12-14 13:45:32</p>
+        <div class="Z_modal_content"></div>
+      </div>
+    </div>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use(['common', 'message'], function(common, message){
+      var url = window.location.href;
+      common.loadmore(url.split('#')[0]);
+      message.showDetail();
+      message.delete();
+    });
+  </script>
+</block>

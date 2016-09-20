@@ -1,0 +1,72 @@
+<extend name="Public/base" />
+
+<!-- 商品评价新增和编辑页面 -->
+<block name="body">
+	<div class="main-title">
+		<h2>{$data['id']?'编辑':'新增'}商品评价</h2>
+	</div>
+
+  <form action="{:U('update')}" enctype="application/x-www-form-urlencoded" method="POST" class="form-horizontal">  
+    <div class="form-item">
+      <label for="auth-title" class="item-label">商品名称</label>
+      <div class="controls">
+        <php>
+          $item_id = $data['item_id'] ? $data['item_id'] : I('get.item_id');
+        </php>
+        <a href="{:U('/Item/detail?id='.$item_id)}" target="_blank">{:get_item_name($item_id)}</a>
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">评价等级(1-5数字)</label>
+      <div class="controls">
+          <input id="auth-title" type="text" name="star_amount" class="text input-large" value="{$data.star_amount|default=5}"/>
+      </div>
+    </div>
+    <if condition="$data['uid'] eq 0">
+      <div class="form-item">
+        <label for="auth-title" class="item-label">用户昵称</label>
+        <div class="controls">
+            <input id="auth-title" type="text" name="nickname" class="text input-large" value="{:$data['nickname'] ?: ($data['uid'] ? get_nickname($data['uid']) : '')}"/>
+        </div>
+      </div>
+      <div class="form-item">
+        <label for="auth-title" class="item-label">用户头像</label>
+        <div class="controls">
+          {:hook('uploadImages', array('fileid' => 'upload_picture', 'name' => 'image', 'tpl' => 'one', 'value' => $data['image']))}
+        </div>
+      </div>
+      <div class="form-item">
+        <label for="auth-title" class="item-label">评价时间</label>
+        <div class="controls">
+          <input type="text" name="create_time" class="text input-large date_select" value="{:time_format($data['create_time'], 'Y-m-d H:i:s')}" placeholder="请选择时间"/>
+        </div>
+      </div>
+    </if>
+    <div class="form-item">
+      <label for="auth-description" class="item-label">评价内容</label>
+      <div class="controls">
+          <label class="textarea input-large"><textarea id="auth-description" type="text" name="content">{$data.content}</textarea></label>
+      </div>
+    </div>
+    <div class="form-item">
+      <input type="hidden" name="id" value="{$data.id}" />
+      <button type="submit" class="btn submit-btn ajax-post" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>  
+    <input type="hidden" name="item_id" value="{$item_id}" />
+  </form>
+<block>
+
+<block name="script">
+  <script language="javascript" type="text/javascript" src="__PUBLIC__/Admin/js/My97Date/WdatePicker.js"></script>
+  <script type="text/javascript" charset="utf-8">
+    $(function(){
+      //导航高亮
+      highlight_subnav('{:U('index')}');
+      //时间选择
+      $('.date_select').focus(function(){
+        WdatePicker({skin: 'twoer', dateFmt: 'yyyy-MM-dd HH:mm:ss', maxDate: '%y-%M-%d'});
+      });
+    });
+  </script>
+</block>

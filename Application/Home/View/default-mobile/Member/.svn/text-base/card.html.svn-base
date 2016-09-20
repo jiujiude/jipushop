@@ -1,0 +1,26 @@
+<extend name="Base/common"/>
+<block name="body">
+  <div class="content-padded">
+    <notempty name="lists">
+      <div class="card-list">
+        <volist name="lists" id="vo">
+          <div class="item item-bg-1" data-url="{:U('Member/cardlog', array('card_id' => $vo.id))}">
+            <div class="hd">
+              {$vo.name}
+              <span class="pull-right">卡号：{$vo.number}</span>
+            </div>
+            <div class="bd">
+              <h2>{$vo.balance}</h2>
+            </div>
+            <div class="fd">
+              <em class="pull-right <eq name="vo.is_expire" value="1">date-expired</eq>">有效期：{$vo.expire_time|time_format='Y-m-d'}</em>
+            </div>
+            <i class="icon icon-arrow-right"></i>
+          </div>
+        </volist>
+      </div>
+    <else/>
+      <p class="list-empty">您暂时没有礼品卡！</p>
+    </notempty>
+  </div>
+</block>

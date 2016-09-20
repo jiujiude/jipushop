@@ -1,0 +1,54 @@
+<extend name="Base/common"/>
+
+
+
+
+<block name="body">
+  <div class="shop list-bg" id="Z_load_itemlist">
+    <notempty name="lists">
+      <notempty name="lists">
+  <volist name="lists" id="vo">
+    <div class="order-lists">
+      <p>
+        <em>订单号：{$vo['order_sn']}</em>
+        <em class="pull-right">{:time_format($vo['create_time'], 'Y-m-d')}</em>
+      </p>
+      <a href="javascript:;" class="item">
+        <ul>
+          
+            <li><img src="__ROOT__{:get_image_thumb($vo['cover_path'], 100, 100)}" alt=""></li>
+
+        </ul>
+        <span>{$vo.price}元</span>
+      </a>
+      <div class="info">
+        <span class="pull-right text-danger price"><em></em></span>
+        <div class="status" id="Z_order_{$vo['id']}">
+          已返现 <span class="text-danger">{$vo.amount}</span> 元
+        </div>
+      </div>
+    </div>
+  </volist>
+</notempty>
+
+    <else/>
+      <p class="list-empty">还没有返现订单信息</p>
+    </notempty>
+  </div>
+</block>
+
+<block name="footer">
+
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+  C.has_more =  '{$_hasmore}';
+    seajs.use(['common', 'order'], function(common, o){
+      var url = window.location.href;
+      order = o;
+      o.bindList();
+      common.loadmore(url);
+    });
+  </script>
+</block>

@@ -1,0 +1,16 @@
+<notempty name="lists">
+  <div class="slider">
+    <div class="slide-group">
+      <volist name="lists" id="vo">
+        <div class="slide">
+          <a href="__ROOT__{$vo.link}"><img src="{$vo['src']}" alt="{$vo.name}"></a>
+        </div>
+      </volist>
+    </div>
+    <ol class="slider-indicators">
+      <volist name="lists" id="vo">
+        <li></li>
+      </volist>
+    </ol>
+  </div>
+</notempty>      

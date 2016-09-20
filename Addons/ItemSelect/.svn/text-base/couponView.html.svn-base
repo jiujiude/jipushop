@@ -1,0 +1,73 @@
+<block name="body">
+  <a href="javascript:selectItem.load();" class="btn btn-mini btn-return">&plus;选择商品</a>
+  <span class="item-sum J_itemSum"><elt name="param.item_count" value="0">全场通用<else/>已选择<strong class="text-danger">{$param.item_count}</strong>件商品</elt></span>
+  <input type="hidden" class="J_current_items" value="{$param.value}">
+  <input type="hidden" name="{$param.name}" class="text input-large" id="items" value="">
+</block>
+<block name="script">
+<script type="text/javascript">
+/*选择商品*/
+var current_items = '{$param.item_ids}';
+var current_count = '{$param.item_count}';
+var selectItem = {
+  current_items: JSON.parse(current_items),
+  selectedItems: {},
+  selectedCount: current_count,
+  load: function(data){
+		if(data){
+			this.current_items = data.current_items;
+			this.selectedItems = data.current_items;
+			this.selectedCount = data.selectedCount;
+		}
+
+    var item_ids = $('.J_current_items').val();
+    var url = '{:addons_url("ItemSelect://ItemSelect/selectItem")}?item_ids=' + item_ids + '&type=view';
+    UI.load(url, '查看适用商品');
+  },
+  getItemPage: function(page){
+    var item_ids = $('.J_current_items').val();
+    var url  = '{:addons_url("ItemSelect://ItemSelect/selectItem")}';
+    $.ajax({
+      type: "GET",
+      url: url,
+      cache: false,
+      data: 'item_ids='+ item_ids +'&p=' + page,
+      dataType: 'json',
+      async: false,
+      success:function(res){
+        if(res.status == 1){
+          var html = '';
+          $.each(res.data, function(i, item){
+            html += '<tr class="item-info" data-id="'+ item.id +'"><td class="title"><div class="title-wrapper"><span class="item-pic"><a href="'+ item.url +'" target="_blank"><img class="J_TShowBigPic" alt="'+ item.name +'" title="'+ item.name +'" src="'+ Core.ROOT + item.cover_path_tiny +'"></a></span><a href="'+ item.url +'" target="_blank" class="title-text" title="'+ item.name +'">'+ item.name +'</a></div></td><td class="price ellipsis g_price" title="'+ item.price +'"><strong>'+ item.price +'</strong></td>';
+
+            if(item.has_select === 1){
+              html += '<td class="opt J_Opt_'+ item.id +'" style="text-align:center;">√</td></tr>';
+            }else{
+              html += '<td class="opt J_Opt_'+ item.id +'" style="text-align:center;">×</td></tr>';
+            }
+          });
+          $('.J_TItems').html(html);
+          var prev = $('.J_Page span.current').html();
+          $('.J_Page span.current').replaceWith('<a class="num J_page_'+ prev +'" href="javascript:selectItem.getItemPage('+ prev +');">'+ prev +'</a>');
+          $('.J_page_' + page).replaceWith('<span class="current">'+ page +'</span>');
+
+          /*处理获取的列表信息*/
+          var selectedItems = selectItem.selectedItems;
+          var items = res.dataIds;
+          $.each(items, function(i, item){
+            for(k in selectedItems){
+              if(selectedItems[k] == item){
+                $('.J_Opt_' + item).html('√');
+              }
+            }
+          });
+        }
+      }
+    });
+  },
+  close: function(){
+    UI.box.close();
+  }
+}
+</script>
+</block>

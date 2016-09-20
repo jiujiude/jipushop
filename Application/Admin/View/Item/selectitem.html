@@ -1,0 +1,81 @@
+<div class="items-box">
+  <div class="item-search J_item_search">
+    {:hook('categorySelect', array('cid_1' => '', 'cid_2' => '', 'cid_3' => '', 'category' => ''))}
+    <!-- <input type="text" name="" class="text input-small" placeholder="商品关键词"> -->
+    <!-- <a href="javascript:selectItem.search();" class="btn btn-small">搜索</a> -->
+  </div>
+  <table class="items-table" summary="搜索结果-商品列表">
+    <caption style="display:none;">商品列表</caption>
+    <colgroup>
+      <col width="45%">
+      <col width="25%">
+      <col width="auto">
+    </colgroup>
+    <thead class="items-tb-hd">
+      <tr>
+        <th class="col-title" scope="col">商品</th>
+        <th class="col-price" scope="col">当前价(&yen;)</th>
+        <th scope="col">选择</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+    
+  <div class="table-outer">
+    <div class="table-inner">
+      <table class="items-table" summary="搜索结果-宝贝列表">
+        <colgroup>
+          <col width="45%">
+          <col width="25%">
+          <col width="auto">
+        </colgroup>
+        <tbody class="item-list J_TItems">
+          <volist name="data.lists" id="vo">
+            <tr class="item-info" data-id="{$vo.id}">
+              <td class="title">
+                <div class="title-wrapper">
+                  <span class="item-pic">
+                    <a href="{:U('/Item/detail', array('id' => $vo['id']))}" target="_blank"><img class="J_TShowBigPic" alt="{$vo.name}" title="{$vo.name}" src="__ROOT__{$vo.cover_path_tiny}" width="38"></a>
+                  </span>
+                  <a href="{:U('/Item/detail', array('id' => $vo['id']))}" target="_blank" class="title-text" title="{$vo.name}">{$vo.name}</a>
+                </div>
+              </td>
+              <td class="price ellipsis g_price" title="{$vo.price}"><strong>{$vo.price}</strong></td>
+              <td class="opt J_Opt_{$vo.id}">
+                <eq name="vo.has_select" value="1">
+                  <a href="javascript:selectItem.calcel({$vo.id});" class="J_Cel_{$vo.id}">取消选择</a>
+                <else/>
+                  <a href="javascript:selectItem.select({$vo.id});" class="sel J_Sel_{$vo.id} J_Item" data-id={$vo.id} title="选择">选择</a>
+                </eq>
+              </td>
+            </tr>
+          </volist>
+        </tbody>
+      </table>
+      <div class="page page-sm J_Page">
+        <div>
+          <for start="1" end="$data['totalPages']+1">
+            <eq name="i" value="1">
+              <span class="current">{$i}</span>
+            <else/>
+              <a class="num J_page_{$i}" href="javascript:selectItem.getItemPage({$i});">{$i}</a>
+            </eq>
+          </for>
+        </div>
+      </div>
+    </div>
+    <div class="fr opt-footer">
+      <input type="hidden" name="items" id="selectedIds" value="">
+      <a href="javascript:selectItem.close();" class="btn btn-mini btn-default">取消</a>
+      <a href="javascript:selectItem.save();" class="btn btn-mini btn-return J_Save">确定(<span class="count">{$data.count}</span>)</a>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $('.J_item_search select').on('change', function(){
+    var cid = $(this).val();
+    selectItem.search(cid);
+  });
+</script>

@@ -1,0 +1,57 @@
+<extend name="Public/base"/>
+
+<block name="body">
+	<div class="main-title">
+		<h2>新增用户</h2>
+	</div>
+	<form action="{:U()}" method="post" class="form-horizontal">
+    <if condition="$lists_user_group">
+      <div class="form-item">
+        <label class="item-label">会员等级选择<span class="check-tips">（不同的会员等级可以享受不同的折扣）</span></label>
+        <div class="controls">
+          <select name="group_id">
+            <option>请选择会员等级</option>
+            <volist name="lists_user_group" id="vo">
+              <option value="{$vo.id}">{$vo.title}</option>
+            </volist>
+          </select>
+        </div>
+      </div>
+    </if>
+		<div class="form-item">
+			<label class="item-label">手机号<span class="check-tips"></span></label>
+			<div class="controls">
+				<input type="text" class="text input-large" name="username" value="">
+			</div>
+		</div>
+		<div class="form-item">
+			<label class="item-label">密码<span class="check-tips">（用户密码不能少于6位）</span></label>
+			<div class="controls">
+				<input type="password" class="text input-large" name="password" value="">
+			</div>
+		</div>
+		<div class="form-item">
+			<label class="item-label">确认密码</label>
+			<div class="controls">
+				<input type="password" class="text input-large" name="repassword" value="">
+			</div>
+		</div>
+		<!--<div class="form-item">
+			<label class="item-label">邮箱<span class="check-tips">（用户邮箱，用于找回密码等安全操作）</span></label>
+			<div class="controls">
+				<input type="text" class="text input-large" name="email" value="">
+			</div>
+		</div>-->
+		<div class="form-item">
+			<button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+			<button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+		</div>
+	</form>
+</block>
+
+<block name="script">
+	<script type="text/javascript">
+		//导航高亮
+		highlight_subnav('{:U('User/index')}');
+	</script>
+</block>

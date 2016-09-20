@@ -1,0 +1,49 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>新增优惠券</h2>
+  </div>
+  
+  <form action="{:U('update')}" method="post" class="form-horizontal">
+    <div class="form-item">
+      <label class="item-label">优惠券编号</label>
+      <div class="controls">
+        <input type="text" class="text input-mid" name="number" value="{$data['number']}" readonly="true">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">优惠券名称</label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="number" value="{$data['name']}" readonly="true">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">发放金额</label>
+      <div class="controls">
+        <input type="text" class="text input-mid" name="number" value="{$data['amount']}" readonly="true">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">发放用户<span class="check-tips">（填写用户uid，以半角逗号隔开，不填写则默认为全部用户）</span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="uids" value="">
+      </div>
+    </div>
+
+    <div class="form-item">
+      <input type="hidden" name="cid" value="{$data['id']}">
+      <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">发 放</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+  </form>
+
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //导航高亮
+    highlight_subnav('{:U("CouponSend/index")}');
+  </script>
+</block>

@@ -1,0 +1,23 @@
+<form class="col-xs-8 form-horizontal" id="J_login_form" action="__SELF__" method="post">
+  <div class="form-group">
+    <label class="col-xs-3 control-label" for="inputEmail">手机</label>
+    <div class="col-xs-9">
+      <input type="text" name="username" id="inputEmail" class="form-control" placeholder="手机" errormsg="手机格式不正确" nullmsg="请填写邮箱或手机" datatype="m" value="">
+    </div>
+  </div>
+	<div class="form-group">
+    <label class="col-xs-3 control-label" for="inputPassword">密码</label>
+    <div class="col-xs-9">
+      <input type="password" id="inputPassword" class="form-control" placeholder="请输入密码" errormsg="密码为6-20位" nullmsg="请填写密码" datatype="*6-20" name="password">
+    </div>
+  </div>
+	<div class="form-group">
+    <label class="col-xs-3 control-label">&nbsp;</label>
+    <div class="col-xs-9">
+      <button type="submit" class="btn btn-block btn-positive">登 录</button>
+    </div>
+  </div>
+</form>
+<script>
+  seajs.use('user');
+</script>

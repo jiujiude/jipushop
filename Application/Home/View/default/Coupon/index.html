@@ -1,0 +1,47 @@
+<extend name="Base/common"/>
+<block name="body">
+  <div class="clearfix coupon">
+    <notempty name="lists">
+      <notempty name="coupon_getall_ids">
+        <p class="act"><a href="javascript:;" class="btn btn-positive J_get_coupon" data-id="{$coupon_getall_ids}">立即领券</a></p>
+      </notempty>
+      <div class="row list">
+        <volist name="lists" id="vo" mod="4">
+          <div class="col-xs-4">
+            <div class="item <if condition="is_get_coupon(UID, $vo['id'])">has-get<else/>J_get_coupon</if> item-bg-{$mod} <eq name="mod" value="3">last</eq>" id="J_coupon_item_{$vo.id}" data-id="{$vo.id}">
+              <div class="bd">
+                <div class="name">{$vo.name}</div>
+                <div class="info">
+                  <em class="yen">&yen;</em>
+                  <strong>{$vo.amount}</strong>
+                </div>
+                <div class="time">
+                  <p>使用条件：<eq name="vo.norm" value="0">单额不限<else/>订单满{$vo.norm}可使用</eq></p>
+                  <p>有效期：{$vo.expire_time|time_format} 前有效</p>
+                </div>
+              </div>
+              <div class="fd clearfix J_coupon_info">
+                <if condition="is_get_coupon(UID, $vo['id'])">
+                  <em>已经领取</em>
+                  <i class="icon icon-round-check-fill"></i>
+                <else/>
+                  <em>立即领取</em>
+                  <i class="icon icon-arrow-right"></i>
+                </if>
+              </div>
+            </div>
+              
+          </div>
+        </volist>
+      </div>
+    <else />
+      <p class="list-empty">暂无可用优惠券</p>
+    </notempty>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use('coupon');
+  </script>
+</block>

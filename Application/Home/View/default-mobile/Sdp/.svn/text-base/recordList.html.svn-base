@@ -1,0 +1,18 @@
+<volist name="lists" id="vo">
+  <li class="table-view-cell">
+    {$vo.item.name}
+    <gt name="vo.quantity" value="1">
+      × {$vo.quantity}
+    </gt>
+    <notempty name="vo.item.spec">
+      <foreach name="vo.item.spec" item="sp">
+        <br/>{$sp.key}：{$sp.val}
+      </foreach>
+    </notempty>
+    <em class="money"><i class="text-danger">+{$vo.cashback_amount} 元</i></em>
+    <p class="text-info">{$vo.create_time|time_format}</p>
+  </li>
+</volist>
+<script>
+  C.has_more =  '{$_hasmore}';
+</script>

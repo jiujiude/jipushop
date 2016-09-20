@@ -1,0 +1,116 @@
+<extend name="Base/common"/>
+<block name="header">
+<div style="height: 60px;"></div>
+<ul class="category-top-fix">
+<li class="l"><a href="javascript:history.go(-1);"><i class="icon icon-arrow-left"></i></a></li>
+<li class="c">
+  <form action="{:U('Item/search')}" class="content-padded" method="get">
+    <div class="control-group search">
+      <i class="icon icon-search"></i>
+      <input type="search" name="keyword" placeholder="请输入关键词">
+    </div>
+  </form>
+</li>
+<li class="r"><i class="icon icon-liebiaolist29"></i></li>
+<li class="category">
+  <!-- 商品分类 -->
+    <div><span class="close_btn"></span></div>
+    <ul>
+        <li>
+            <a href="{:U('Item/search', array('cid' => $vo['id']))}">
+            <h4 class="name">所有商品 <i class="icon arrow icon-arrow-right"></i></h4>
+            </a>
+            <div class="sub"></div>
+        </li>
+        <notempty name="cateTree">
+        <volist name="cateTree" id="vo">
+          <li>
+            <a <neq name="vo._" value="">class="cateTree"<else/>href="{:U('Item/search', array('cid' => $vo['id']))}"</neq>>
+             <!-- <span class="item item-{$vo.ename}" style="background-color: {$vo['iconbgc']}"><i class="icon icon-{$vo.ename}"></i></span>-->
+              <h4 class="name">{$vo['name']} <i class="icon arrow icon-arrow-right"></i></h4>
+            </a>
+            <div class="sub">
+            	<div class="clearfix">
+                <a class="btn btn-sm btn-default" href="{:U('Item/search', array('cid' => $vo['id']))}"><span>全部</span></a>
+                    <php>$i=1;$three='<p></p>';</php>
+                    <foreach name="vo._" item="sub">
+                        <a class="btn btn-sm btn-default"  <neq name="sub._" value="">cid="{$i}"<else/>href="{:U('Item/search', array('cid' => $sub['id']))}"</neq>><span>{$sub['name']}</span><neq name="sub._" value=""><i class="icon arrow icon-arrow-bottom"></i></neq></a>
+                        <php>
+                            $three.='<p cid-'.$i.'="1">';
+                            if(!empty($sub['_']))$three.='<a href="'.U('Item/search', array('cid' => $sub['id'])).'"><span>全部</span></a>';
+                        </php>
+                        <foreach name="sub._" item="thr">
+                            <php>
+                                $three.='<a href="'.U('Item/search', array('cid' => $thr['id'])).'"><span>'.$thr['name'].'</span></a>';
+                            </php>
+                        </foreach>
+                        <php>
+                            $three.='</p>';
+                            $i++;
+                            if($i%3 == 0){
+                            echo '<div>'.$three.'</div>';
+                            $three='';
+                            }
+                        </php>
+                    </foreach>
+                    <php>
+                        if($i%3 != 0){
+                        echo '<div>'.$three.'</div>';
+                        }
+                    </php>
+                </div>
+            </div>
+          </li>
+        </volist>
+        </notempty>
+    </ul>
+</li>
+</ul>
+</block>
+<block name="body">
+    <div class="list-filter sort">
+        <!--搜索提示-->
+        <notempty name="keyword">
+            <div class="keyword">
+                <h3>共找到（<span class="text-danger">{$_total}</span>）件与“<span class="text-danger">{$keyword}</span>”相关的结果<!-- <small>（23）</small> --></h3>
+            </div>
+        </notempty>
+        <!-- 排序 -->
+        <dl class="dl-horizontal">
+            <dd class="clearfix">
+                <a href="{:U('Item/search', array('cid' => $cid, 'label' => $label, 'keyword' => $keyword, '_field' => 'is_top', '_order' => 'desc'))}" class="{$order_css['active']['is_top']['desc']}">推荐</a>
+                <a href="{:U('Item/search', array('cid' => $cid, 'label' => $label, 'keyword' => $keyword, '_field' => 'viewnum', '_order' => 'desc'))}" class="{$order_css['active']['viewnum']['desc']}">人气</a>
+                <a href="{:U('Item/search', array('cid' => $cid, 'label' => $label, 'keyword' => $keyword, '_field' => 'create_time', '_order' => 'desc'))}" class="{$order_css['active']['create_time']['desc']}">新品</a>
+                <if condition="$order_css['active']['price']['desc'] eq 'active'">
+                    <a href="{:U('Item/search', array('cid' => $cid, 'label' => $label, 'keyword' => $keyword, '_field' => 'price', '_order' => 'asc'))}" class="{$order_css['active']['price']['desc']}">价格<i class="icon icon-arrow-top"></i></a>
+                <else/>
+                    <a href="{:U('Item/search', array('cid' => $cid, 'label' => $label, 'keyword' => $keyword, '_field' => 'price', '_order' => 'desc'))}" class="{$order_css['active']['price']['asc']}">价格<i class="icon icon-arrow-bottom"></i></a>
+                </if>
+                <a href="{:U('Item/search', array('cid' => $cid, 'label' => $label, 'keyword' => $keyword, '_field' => 'buynum', '_order' => 'desc'))}" class="{$order_css['active']['buynum']['desc']}">销量</a>
+            </dd>
+        </dl>
+    </div>
+
+  <!-- 商品列表 -->
+  <notempty name="lists">
+    <div class="item-list clearfix" id="Z_load_itemlist">
+      <include file="itemList"/>
+    </div>
+  <else/>
+    <p class="list-empty">
+      暂无商品！<br>
+      <a href="{:U('Item/search')}" class="btn btn-positive">去看看别的</a>
+    </p>
+  </notempty>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use(['common','module/category'], function(common,category){
+      var url = "{:U('/Item/search', array('keyword' => $_REQUEST['keyword'], 'cid' => $_REQUEST['cid']))}";
+      common.loadmore(url);
+	  category.search_init();
+      category.all_init()
+    });
+  </script>
+</block>

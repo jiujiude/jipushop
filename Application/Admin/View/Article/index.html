@@ -1,0 +1,86 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>文章列表({$_total})</h2>
+  </div>
+
+  <div class="cf">
+    <div class="fl">
+      <div class="btn-group">
+        <a class="btn" href="{:U('Article/add')}">添 加</a>
+        <button class="btn ajax-post confirm" target-form="ids" url="{:U('Article/setStatus',array('status'=>-1))}">删 除</button>
+        <a class="btn" href="{:U('index')}">刷 新</a>（点击"刷新"按钮显示全部信息。）
+      </div>
+    </div>
+    <!-- 高级搜索 -->
+    <form action="{:U()}" method="GET" id="J_search_form">
+    <div class="search-form fr cf">
+      <div class="sleft">
+        <input type="text" name="keywords" class="search-input" value="{:I('keywords')}" placeholder="请输入关键词">
+        <a class="sch-btn" href="javascript:;" id="J_search"><i class="btn-search"></i></a>
+      </div>
+    </div>
+    </form>
+  </div>
+
+  <!-- 数据表格 -->
+  <div class="data-table">
+    <table>
+      <thead>
+        <tr>
+          <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+          <th>ID</th>
+          <th>文章标题</th>
+          <th>头条</th>
+          <th>置顶</th>
+          <th>文章分类</th>
+          <th>发布人</th>
+          <th>发布时间</th>
+          <th>浏览数</th>
+          <th width="125">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <notempty name="list">
+          <volist name="list" id="vo">
+            <tr>
+              <td><input class="ids" type="checkbox" name="ids[]" value="{$vo.id}" /></td>
+              <td>{$vo.id}</td>
+              <td><a href="{:U('edit?id='.$vo['id'])}">{$vo.title}</a></td>
+              <td>
+              <input type="checkbox" data-action="{:U('setFieldValue')}" data-id="{$vo.id}" name="is_topic" value="1" class="J_ajax_updatefield" <if condition="$vo.is_topic eq 1">checked</if>>
+              </td>
+              <td>
+              <input type="checkbox" data-action="{:U('setFieldValue')}" data-id="{$vo.id}" name="is_top" value="1" class="J_ajax_updatefield" <if condition="$vo.is_top eq 1">checked</if>>
+              </td>
+              <td>{$vo.category}</td>
+              <td><a href="{:U('Admin/UserManager/detail', array('id' => $vo['uid']))}">{$vo.uid|get_nickname}</a></td>
+              <td>{$vo.create_time|time_format}</td>
+              <td>{$vo.view}</td>
+              <td>
+                <a href="{:U('/Article/detail?id='.$vo['id'])}" target="_blank">[预览]</a>
+                <a href="{:U('edit?id='.$vo['id'])}">[编辑]</a>
+                <a href="{:U('setStatus',array('ids'=>$vo['id'],'status'=>-1))}" class="confirm ajax-get">[删除]</a>
+              </td>
+            </tr>
+          </volist>
+        <else/>
+          <tr><td colspan="10" class="text-center"> 暂无文章!  <a href="{:U('Article/add')}" class="btn btn-mini">&plus;立即添加</a></td></tr>
+        </notempty>
+      </tbody>
+    </table> 
+  </div>
+  <!-- 分页 -->
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //导航高亮
+    highlight_subnav("{:U('Article/index')}");
+  </script>
+</block>

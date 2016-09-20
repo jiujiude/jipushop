@@ -1,0 +1,39 @@
+<extend name="Base/member"/>
+<block name="breadcrumb"></block>
+<block name="body">
+  <div class="user-box">
+    <div class="user-order">
+      <h3>
+        我的订单
+        <small>
+          <ul class="box-nav clearfix">
+            <li><a href="{:U('Member/order', array('type' => 'payment'))}">待付款（{$order_num.payment}）</a></li>
+            <li><a href="{:U('Member/order', array('type' => 'unship'))}">待发货（{$order_num.unship}）</a></li>
+            <li><a href="{:U('Member/order', array('type' => 'unreceive'))}">待收货（{$order_num.unreceive}）</a></li>
+            <li><a href="{:U('Member/order', array('type' => 'success'))}">已完成（{$order_num.success}）</a></li>
+            <li><a href="{:U('Member/order', array('type' => 'recycle'))}">回收站（{$order_num.recycle}）</a></li>
+          </ul>
+          <a href="{:U('Member/order')}" class="pull-right btn btn-link">查看全部订单&gt;</a>
+        </small>
+      </h3>
+      <notempty name="data.orders">
+        <div class="list">
+          <php>$lists = $data['orders'];</php>
+          <include file="orderList" />
+        </div>
+        <div class="text-center">
+          <a href="{:U('Member/order')}" class="btn btn-sm">查看更多订单&gt;</a>
+        </div>
+      <else/>
+        <p class="list-empty">您暂时没有订单。<a href="{:U('Item/search')}">挑挑喜欢的商品去</a></p>
+      </notempty>
+    </div>
+  </div>
+</block>
+<block name="script">
+  <script>
+    seajs.use('order', function(order){
+      order.listsBind();
+    });
+  </script>
+</block>

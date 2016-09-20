@@ -1,0 +1,52 @@
+<div id="filter">
+  <div class="row">
+    <!-- 商品分类 -->
+    <div class="col-lg-4 col-md-4 item J_home_nav" data-id="category">
+      <a href="javascript:;" class="title">
+        <i class="iconfont">&#xe623;</i>分类
+        <i class="pull-right iconfont">&#xe60c;</i>
+      </a>
+      <!-- 分类列表 -->
+      {:W('ItemCategory/category')}
+    </div>
+    <div class="col-lg-4 col-md-4 item J_home_nav" data-id="option">
+      <a href="" class="title">
+        <i class="iconfont">&#xe623;</i>筛选
+        <i class="pull-right iconfont">&#xe60c;</i>
+      </a>
+      <!-- 筛选选项 -->
+      <div class="nav-category J_home_option">
+        <ul>
+          <li class="item">
+            <a class="title" href="{:U('Item/search', array('cid' => $vo['id']))}"><i class="iconfont">&#xe610;</i>价格</a>
+          </li>
+          <li class="item">
+            <a class="title" href="{:U('Item/search', array('cid' => $vo['id']))}"><i class="iconfont">&#xe610;</i>价格</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+
+    <div class="col-lg-4 col-md-4 item J_home_nav" data-id="sort">
+      <a href="" class="title">
+        <i class="iconfont">&#xe600;</i>热卖
+        <i class="pull-right iconfont">&#xe60c;</i>
+      </a>
+      <div class="nav-category J_home_sort">
+        <ul>
+          <li class="item">
+            <a class="title" href="{:U('Item/search', array('cid' => $vo['id']))}"><i class="iconfont">&#xe610;</i>价格</a>
+          </li>
+          <li class="item">
+            <a class="title" href="{:U('Item/search', array('cid' => $vo['id']))}"><i class="iconfont">&#xe610;</i>销量</a>
+          </li>
+          <li class="item">
+            <a class="title" href="{:U('Item/search', array('cid' => $vo['id']))}"><i class="iconfont">&#xe610;</i>评价</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+      
+  </div>
+</div>

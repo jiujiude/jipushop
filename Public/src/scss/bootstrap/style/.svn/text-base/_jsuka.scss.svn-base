@@ -1,0 +1,250 @@
+/*common*/
+.topbar {
+  position: relative;
+  z-index: 11;
+  height: 36px;
+  line-height:36px;
+  border-bottom: 1px solid $border-color;
+  background: #fafafa;
+  font-size: 12px;
+  color: #8c8c8c;
+}
+.header-page {
+  height: 90px;
+}
+
+.navbar-header {
+
+  > .navbar-brand {
+    margin-left: -3px;
+  }
+}
+
+.navbar-nav {
+
+  > li {
+
+    > a {
+      padding: 15px 30px;
+    }
+  }
+}
+
+.footer {
+  background-color: #fafafa;
+
+  .support {
+
+    > li {
+      width: 16.66666666%;
+    }
+  }
+
+  .copyright {
+    border-top: none;
+
+    > p {
+      border-top: none;
+    }
+  }
+}
+
+/*icon*/
+
+.nav-category-list {
+  left: 7px;
+  height: 448px;
+
+  > .item {
+
+    > a {
+      height: 63px;
+      line-height: 63px;
+
+      > .icon {
+
+        &:first-child {
+          float: left;
+          margin: 16px 10px 16px 0;
+          width: 32px;
+          height: 32px;
+          background: url(../images/icon.png);
+        }
+
+        &.icon-xifeng {
+          background-position: 0 0;
+        }
+
+        &.icon-wuliangye {
+          background-position: -32px 0;
+        }
+
+        &.icon-luzhou {
+          background-position: -64px 0;
+        }
+
+        &.icon-taibai {
+          background-position: -96px 0;
+        }
+
+        &.icon-pts {
+          background-position: 0 -32px;
+        }
+        &.icon-zl {
+          background-position: -32px -32px;
+        }
+        &.icon-ts {
+          background-position: -64px -32px;
+        }
+        &.icon-activity {
+          background-position: -96px -32px;
+        }
+      }
+    }
+
+    > .sub-list {
+      height: 448px;
+    }
+  }
+}
+/*商品列表*/
+.item-list {
+
+  > .item {
+
+    > .thumbnail {
+      height: 360px;
+      overflow: hidden;
+
+      .pic {
+        @include transition(.2s linear);
+      }
+
+      &:hover {
+
+        .pic {
+          @include translate(-5px, 0);
+          @include opacity(0.9);
+        }
+      }
+
+      &.last {
+        border-right: 1px solid $border-color;
+      }
+
+      > .icon-tag {
+        position: absolute;
+        top: 0;
+        right: 8px;
+        display: inline-block;
+        *display: inline;
+        *zoom: 1;
+        width: 63px;
+        height: 63px;
+        text-indent: -9999em;
+        overflow: hidden;
+        background-image: url('../images/sprite.png');
+        background-repeat: no-repeat;
+
+        &.icon-tag-recommend {
+          background-position: -10px -110px;
+        }
+      }
+
+      > .caption {
+
+        > .thumbnail-label {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          -o-text-overflow: ellipsis;
+          -webkit-text-overflow: ellipsis;
+          -moz-text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        > .thumbnail-info {
+          margin-bottom: 0;
+          line-height: 30px;
+
+          > .text-danger {
+            font-size: 24px;
+          }
+
+          > .text-info {
+
+            > .icon {
+              vertical-align: 1px;
+            }
+          }
+        }
+      }
+    }
+
+
+      
+  }
+}
+
+/*item-title*/
+.item-title {
+
+  > h3  {
+
+    > a {
+      padding-left: 15px;
+      border-left: 2px solid lighten($brand-negative, 20%);
+
+      > .more {
+        margin-top: 0;
+        padding: 7px 10px;
+        border-radius: 13px;
+      }
+    }
+  }
+}
+
+.home-slider {
+  height: 448px;
+
+  > .item {
+
+    > .li {
+
+      > a {
+        height: 448px;
+      }
+    }
+  }
+
+  > .nav {
+    margin-top: -30px;
+
+    > ul {
+      display: inline-block;
+      height: 20px;
+
+      > li {
+        float: left;
+        margin-right: 10px;
+        width: 10px;
+        height: 10px;
+        border: none;
+        border-radius: 50%;
+
+        &.on {
+          background-color: $brand-negative;
+        }
+      }
+    }
+  }
+}
+
+.activity {
+
+  > .list {
+
+    > li {
+      margin-bottom: 2px;
+    }
+  }
+}

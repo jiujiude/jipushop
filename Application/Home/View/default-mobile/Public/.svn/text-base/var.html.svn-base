@@ -1,0 +1,28 @@
+<script type="text/javascript">
+(function(){
+  var C = window.C = {
+    'ROOT': '__ROOT__', // 当前网站地址
+    'APP': '__APP__', // 当前项目地址
+    'PUBLIC': '__PUBLIC__', // 项目公共目录地址
+    'IMG': '__IMG__', // 项目图片地址
+    'JS': '__JS__',
+    'CSS': '__CSS__',
+    'UPLOADS': '__UPLOADS__',
+    'SITE_URL': '{:SITE_URL}',
+    'DEEP': "{:C('URL_PATHINFO_DEPR')}", // PATHINFO分割符
+    'MODEL': ["{:C('URL_MODEL')}", "{:C('URL_CASE_INSENSITIVE')}", "{:C('URL_HTML_SUFFIX')}"],
+    'VAR': ["{:C('VAR_MODULE')}", "{:C('VAR_CONTROLLER')}", "{:C('VAR_ACTION')}"],
+    'UID': '{:is_login()}',
+  };
+})();
+</script>
+<script type="text/javascript" src="__JS__/lib/seajs/sea.2.3.0.js"></script>
+<script type="text/javascript" src="__JS__/config.js?{:date('Ymd')}"></script>
+<empty name='unload_weixinjs'>
+  <notempty name="meta_share">
+    <script type="text/javascript">
+      //微信分享参数
+      C.WECHAT_CONFIG =  {:get_jsapi_config('onMenuShareTimeline,onMenuShareAppMessage,onMenuShareQQ')};
+    </script>
+  </notempty>
+</empty>

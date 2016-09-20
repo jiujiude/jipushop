@@ -1,0 +1,20 @@
+<notempty name="data.lists">
+  <div class="row item-list" id="J_load_items">
+    <volist name="data.lists" id="vo">
+      <div class="col-xs-3">
+        <div class="thumbnail">
+          <a href="{:U('Item/detail', array('id' => $vo['id']))}"><img src="{$vo.cover_path}" class="pic" alt="{$vo.name}"></a>
+          <div class="caption">
+            <h4 class="thumbnail-label"><a href="{:U('Item/detail', array('id' => $vo['id']))}">{$vo.name}</a></h4>
+            <p class="thumbnail-info">
+              <span class="text-danger"><em class="yen">&yen;</em>{$vo.price}</span>
+              <if condition="C('IS_SHOW_BUYNUM')"><a href="{:U('Item/detail', array('id' => $vo['id']))}" class="pull-right text-info"><i class="icon icon-cart-fill"></i> {$vo.buynum}人购买</a></if>
+            </p>
+          </div>
+        </div>
+      </div>
+    </volist>
+  </div>
+<else/>
+  <p class="list-empty">暂无相关商品</p>
+</notempty>

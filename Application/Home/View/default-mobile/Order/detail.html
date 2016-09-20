@@ -1,0 +1,295 @@
+<extend name="Base/common"/>
+<block name="header">
+{:hook('mobileTopNav',array('title'=>$meta_title))}
+</block>
+
+<block name="body">
+  <style>
+  .bar-tab{display: none;}
+  .order h4 {
+  padding: 0 10px;
+  height: 42px;
+  line-height: 42px;
+  background-color: rgba(255,255,255,0); 
+  color: #333;
+}</style>
+  <div class="order">
+    <form action="<gt name="data.total_amount" value="0">{:U('Pay/index')}<else/>{:U('Pay/quick')}</gt>" id="payment_{$data['id']}" data-ajax="false" method="POST">
+      <div class="order-detail">
+        <!-- 基本信息 -->
+        <h4>基本信息</h4>
+        <ul class="table-view base">
+          <li class="table-view-cell">
+            <span class="th">订单编号：</span>
+            {$data['order_sn']}
+          </li>
+          <li class="table-view-cell">
+            <span class="th">下单时间：</span>
+            {$data['create_time']|time_format}
+          </li>
+          <li class="table-view-cell">
+            <span class="th">收货地址：</span>
+            {$data.ship.ship_uname}<br>
+            {$data.ship.ship_area}<br>
+            {$data.ship.ship_address}<br>
+            {$data.ship.ship_mobile}
+          </li>
+          <li class="table-view-cell">
+            <span class="th">包裹数：</span>
+            {$data['total_package']}个<span class="attachment">（含{$data['total_quantity']}件商品）</span>
+          </li>
+            <notempty name='data.memo'>
+          <li class="table-view-cell">
+            <span class="th">订单备注</span>
+            {$data.memo}
+          </li>
+          </notempty>
+          <notempty name='data.invoice_des'>
+          <li class="table-view-cell">
+            <span class="th">发票信息</span>
+            <volist name='data.invoice_des' id='vo'>
+              {$vo}<br />
+            </volist>
+          </li>
+          </notempty>
+
+        </ul>
+        <!-- 包裹及配送信息 -->
+        <h4>包裹及配送信息</h4>
+        <ul class="table-view package">
+          <volist name="data.items" id="vo">
+            <li class="table-view-cell" data-href="{:U('Item/detail', array('id' => $vo['item_id']))}">
+              <span class="thumb"><img src="__ROOT__{:get_image_thumb($vo['cover_path'], 100, 100)}" alt="{$vo.name}"></span>
+              <span class="name">{$vo.name}<if condition="$vo[price] eq 0"><span class="text-danger">（赠品）</span></if></span>
+              <span class="spec">{:custom_unserialize($vo['spec'], 1, '，')}</span>
+
+              <span class="price">
+                {$vo.price}元 
+                <gt name="vo.quantity" value="0">
+                  &times; {$vo.quantity}
+                </gt>
+                <gt name="vo.fugou_dis_price" value="0">
+                <span class="text-danger">（老客户立减）</span>
+                </gt>
+                <notempty name="vo.memo">
+                  <span class="text-danger">（{$vo.memo}）</span>
+                </notempty>
+                
+              </span>
+
+              <if condition="$data.o_status eq 202">
+                <notempty name="vo.is_comment">
+                  <a href="/Item/detail/id/{$vo.item_id}.html" class="btn btn-default" style="top:75%">商品详情</a>
+                <else/>
+                  <a href="javascript:comment.add({$vo.item_id}, {$data['id']});" class="btn btn-positive" style="top:75%">立即评价</a>
+                </notempty>
+              </if>
+            </li>
+          </volist>
+        </ul>
+        <notempty name="data.Ship">
+         <ul class="table-view base border-none">
+            <li class="table-view-cell">
+            <span class="th">快递公司：</span>
+            {$data.Ship.delivery_name}
+            </li>
+            <li class="table-view-cell">
+              <span class="th">快递单号：</span>
+              {$data.Ship.delivery_sn}
+              <a href="javascript:$.ui.load('{:U('Order/getDelivery?order_id='.$data['id'])}', '物流配送信息');" class="btn delivery_info_btn hidden Z_delivery_info_btn btn-default">查看物流</a>
+            </li>
+          </ul>
+        </notempty>
+        <!-- 结算清单 -->
+        <h4>结算清单</h4>
+        <ul class="table-view base">
+          
+          <li class="table-view-cell">
+            <span class="th">商品总价：</span>
+            {$data.total_price} 元
+          </li>
+          <li class="table-view-cell">
+            <span class="th">运费总额：</span>
+            + {$data.delivery_fee} 元
+          </li>
+          <eq name="data.payment.is_use_coupon" value="1">
+          <li class="table-view-cell">
+            <span class="th" style="text-indent: 1em;">优惠券：</span>
+            - {$data.payment.coupon_amount} 元
+          </li>
+          </eq>
+          <eq name="data.payment.is_use_card" value="1">
+          <li class="table-view-cell">
+            <span class="th" style="text-indent: 1em;">礼品卡：</span>
+            - {$data.payment.card_amount} 元
+          </li>
+          </eq>
+          <gt name="data.payment.score_amount" value="0">
+            <li class="table-view-cell">
+            <span class="th">积分抵扣：</span>
+            - {$data.payment.score_amount} 元
+            </li>
+          </gt>
+          <if condition="$data['discount_amount'] gt 0">
+          <li class="table-view-cell">
+            <span class="th">优惠金额：</span>
+            {$data.discount_amount} 元
+          </li>
+          </if>
+          <php>$amount = sprintf('%.2f', $data['finance_amount']+$data['total_amount']);</php>
+          <li class="table-view-cell">
+          <if condition="$data['payment_time'] gt 0">
+            <span class="th">实际支付：</span>
+            <em class="text-danger">{$amount}</em> 元
+           <gt name='amount' value='0'>
+            <p class="amount-info">
+              （<if condition="$data['finance_amount'] gt 0">余额：{$data.finance_amount} 元</if>
+              <if condition="$data['finance_amount'] gt 0 AND $data['total_amount'] gt 0">+</if>
+              <gt name="data.total_amount" value="0">
+                {$data.payment.payment_type|get_payment_type_text}：{$data.total_amount}</b> 元
+              </gt>
+              ）
+            </p>
+            </gt> 
+            
+            <else />
+            <span class="th">应付金额：</span>
+            <em class="text-danger">{$amount}</em> 元
+            <gt name='amount' value='0'>
+                  <span class="amount-info">
+                    （
+                        <if condition="$data['finance_amount'] gt 0">余额：{$data.finance_amount} 元</if>
+                        <if condition="$data['finance_amount'] gt 0 AND $data['total_amount'] gt 0">+</if>
+                        <gt name="data.total_amount" value="0">
+                          第三方支付：{$data.total_amount}</b> 元
+                        </gt>
+                    ）
+                  </span>
+            </gt>
+          </if>
+          </li>
+          
+        </ul>
+        <h4>订单操作</h4>
+        <ul class="table-view base">
+          <li class="table-view-cell">
+            <span class="th">订单状态：</span>
+            <strong>{$data.o_status|get_order_status_text}</strong>
+          </li>
+          <notempty name='data.refuse_message'>
+            <li class="table-view-cell">
+              <span class="th" style="width: auto;">退款驳回理由：</span>
+              <strong>&nbsp;&nbsp;&nbsp;&nbsp;{$data.refuse_message}</strong>
+            </li>
+          </notempty>
+        </ul>
+        <!-- 订单操作按钮 -->
+        
+          <switch name="data.o_status">
+            <case value="201">
+              <div class="content-padded" id="Z_order_act">
+                <a href="javascript:order.confirm({$data.id});" class="btn btn-block btn-positive">确认收货</a>
+              </div>
+            </case>
+            <case value="301">
+              <div class="content-padded" id="Z_order_act">
+                <a href="{:U('Order/reShip',array('order_id' => $data['id']))}" class="btn btn-block btn-positive">立即退货</a>
+              </div>
+            </case>
+            <case value="302">
+              <ul class="table-view base  border-none">
+                <li class="table-view-cell">
+                  <span class="th">退货信息：</span>
+                  {$data['reship_info_text']['company_name']} （{$data['reship_info_text']['ship_number']}）
+                </li>
+              </ul>
+            </case>
+            <case value="0">
+              <em class="timer">{$data['timer']}</em>
+              <input type="hidden" name="order_id" value="{$data['id']}">
+              <input type="hidden" name="total_amount" class="Z_total_amount" value="{$data.total_amount}">
+              <input type="hidden" name="payment_type" class="Z_payment_type" value="{$data.payment_type}">
+              <!-- 众筹订单 -->
+              <eq name="data.order_type.name" value="crowdfunding">
+                <a href="{:U('Crowdfunding/doing', array('id' => $data['order_type']['data']['id'], 'oid' => $data['id']))}" class="btn btn-block btn-positive"><eq name="data.order_type.data.has_finish" value="1">众筹完成<else/>正在众筹…</eq></a>
+              <else/>
+                <!-- 余额、卡券支付 or 第三方支付 -->
+                <eq name="data.total_amount" value="0">
+                  <div class="quick-pay">
+                    <div class="control-group">
+                      <input type="text" name="mobile" id="mobile" value="{:session('user_auth.mobile')}" disabled="1"><span class="btn btn-randcode">限注册手机</span>
+                    </div>
+                    <div class="control-group">
+                      <input type="text" name="verify" id="verify" maxlength="4" placeholder="图形验证码">
+                      <img class="verifyimg J_reload_verify" style="width: 86px; height: 30px; position: absolute; right: 10px; top:8px;" title="点击更换" src="{:U('User/verify')}">
+                    </div>
+                    <div class="control-group">
+                      <input type="text" name="randcode" class="last Z_mobile_randcode" maxlength="6" placeholder="支付验证码">
+                      <a href="javascript:;" class="btn btn-primary btn-randcode Z_mobile_randcode_button" data-geturl="{:U('User/sendMobileCode')}">获取支付验证码</a>
+                    </div>
+                    <div class="content-padded">
+                      <a href="javascript:order.quick_pay({$data['id']});" class="btn  btn-block btn-positive">立即支付</a>
+                    </div>
+                  </div>
+                <else/>
+                <!--{//此处只为截断样式 }--> 
+                <div class="content-padded">
+                     <input type="hidden" name="payment_type" id="payment_type" value="{$data.payment_type}">
+                     <if condition="is_weixin()">
+                     <button class="btn btn-block btn-positive" onclick="return Ccyishepay('wechat');" style="background-color: #2d8701;border: 1px solid #2d8701;color: rgba(255,255,255,.9);padding: 8px 0;font-size: 18px;"><i class="icon icon-wechat" style="font-size:25px;color: #fff;margin-right: 5px;"></i>微信支付&nbsp;&nbsp;&nbsp;</button>
+                     <else/>
+                     <button class="btn btn-block btn-positive" onclick="return Ccyishepay('alipay');" style=" background-color: #f77c04;border: 1px solid #f77c04;color: rgba(255,255,255,.9);padding: 8px 0;font-size: 18px;"><i class="icon icon-homeiconzhifubao" style="font-size:25px;color: #fff;margin-right: 5px;"></i> 支付宝支付</button>
+                     </if>
+                 </div>
+                </eq>
+                <div class="content-padded">
+                  <a href="javascript:order.setStatus({$data['id']}, 'cancel');" class="btn btn-block">取消订单</a>
+                </div>
+              </eq>
+            </case>
+          </switch>
+          <switch name="data.o_status">
+            <case value="200">
+              <div class="content-padded" style="display:none;">
+                <a href="javascript:order.refund({$data['id']});" class="btn btn-block">申请退货/退款</a>
+              </div>
+            </case>
+            <case value="202">
+              <if condition="$data.complete_time gt time()-7*24*3600">
+                <div class="content-padded">
+                  <a href="javascript:order.refund({$data['id']});" class="btn btn-block">申请退货/退款</a>
+                </div>
+              </if>
+            </case>
+            <case value="300|301">
+              <div class="content-padded">
+                <a href="javascript:order.unrefund({$data['id']});" class="btn btn-block">撤销退款申请</a>
+              </div>
+            </case>
+          </switch>
+      </div>
+    </form>
+  </div>
+  
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    var order, comment;
+    seajs.use(['order', 'comment','user'], function(o, c,user){
+      order = o;
+      comment = c;
+      user.getRandCode('quickPay');
+    });
+
+    function Ccyishepay(ccyspay)
+      {
+        if(ccyspay=="alipay"){
+            document.getElementById("payment_type").value="alipaywap";
+        }else{
+            document.getElementById("payment_type").value="wechatpay";
+        } 
+       return true;            
+       }
+  </script>
+</block>

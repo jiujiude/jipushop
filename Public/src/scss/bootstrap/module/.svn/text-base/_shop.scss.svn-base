@@ -1,0 +1,204 @@
+/**
+ * 店铺模块
+ */
+
+.shop {
+  > h3 {
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    
+    .title-right-tip {
+      font-size: 14px;
+      color: #999;
+      float: right;
+      margin-top: 10px;
+      
+      a {
+        color: #999;
+        
+        &:hover {
+          color: $brand-primary;
+          padding-bottom: 2px;
+          border-bottom: 1px dotted $brand-primary;
+        }
+      }
+    }
+  }
+
+  /*店铺管理*/
+  > .manage {
+
+    > .form-group {
+
+      &.avatar {
+
+        > .control-label {
+          padding-top: 23px;
+        }
+
+        .btn-upload {
+          display: inline-block;
+          width: 90px;
+          height: 90px;
+          line-height: 60px;
+          border: 2px dashed #eee;
+          border-radius: 5px;
+          background-color: #f9f9f9;
+          text-align: center;
+
+          &:active {
+            background-color: #eee;
+          }
+
+          > .icon-camera-add {
+            font-size: 42px;
+          }
+        }
+
+        .tips {
+          position: absolute;
+          top: 50%;
+          margin-top: -10px;
+          padding: 0 10px;
+          height: 20px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+
+  /*商品列表*/
+  > .item-list {
+
+    > .item {
+
+      > .thumbnail {
+
+        &.thumbnail-fav {
+
+          > .btn-add {
+            display: block;
+            padding: 140px 0 186px;
+            height: 80px;
+            background-color: #eee;
+
+            &:hover {
+              text-decoration: none;
+            }
+
+            > .icon-add {
+              display: block;
+              font-size: 32px;
+            }
+          }
+        }
+
+        > .caption {
+
+          > .thumbnail-info {
+
+            > .text-danger {
+              font-size: 18px;
+            }
+            > .sdp-price {
+              font-size: 14px;
+              >strong {
+                font-size: 14px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /*店铺统计*/
+  > .chart-title-pos {
+    margin: 20px 0 10px;
+    padding: 0 10px;
+    line-height: 40px;
+    background-color: #eee;
+  }
+
+  /*店铺详情页面*/
+  > .detail {
+    margin-top: 0;
+
+    > .head {
+      padding: 50px 0;
+      height: 300px;
+      background: url(../images/shop/banner-2.jpg) center center no-repeat;
+      background-size: cover;
+
+      .info {
+        position: relative;
+        padding-left: 180px;
+
+        > .shop-logo {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 150px;
+          height: 150px;
+          border-radius: 50%;
+          border: 5px solid #fff;
+          overflow: hidden;
+        }
+
+        > .shop-desc {
+          position: relative;
+          padding: 10px 30px;
+          height: 180px;
+          background-color: rgba(0,0,0,.05);
+
+          > .title {
+            color: #fff;
+          }
+
+          > .intro {
+            line-height: 30px;
+            color: #ccc;
+          }
+
+          > .count {
+            margin: 10px 0;
+
+            > li {
+              float: left;
+              margin-right: 20px;
+              text-align: center;
+
+              &:last-child {
+                border-right: none;
+              }
+
+              > .btn {
+                padding: 5px 40px;
+                border-radius: 0;
+                border: none;
+                background-color: rgba(255,255,255,.1);
+                color: #fff;
+
+                &:hover {
+                  background-color: rgba(255,255,255,.2);
+                }
+
+                > .icon {
+                  margin-right: 3px;
+                }
+              }
+            }
+          }
+
+          > .manage {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            margin-top: -22px;
+          }
+        }
+      }
+    }
+  }
+}

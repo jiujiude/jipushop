@@ -1,0 +1,83 @@
+<form id="J_refund_form" method="POST" class="rechange-add-form">
+  <input type="hidden" value="23060" name="uid">
+  <div class="boxpage-div">
+    <if condition="$order['o_status'] eq 300">
+      <div class="boxpage-line">
+        <label class="fl">发货状态：</label>
+        <div class="fl">
+          <gt name="order.shipping_time" value="0">
+          <span class="text-danger">已发货</span>
+            <else/>
+            <span class="text-cancel">未发货</span>
+          </gt>
+        </div>
+      </div>
+      <div class="boxpage-line">
+        <label class="fl">操作：</label>
+        <div class="fl">
+          <select name="to_status">
+            <gt name="order.shipping_time" value="0"><option value="301">需要客户退货</option></gt>
+            <option value="303">不需要退货，直接退款</option>
+            <option value="405">退款驳回</option>
+          </select>
+        </div>
+      </div>
+      <div class="boxpage-line" id="reason">
+        <label class="fl">驳回理由：</label>
+        <div class="fl">
+          <textarea name="reason" class="textarea input-large"></textarea>
+        </div>
+      </div>
+    <elseif condition="$order['o_status'] eq 302"/>
+      <div class="boxpage-line">
+         <label class="fl">退货状态：</label> 
+         <div class="fl text-success">买家已退货</div>
+      </div>
+      <div class="boxpage-line">
+        <label class="fl">快递公司：</label> 
+         <div class="fl">{$order.reship_info_text.company_name}</div>
+      </div> 
+      <div class="boxpage-line">
+        <label class="fl">快递单号：</label> 
+        <div class="fl">
+          {$order.reship_info_text.ship_number}
+          <a href="https://www.baidu.com/s?wd={$order.reship_info_text.company_name}%20{$order.reship_info_text.ship_number}" target="_blank" class="text-danger">[追踪物流信息]</a>
+      
+        </div>
+      </div>
+      <div class="boxpage-line">
+        <label class="fl">退货时间：</label> 
+        <div class="fl text-cancel">
+          {:date('Y-m-d H:i', $order['reship_info_text']['reship_time'])}
+        </div>
+      </div>
+      <div class="boxpage-line">
+        <label class="fl">操作：</label>
+        <div class="fl">
+          <select name="to_status">
+            <option value="303">直接退款</option>
+          </select>
+        </div>
+      </div>
+    </if>
+    
+    <div class="boxpage-line boxpage-menu">
+      <input type='hidden' value="{$order['id']}" name="order_id"/>
+      <a class="btn" href="javascript:;" onclick="order.refund()">确定</a>
+    </div>
+  </div>
+</form>
+
+<script type="text/javascript">
+  ;(function(){
+    $('#J_load_box').css({'zIndex':1030});
+    $('div#reason').hide();
+    $('select[name="to_status"]').change(function(){
+        if($(this).val() == '405'){
+            $('div#reason').show();
+        }else{
+            $('div#reason').hide();
+        }
+    });
+  })();
+</script>

@@ -1,0 +1,185 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <style type="text/css">
+  .query_hint{
+    border: 5px solid #27ae60;
+    width: 250px;
+    height: 50px;
+    line-height: 55px;
+    padding: 0 20px;
+    position: absolute;
+    left: 50%;
+    margin-left: -140px;
+    top: 300px;
+    margin-top: -40px;
+    font-size: 15px;
+    color: #333;
+    font-weight: bold;
+    text-align: center;
+    background-color: #f9f9f9;
+    display:  none;
+  }
+  .query_hint img{
+    position: relative;
+    top: 10px;
+    left: -8px;
+    vertical-align: inherit;
+  }
+  </style>
+  <div id="query_hint" class="query_hint"><img src="__IMG__/loading.gif" />正在生成导出文件，请稍等...</div>
+
+  <div class="main-title">
+    <h2>礼品卡管理（{$_total}）</h2>
+  </div>
+
+  <!-- 按钮工具栏 -->
+  <div class="cf">
+    <div class="fl">
+      <a class="btn" href="{:U('add')}">新 增</a>
+      <notempty name="list">
+        <a class="btn export-excel" href="javascript:;" url="{:U('export',array('keywords'=>I('keywords'), 'is_bind'=>I('is_bind'), 'is_expire'=>I('is_expire')))}">导 出</a>
+      <else/>
+        <button class="btn" disabled="disabled">导 出</button>
+      </notempty>
+      <button class="btn ajax-post confirm" url="{:U('del')}" target-form="ids-form">删 除</button>
+      <a class="btn" href="{:U('index')}">刷 新</a>（点击"刷新"按钮清除搜索条件，显示全部信息。）
+    </div>
+
+    <!-- 高级搜索 -->
+    <div class="search-form fr cf">
+      <div style="float:left; margin-right: 5px;">
+        <select id="is_bind" name="is_bind">
+          <option value="">绑定状态</option>
+          <option value="1">已绑定</option>
+          <option value="0">未绑定</option>
+        </select>
+        <select id="is_use" name="is_use">
+          <option value="">使用状态</option>
+          <option value="1">已使用</option>
+          <option value="0">未使用</option>
+        </select>
+        <select id="is_expire" name="is_expire">
+          <option value="">过期状态</option>>
+          <option value="1">已过期</option>
+          <option value="0">未过期</option>
+        </select>
+      </div>
+
+      <div class="sleft">
+        <input type="text" name="keywords" class="search-input" value="{:I('keywords')}" placeholder="请输入卡号或名称" />
+        <a class="sch-btn" href="javascript:;" id="search" url="{:U()}"><i class="btn-search"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 数据表格 -->
+  <div class="data-table table-striped">
+    <form class="ids-form" name="SearchForm" id="SearchForm" method="post" target="_self">
+      <table>
+        <thead>
+          <tr>
+            <th class="row-selected"><input class="checkbox check-all" type="checkbox"></th>
+            <th>卡号</th>
+            <th>名称</th>
+            <th>面值</th>
+            <th>余额</th>
+            <th>开卡日期</th>
+            <th>有效日期</th>
+            <th>状态</th>
+            <th>绑定用户</th>
+            <th width="40">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <notempty name="list">
+            <volist name="list" id="vo">
+              <tr>
+                <td><input class="ids row-selected" type="checkbox" name="ids[]" value="{$vo.id}"></td>
+                <td><a title="查看与编辑" href="{:U('view?id='.$vo['id'])}">{$vo.number}</a></td>
+                <td>{$vo.name}</td>
+                <td>{$vo.amount}</td>
+                <td>{$vo.balance}</td>
+                <td>{$vo.create_time|time_format='Y-m-d'}</td>
+                <td <eq name="vo.is_expire" value="1">class="date-expired"</eq>>{$vo.expire_time|time_format='Y-m-d'}</td>
+                <td>{$vo.is_bind_text} | {$vo.is_use_text} | {$vo.is_expire_text}</td>
+                <td><a href="{:U('User/view?id='.$vo['card_user']['User']['id'])}" target="_blank">{$vo.card_user.User.username}</a></td>
+                <td>
+                  <!--<a title="编辑" href="{:U('edit?id='.$vo['id'])}">[编辑]</a>-->
+                  <a class="confirm ajax-get" title="删除" href="{:U('del?ids='.$vo['id'])}">[删除]</a>
+                </td>
+              </tr>
+            </volist>
+          <else/>
+            <empty name="keywords">
+              <td colspan="10" class="text-center">暂无礼品卡，<a class="btn btn-mini" href="{:U('add')}">+立即添加</a></td>
+            <else />
+              <td colspan="10" class="text-center">没找到与" {$keywords} "相关的礼品卡，要不您换个关键词再找找看。[ <a href="{:U('index')}">显示全部</a> ]</td>
+            </empty>
+          </notempty>
+        </tbody>
+      </table>
+    </form>
+    <!-- 分页 -->
+    <div class="page">{$_page}</div>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    $(function(){
+      //搜索功能
+      $("#search").click(function(){
+        var url = $(this).attr('url');
+        var query = $('.search-form').find('input').serialize();
+        var is_bind = $("#is_bind").val();
+        var is_use = $("#is_use").val();
+        var is_expire = $("#is_expire").val();
+
+        query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g,'');
+        query = query.replace(/^&/g,'');
+        
+        if(is_bind != ''){
+          query += '&is_bind=' + is_bind;
+        }
+
+        if(is_use != ''){
+          query += '&is_use=' + is_use;
+        }
+
+        if(is_expire != ''){
+          query += '&is_expire=' + is_expire;
+        }
+
+        if(url.indexOf('?') > 0){
+          url += '&' + query;
+        }else{
+          url += '?' + query;
+        }
+
+        window.location.href = url;
+      });
+
+        //回车自动提交
+      $('.search-form').find('input').keyup(function(event){
+        if(event.keyCode===13){
+          $("#search").click();
+        }
+      });
+
+      /* 导出excel文件等待提示 */
+      $('.export-excel').click(function(){
+          document.SearchForm.action = $('.export-excel').attr('url');
+          document.SearchForm.submit();
+      });
+
+
+      //设置单选，复选，下拉菜单的值
+      Core.setValue('is_bind', '{$is_bind|default = ""}');
+      Core.setValue('is_expire', '{$is_expire|default = ""}');
+      
+      //导航高亮
+      highlight_subnav("{:U('index')}");
+    });
+  </script>
+</block>

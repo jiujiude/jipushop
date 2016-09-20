@@ -1,0 +1,38 @@
+<extend name="Base/common"/>
+<block name="header">
+  <header class="bar bar-nav">
+    <div class="segmented-control">
+      <a class="control-item <if condition="$type eq 'days'"> active</if>" href="{:U('', 'type=days')}">
+        按天统计
+      </a>
+      <a class="control-item <if condition="$type eq 'months'"> active</if>" href="{:U('', 'type=months')}">
+        按月统计
+      </a>
+    </div>
+  </header>
+</block>
+
+<block name="body">
+  <div class="shop">
+    <div class="chart-title-pos">返现金额</div>
+    <div class="chart-body" id="amount_charts">
+      <div class="waiting"><img src="__IMG__/loading.gif"> 正在加载图表插件...</div>
+    </div>
+    <div class="chart-title-pos">订单量</div>
+    <div class="chart-body" id="order_charts">
+      <div class="waiting"><img src="__IMG__/loading.gif"> 正在加载图表插件...</div>
+    </div>
+  </div>
+</block>
+
+<block name="footer"></block>
+
+<block name="script">
+  <script>
+    seajs.use('shop', function(shop){
+     shop.statChart('amount_charts', {labels: {$data.labels|json_encode}, datas: {$data.amount_datas|json_encode}});
+     shop.statChart('order_charts', {labels: {$data.labels|json_encode}, datas: {$data.order_datas|json_encode}});
+    });
+
+  </script>
+</block>

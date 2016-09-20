@@ -1,0 +1,61 @@
+<eq name="param.type" value="radio">
+<else/>
+<a href="javascript:userSel.load();" class="btn btn-mini btn-return">&plus;选择用户</a>
+</eq>
+<input type="hidden" name="{$param.name}" id="J_usersel_input" value="{$param.value}">
+<span class="user-sum J_usersel_tip"></span>
+<script>
+var userSel = {
+  index : '{:addons_url("UserSel://UserSel/index?type=".$param["type"])}',
+  load: function(){
+    UI.load(this.index , '选择用户');
+  },
+  manage: function(){
+    var users = $('input[name="{$param.name}"]').val();
+    var url = this.index;
+    //console.log(users);
+    if(users === ''){
+      $('.modal-title').text('选择用户');
+    }
+    url = url + (url.indexOf('?') > -1 ? '&' : '?') + 'users=' + users;
+    UI.load(url, '已选择用户');
+  },
+  search: function(param){
+    var url = this.index;
+    url = url + (url.indexOf('?') > -1 ? '&' : '?') + param;
+    UI.load(url);
+  },
+  selSum: function(){
+    var usersel = $('#J_usersel_input').val(),
+        tip_text = '',
+        tip_obj = $('.J_usersel_tip');
+    if('{$param.type}' == 'radio'){
+      //console.log(usersel);
+      if(usersel > 0){
+        //单选
+        tip_obj.html('...');
+        url = '{:addons_url("UserSel://UserSel/getUserInfo")}';
+        $.get(url, {uid: usersel}, function(data){
+          html = '<span class="show-userinfo">'+ (data.avatar != '' ? '<img src="'+ data.avatar +'" width="32">': '') + data.nickname + (data.mobile != '' ? '（'+ data.mobile +'）' : '') + '</span>';
+          html+= '<a href="javascript:userSel.load();" class="btn btn-default">重新选择</a>';
+          tip_obj.html(html);
+        }, 'json');
+      }else{
+        tip_text = '<a href="javascript:userSel.load();" class="btn btn-mini btn-return">选择用户</a>';
+      }
+    }else{
+      //复选框
+      sum = usersel === '' ? 0 : usersel.split(',').length;
+      tip_text = '已选择 <strong class="text-danger">'+ sum +'</strong> 个用户 (<a href="javascript:userSel.manage();">管理</a>)';
+      if(sum === 0){
+        tip_text = "<empty name='param.empty_tip'>尚未选择用户<else/>{$param.empty_tip}</empty>";
+      }
+    }
+    tip_obj.html(tip_text);
+  }
+};
+//统计选择用户数量
+$(function(){
+  userSel.selSum();
+});
+</script>

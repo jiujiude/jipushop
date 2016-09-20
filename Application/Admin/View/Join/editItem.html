@@ -1,0 +1,93 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title"><h2>编辑商品</h2></div>
+  <div class="tab-wrap">
+    <ul class="tab-nav nav">
+      <li class="current" data-tab="tab0"><a href="javascript:;">基本信息</a></li>
+    </ul>
+  </div> 
+  <form id="form" action="{:U('editItemHandle')}" method="post" class="form-horizontal">
+    <div class="item-field">
+      <div class="tab-content">
+        <div class="tab-pane in tab0">
+          <div class="form-item cf">
+            <label class="item-label">商品名称<span class="check-tips">（优惠信息将高亮显示在商品名称后面）</span></label>
+            <div class="controls">
+              <input type="text" disabled class="text input-large" value="{$data.name}">
+            </div>
+          </div>
+          <div class="form-item">
+            <label class="item-label">通用价格与库存</label>
+            <div class="controls">
+              <div class="field-group">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>店价</th>
+                      <th>库存</th>
+                      <th>拼团人数</th>
+                      <th>开团价</th>
+                      <th>参团价</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><input class="text input-small" name="price" type="text" value="{$data.oprice}"> (元)</td>
+                      <td><input class="text input-mini" name="stock" type="text" value="{$data.ostock}"> (件)</td>
+                      <td><input class="text input-mini" name="join_num" type="text" value="{$data.join_num}"> (人)</td>
+                      <td><input class="text input-mini" name="first_price" type="text" value="{$data.ofprice}"> (元)</td>
+                      <td><input class="text input-mini" name="join_price" type="text" value="{$data.ojprice}"> (元)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
+          <h4 class="title"><i>3</i>商品规格 </h4>
+          
+          <div class="form-item" style="background: #fff;padding:8px;margin-top: -6px;border: 1px solid #ddd" id="sku_spec">
+            <if condition="$data.id gt 0">
+              <div class="text-cancel"><img src="__IMG__/loading_icon.gif"/> 规格数据正在加载...</div>
+              <else/>
+            <div class="text-cancel">当前商品分类没有规格</div>
+            </if>
+          </div>
+          <!-- 基本信息结束 -->
+        </div>
+      </div>
+      <div class="form-item form-action cf">
+        <button class="btn submit-btn ajax-post" id="submit" disabled type="submit" target-form="form-horizontal">保存</button>
+        <a class="btn btn-return" href="{$Think.cookie.__forward__}">返 回</a>
+        <input type="hidden" name="item_id" value="{$data.item_id|default=''}"/>
+        <input type="hidden" name="join_id" value="{$data.join_id|default=''}"/>
+      </div>
+    </div>
+  </form>
+</block>
+
+<block name="script">
+  <script src="__JS__/jquery/jquery.loadtype.js"></script>
+  <script type="text/javascript" src="__JS__/jquery/jquery.printarea.js"></script> 
+  <script type="text/javascript">
+    $(function(){
+      //导航高亮
+      highlight_subnav("{:U('Join/index')}");
+      
+      var c1= "{$data['cid_1']}",
+      c2= "{$data['cid_2']}",
+      c3= "{$data['cid_3']}";
+      url = '{:U("Admin/Join/ajaxProp?item_id=".$data["item_id"])}?type=specification&cid_1=' + c1 + '&cid_2=' + c2 + '&cid_3=' + c3;
+      $.get(url, function(data){
+          if(data != null){
+            $('#sku_spec').empty();
+            $('#sku_spec').append(data);
+          }else{
+            $('#sku_spec').append('<div style="height:100px;line-height:100px;text-indent:20px;color:#f00;">您所选择的分类未绑定规格</div>');
+          }
+          $('#submit').removeAttr('disabled');
+        });
+    });
+  </script>
+</block>

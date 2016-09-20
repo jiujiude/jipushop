@@ -1,0 +1,32 @@
+<extend name="Base/common"/>
+<block name="body">
+    <div class="order-preview crowdfunding">
+      <notempty name="list">
+        <div class="crowdfunding-content">
+          <span>{$list.msg}</span>
+        </div>
+        <div class="crowdfunding-content thin">
+          <div class="progress z_progress">
+          </div>
+        </div>
+        <div class="crowdfunding-content">
+          <span>恭喜，众筹成功，<i class="text-danger">共筹集{$list.raise_amount}元</i></span>
+        </div>
+        <notempty name="list.CrowdfundingUsers">
+          <div class="user-third">
+            <ul class="flex-box">
+              <volist name="list.CrowdfundingUsers" id="vo">
+                <li>
+                  <span>{$vo.username}贡献了：<i class="text-danger">{$vo.pay_money}元</i></span>
+                  <span>{$vo.create_time}</span>
+                </li>
+              </volist>
+            </ul>
+          </div>
+        </notempty>
+        <div class="btn btn-block btn-positive z_help_pay">众筹已结束</div>
+      <else/>
+          <a href="{:U('Index/index')}" class="btn btn-block btn-positive">亲，请先下单</a>
+      </notempty>
+    </div>
+</block>

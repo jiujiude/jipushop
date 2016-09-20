@@ -1,0 +1,189 @@
+.nav-invite {
+  float: right;
+  line-height: 44px;
+
+  .icon {
+    color: $negative-color;
+  }
+}
+
+.item-title {
+
+  > a {
+    padding-left: 5px;
+    border-left: 2px solid $negative-color;
+
+    > .more {
+      padding: 0 10px;
+      border-radius: 24px;
+      background-color: #ff5500;
+      color: #FFF;
+    }
+  }
+}
+
+.index-category {
+  border-bottom: none;
+  border-top: $border-default;
+
+  > .flex-box {
+    margin-bottom: 0 !important;
+    border-bottom: $border-default;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    > li {
+      padding: 15px 0;
+      border-right: $border-default;
+
+      &:active,
+      &:focus {
+        background-color: #f2f2f2;
+      }
+    }
+  }
+}
+
+/*icon*/
+.icon-money:before { content: "\e638"; }
+.icon-wechat:before { content: "\e600"; }
+.icon-appreciate:before { content: "\e601"; }
+.icon-check:before { content: "\e602"; }
+.icon-close:before { content: "\e603"; }
+.icon-edit:before { content: "\e604"; }
+.icon-favor:before { content: "\e605"; }
+.icon-location:before { content: "\e606"; }
+.icon-round-check-fill:before { content: "\e607"; }
+.icon-round-check:before { content: "\e608"; }
+.icon-round-close-fill:before { content: "\e609"; }
+.icon-round-close:before { content: "\e60a"; }
+.icon-round-right-fill:before { content: "\e60b"; }
+.icon-roundright:before { content: "\e60c"; }
+.icon-search:before { content: "\e60d"; }
+.icon-time-fill:before { content: "\e636"; }
+.icon-time:before { content: "\e635"; }
+.icon-arrow-bottom:before { content: "\e60e"; }
+.icon-like-fill:before { content: "\e60f"; }
+.icon-like:before { content: "\e610"; }
+.icon-shop:before { content: "\e62d"; }
+.icon-ticket:before { content: "\e611"; }
+.icon-list:before { content: "\e613"; }
+.icon-my-fill:before { content: "\e614"; }
+.icon-my:before { content: "\e615"; }
+.icon-form:before { content: "\e62c"; }
+.icon-refresh:before { content: "\e616"; }
+.icon-cart:before { content: "\e617"; }
+.icon-remove:before { content: "\e618"; }
+.icon-home:before { content: "\e619"; }
+.icon-cart-fill:before { content: "\e61a"; }
+.icon-home-fill:before { content: "\e630"; }
+.icon-link:before { content: "\e62e"; }
+.icon-lock:before { content: "\e61b"; }
+.icon-weibo:before { content: "\e633"; }
+.icon-items:before { content: "\e62f"; }
+.icon-square-check-fill:before { content: "\e61c"; }
+.icon-square:before { content: "\e61d"; }
+.icon-add:before { content: "\e61e"; }
+.icon-arrow-top:before { content: "\e612"; }
+.icon-redpacket:before { content: "\e620"; }
+.icon-category:before { content: "\e621"; }
+.icon-appreciate-fill:before { content: "\e622"; }
+.icon-info-fill:before { content: "\e623"; }
+.icon-info:before { content: "\e624"; }
+.icon-forward:before { content: "\e62b"; }
+.icon-recharge:before { content: "\e625"; }
+.icon-card:before { content: "\e632"; }
+.icon-qq:before { content: "\e626"; }
+.icon-service:before { content: "\e645"; }
+.icon-sort:before { content: "\e627"; }
+.icon-invite:before { content: "\e628"; }
+.icon-mobile:before { content: "\e629"; }
+.icon-category-fill:before { content: "\e62a"; }
+.icon-camera-add:before { content: "\e637"; }
+.icon-arrow-right:before { content: "\e61f"; }
+.icon-arrow-left:before { content: "\e631"; }
+.icon-sdp:before { content: "\e642"; }
+.icon-stat:before { content: "\e634"; }
+.icon-withdraw:before { content: "\e643"; }
+.icon-message:before { content: "\e641"; }
+
+/*分类icon*/
+.icon-baby:before {
+  content: "\e639";
+}
+.icon-bag:before {
+  content: "\e63a";
+}
+.icon-gift:before {
+  content: "\e63b";
+}
+.icon-food:before {
+  content: "\e63c";
+}
+.icon-wine:before {
+  content: "\e63d";
+}
+.icon-tea:before {
+  content: "\e63e";
+}
+.icon-fruit:before {
+  content: "\e63f";
+}
+.icon-special:before {
+  content: "\e640";
+}
+.icon-meat:before {
+  content: "\e644";
+}
+
+.item.item-meat {
+  background-color: #359eda;
+}
+.item.item-food {
+  background-color: #5ebb44;
+}
+.item.item-fruit {
+  background-color: #ffae3a;
+}
+.item.item-wine {
+  background-color: #bd3258;
+}
+.item.item-special {
+  background-color: #a47ac2;
+}
+.item.item-tea {
+  background-color: #d06c5c;
+}
+.item.item-gift {
+  background-color: #ff5b5f;
+}
+.item.item-baby {
+  background-color: #f10582;
+}
+.item.item-bag {
+  background-color: #ff5b5f;
+}
+.item-le {
+  background-color: #c66600;
+}
+.item.item-shop {
+  background-color: #66CC99;
+}
+.item.item-mobile {
+  background-color: #6699FF;
+}
+.item-camera-add {
+  background-color: #66CCCC;
+}
+.item.item-shengxian {
+  background-color: #66CC99;
+}
+.item.item-jiajushafa{  background-color: #FF9933;
+}
+
+.item.item-servicedianqichengfuwu{  background-color: #66CC99;
+}
+.item.item-shenghuodianqi{  background-color: #FF9900;
+}

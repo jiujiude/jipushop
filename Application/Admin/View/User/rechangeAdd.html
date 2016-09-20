@@ -1,0 +1,34 @@
+<form action="{:U()}" method="POST" class="rechange-add-form">
+  <input type="hidden" value="{$member.uid}" name="uid"/>
+  <div class="boxpage-div">
+    <div class="boxpage-line">
+      <label class="fl">用户：</label>
+      <div class="fl">{$member.uid|get_nickname}</div>
+    </div>
+    <div class="boxpage-line">
+      <label class="fl">当前余额：</label>
+      <div class="fl">{$member.finance}</div>
+    </div>
+    <div class="boxpage-line">
+      <label class="fl">充值/扣款：</label>
+      <div class="fl">
+        <select name="type">
+          <option value="in">充值</option>
+          <option value="out">扣款</option>
+        </select>
+      </div>
+    </div>
+    <div class="boxpage-line">
+      <label class="fl">操作金额：</label>
+      <div class="fl">
+        <input type="text" name="money" class="text input-2x" value="" autocomplete="off" placeholder="请输入金额"> 元
+      </div>
+    </div>
+    <div class="boxpage-line boxpage-menu">
+      <button class="btn ajax-post" data-target-form="rechange-add-form">确定</button>
+    </div>
+  </div>
+</form>
+<script>
+  ajaxpost.init('.rechange-add-form');
+</script>

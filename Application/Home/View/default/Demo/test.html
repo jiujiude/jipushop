@@ -1,0 +1,33 @@
+<extend name="Base/common"/>
+
+<block name="style">
+  <link rel="stylesheet" href="__CSS__/ui.css">
+</block>
+
+<block name="body">
+  <style>
+  .target{width:50px;height:50px;border-radius:25px;background:#000;transition:All 1s ease;-webkit-transition:All 1s ease;-moz-transition:All 1s ease;}
+  </style>
+  <script src="__STATIC__/js/seajs/sea.3.0.0.js"></script>
+  <script src="__JS__/config.js"></script>
+  <script>
+    seajs.use(['jquery', 'position'], function($, Position){
+      console.log($);
+      console.log(Position);
+
+      var stop = false;
+      var target = $('<div class="target"></div>')
+        .hover(function(){stop = true;},function(){stop = false;})
+        .appendTo(document.body);
+      setInterval(function() {
+        if (stop) return;
+        var x = Math.floor(Math.random() * 100);
+        var y = Math.floor(Math.random() * 100);
+        Position.pin(
+          { element: target, x: 'center', y: 'center' }, 
+          { element: Position.VIEWPORT, x: x + '%', y: y + '%' }
+        );
+      }, 800);
+    });
+  </script>
+</block>

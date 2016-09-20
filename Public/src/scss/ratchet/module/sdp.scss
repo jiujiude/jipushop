@@ -1,0 +1,153 @@
+//
+// SDP
+// --------------------------------------------------
+
+.sdp {
+  
+  > .head {
+    position: relative;
+    @include linear-gradient(#f57425, #ee512b);
+    color: #fff;
+    
+    &.bg-1 {
+      @include linear-gradient(#00cec2, #018a82);
+    }
+    
+    &.bg-2 {
+      @include linear-gradient(#57adef, #2f78b0);
+    }
+    
+    
+    > a.my-shop {
+      position: absolute;
+      right: 15px;
+      top: 15px;
+      border-radius: 15px;
+      background: rgba(0, 0, 0, 0.4);
+      color: #FFF;
+      padding: 4px 12px;
+      font-size: 14px;
+    }
+    
+    > .hd {
+      padding: 8% 0 0;
+      
+      > h2 {
+        padding: 8% 0;
+        font-size: 55px;
+        font-weight: 500;
+        letter-spacing: 2px;
+        
+        > a {
+          color: #FFF;
+        }
+      }
+    }
+
+    > .bd {
+      padding: 6% 0;
+      
+      > h4 {
+        padding-left: 68px;
+        line-height: 50px;
+        font-size: 24px;
+        font-weight: 500; 
+        
+        > a.btn {
+          margin-left: 10px;
+          margin-bottom: 3px;
+          font-size: 14px;
+          padding: 6px 10px;
+        }
+      }
+    }
+  }
+
+  /*导航菜单*/
+  > .nav {
+    border-bottom: $border-default;
+
+    > .flex-box {
+
+      &:first-child {
+        border-bottom: $border-default;
+      }
+
+      > li {
+        border-right: $border-default;
+        text-align: center;
+
+        > a {
+          padding: 20px 0;
+          height: 100px;
+          display: block;
+
+          &:hover,
+          &:active,
+          &:visited {
+            background-color: #eee;
+          }
+
+          > .icon {
+            vertical-align: middle;
+            font-size: 36px;
+
+            &.icon-shop {
+              color: #ff4e00;
+            }
+
+            &.icon-items {
+              color: #2abc69;
+            }
+
+            &.icon-form {
+              color: #bd3258;
+            }
+
+            &.icon-stat {
+              color: #a47ac2;
+            }
+            
+            &.icon-card {
+              color: #1db4f0;
+            }
+            
+            &.icon-sdp {
+              color: #2abc69;
+            }
+            
+            &.icon-link {
+              color: #ff4e00
+            }
+          }
+
+          > span {
+            display: block;
+            line-height: 30px;
+          }
+        }
+      }
+    }
+  }
+
+  > .lists {
+
+    > .table-view {
+      border-bottom: none;
+
+      > .table-view-cell {
+        
+        > .money {
+          position: absolute;
+          top: 50%;
+          
+          right: 20px;
+          margin-top: -10px;
+        }
+      }
+    }
+  }
+  
+  
+  //
+}

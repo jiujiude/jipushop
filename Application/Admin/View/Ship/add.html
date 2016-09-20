@@ -1,0 +1,118 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>新增发货单</h2>
+  </div>
+  <div class="order-box">
+    <p>
+      <strong>订单编号：</strong><a href="{:U('Order/view', array('id'=>$order['id']))}">{$order.order_sn}</a>
+      <span class="sep"></span>
+      <strong>下单时间：</strong>{$order.create_time|time_format}
+    </p>
+  </div>
+  <div class="order-item-table mb-10">    
+    <div class="sub-title">
+      <h3>发货清单</h3>
+    </div>
+    <table class="dynamic-table">
+      <thead>
+        <tr>
+          <th>商品编号</th>
+          <th>商品名称</th>
+          <th>商品规格</th>
+          <th width="100">商品数量</th>
+        </tr>
+      </thead>
+      <tbody>
+        <volist name="orderItemInfo" id="vo">
+        <tr>
+          <td><a href="{:U('/Item/detail?id='.$vo['item_id'])}" target="_blank">{$vo.number}</a></td>
+          <td>
+            <a href="{:U('/Item/detail', array('id' => $vo['item_id']))}" target="_blank">
+              <img src="__ROOT__{:get_image_thumb(get_cover($vo['thumb'], 'path'), 100, 100)}" class="goods-thumb" alt="{$vo.name}">
+            </a>
+            <a href="{:U('/Item/detail?id='.$vo['item_id'])}" target="_blank">{$vo.name}</a>
+            <if condition="$vo[price] eq 0"><span class="text-danger">（赠品）</span></if>
+          </td>
+          <td>{$vo.spec|default='无'}</td>
+          <td>{$vo.quantity}</td>
+        </tr>
+        </volist>
+      </tbody>
+    </table> 
+  </div>
+  
+  <div class="sub-title">
+    <h3>收货信息</h3>
+  </div>
+  <div class="order-box">
+    <p>
+      <strong>收货人姓名：</strong>{$ship.ship_uname}
+      <span class="sep"></span>
+      <strong>手机：</strong>{$ship.ship_mobile}
+      <notempty name='ship.ship_phone'>
+        <span class="sep"></span>
+        <strong>座机：</strong>{$ship.ship_phone|default='-'}
+      </notempty>
+      <span class="sep"></span>
+      <strong>地址：</strong>{$ship.ship_area}{$ship.ship_address}
+      <notempty name='ship.ship_zipcode'>
+        <span class="sep"></span>
+        <strong>邮编：</strong>{$ship.ship_zipcode}
+      </notempty>
+    </p>
+  </div>
+  
+  <form action="{:U('update')}" method="post" class="form-horizontal">
+    <div class="form-item">
+      <label class="item-label">快递公司：
+        <notempty name="order.delivery_tpl">
+          （买家指定： <span class="text-warning">{$order.delivery_tpl}</span>）
+        </notempty>
+      </label>
+      <div class="controls">
+        <select name="delivery_name">
+          <volist name="delivery" id="vo">
+            <option value="{$vo}">{$vo}</option>
+          </volist>
+        </select>
+        <a href="javascript:;" class="J_diy_delivery">自定义 +</a>
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">快递单号：</label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="delivery_sn" value="">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">发货备注信息：</label>
+      <div class="controls">
+        <label class="textarea input-large">
+          <textarea name="memo"></textarea>
+        </label>              
+      </div>
+    </div>
+    <div class="form-item button-item">
+      <input type="hidden" name="supplier_id" value="{$order.supplier_ids}">
+      <input type="hidden" name="order_id" value="{$order.id}">
+      <input type="hidden" name="order_sn" value="{$order.order_sn}">
+      <input type="hidden" name="uid" value="{$order.uid}">
+      <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+      <a href="{$Think.cookie.__forward__}" class="btn btn-return">返 回</a>
+    </div>
+  </form>
+</block>
+
+<block name="script">
+  <script src="__JS__/lib/ship.js"></script>
+  <script type="text/javascript">
+    $(function(){
+      //导航高亮
+      highlight_subnav("{:U('index')}");
+      //快递公司处理
+      ship.add();
+    });
+  </script>
+</block>

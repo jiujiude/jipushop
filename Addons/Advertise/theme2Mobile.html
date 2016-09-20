@@ -1,0 +1,23 @@
+<notempty name="data">
+  <switch name="modality">
+    <case value="slide">
+      <div id="slider" class="swipeSlide">
+        <ul>
+          <volist name="data" id="vo">
+            <li><a href="{$vo.link}" title="{$vo.title}"><img src="{:get_image_thumb($vo['image_src'], 940, 450, 6, 590, 0)}"></a></li>
+          </volist>
+        </ul>
+        <notempty name="data.1">
+        <div class="dot">
+          <volist name="data" id="vo">
+            <span></span>
+          </volist>
+         </div>
+        </notempty>
+      </div>
+    </case>
+    <case value="image">
+      <a href="{$data.link}"><img src="{:get_image_thumb($data['image_src'], 1140, 300, 6, 390, 0)}" style="display: block" alt=""></a>
+    </case>
+  </switch>
+</notempty>

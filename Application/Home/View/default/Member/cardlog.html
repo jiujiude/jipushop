@@ -1,0 +1,50 @@
+<extend name="Base/member"/>
+
+<block name="header">
+  <div class="container breadcrumbs">
+    <a href="/index.php">首页</a><span class="sep">/</span><span>我的礼品卡</span></div>
+</block>
+
+<block name="body">
+  <div class="xm-line-box uc-box">
+    <div class="box-hd">
+      <h3 class="title">礼品卡使用记录</h3>
+    </div>
+    <div class="box-bd">
+      <notempty name="cardlog">
+				<div class="uc-coupon-box">
+          <dl>
+            <dt>
+              <span class="col-2">卡号</span>
+              <span class="col-name">名称</span>
+              <span class="col-2">订单编号</span>
+              <span class="col-1">使用金额</span>
+              <span class="col-time">使用时间</span>
+            </dt>
+            <volist name="cardlog" id="vo">
+              <dd class="item">
+                <div class="item-row">
+                  <div class="col-2">{$vo.card_number}</div>
+                  <div class="col-name">{$vo.card_name}</div>
+                  <div class="col-2"><a href="{:U('Member/orderDetail', array('id' => $vo['order_id']))}">{$vo.order_sn}</a></div>
+                  <div class="col-1">{$vo.amount}</div>
+                  <div class="col-time">{$vo.create_time|time_format}</div>
+                </div>
+              </dd>
+            </volist>
+          </dl>
+        </div>
+      <else/>
+        <p class="list-empty">该礼品卡暂无使用记录。</p>
+      </notempty>
+    </div>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    (function(){
+      member.init();
+    })();
+  </script>
+</block>

@@ -1,0 +1,412 @@
+<extend name="Base/common"/>
+<block name="body">
+  <ul class="breadcrumb search">
+    <li><a href="{:U('/')}">首页</a></li>
+    <li><a href="{:U('Item/search', array('cid' => $data['cid_1']))}" target="_self">{$data['category']}</a></li>
+    <li class="active">{$data['name']}</li>
+  </ul>
+  
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="item-hd">
+        <div class="row">
+          <!-- 商品图片 -->
+          <div class="col-xs-6">
+            <div class="item-pic" id="J_item_slider">
+              <notempty name="data.images_list">
+                <div class="bd">
+                  <ul>
+                    <volist name="data.images_list" id="vo">
+                      <!--<li><img src="{:get_image_thumb($vo['path'], 600, 600)}" alt=""></li>-->
+                      <li><img src="{$vo['path']}" alt=""></li>
+                    </volist>
+                  </ul>
+                </div>
+                <div class="hd">
+                  <ul>
+                    <volist name="data.images_list" id="vo">
+                      <li><img src="{:get_image_thumb($vo['path'], 80, 80)}" width="62"></li>
+                    </volist>
+                  </ul>
+                </div>
+                <a class="prev" href="javascript:void(0)"><i class="icon icon-arrow-left"></i></a>
+                <a class="next" href="javascript:void(0)"><i class="icon icon-arrow-right"></i></a>
+              </notempty>
+            </div>
+          </div>
+          <!-- 商品名称、属性、规格、价格 -->
+          <div class="col-xs-6">
+            <div class="item-info clearfix">
+              <!-- 名称、简介 -->
+              <h3>{$data.name} <notempty name="data.subname"><span class="subname text-danger">{$data.subname}</span></notempty></h3>
+              <p class="text-summary">{$data.summary}</p>
+
+              <!-- 价格、规格、数量 -->
+              <div class="panel">
+                <!-- 商品价格 -->
+                <dl class="dl-horizontal item price">
+                  <dt>价格：</dt>
+                  <dd>
+                    <span class="text-danger text-lg"><em class="yen">&yen;</em><em class="J_spec_price">{$data.price}</em></span>
+                    <del><em class="yen">&yen;</em>{$data.mprice}</del>
+                  </dd>
+                </dl>
+                
+                <if condition="$data.show_preferential eq true">
+                <dl class="dl-horizontal preferential">
+                  <dt>&nbsp;</dt>
+                  <dd>
+                    <notempty name="data.SecondPieces">
+                      <span>{$data.SecondPieces.name}</span>
+                    </notempty>
+                    <gt name="data.fugou_dis_price" value="0">
+                      <span>老客户立减 {$data.fugou_dis_price} 元</span>
+                    </gt>
+                  </dd>
+                </dl>
+                </if>
+                
+                <notempty name="data.send_item">
+                  <!-- 赠品 -->
+                  <div class="send-item">
+                    <span class="title">
+                      <gt name="data.send_min_num" value="1">
+                      买 {$data.send_min_num} 赠
+                      <else/>
+                      赠品
+                      </gt>
+                    </span>
+                    <volist name="data.send_item" id="vv">
+                      <span class="item"><a href="{:U('/Item/detail?id='.$vv['id'])}" target="_blank"><img src="{:get_image_thumb($vv['item_info']['thumb'], 50, 50)}" width="26" title="{$vv.item_info.name} × {$vv.num}" alt="{$vv.item_info.name} × {$vv.num}"/></a></span>
+                    </volist>
+                  </div>
+                </notempty>
+                
+                
+                <if condition="C('IS_SHOW_BUYNUM')">
+                  <dl class="dl-horizontal item">
+                    <dt>销量：</dt>
+                    <dd><em class="text-danger">{$data['buynum']}</em> 人已购买</dd>
+                  </dl>
+                </if>
+                
+                <!-- 商品规格 -->
+                <notempty name="data.property.property_specifiction">
+                  <div class="skubox_lists" id="J_skubox_lists">
+                    <p class="tips">请选择您要的商品信息<a href="javascript:;" class="close" id="J_skubox_close"><i class="icon icon-close"></i></a></p>
+                    <volist name="data.property.property_specifiction" id="spc" key="spc_key">
+                      <dl class="dl-horizontal item sku-box J_sku_box">
+                        <dt>{$spc.cname}：</dt>
+                        <notempty name="spc.info">
+                          <dd>
+                            <ul class="clearfix spec-lists J_spec_item <in name='spc.formtype' value='checkbox'>text</in> <in name='spc.formtype' value='color,image'>color</in>">
+                              <volist name="spc.info" id="val">
+                                <li title="{$val['option']}" class="choose J_sale_prop" data-key="{$spc_key}" data-code="{$val['code']}" args="key[{$val['code']}]={$spc.cname}&val[{$val['code']}]={$val['option']}&code[]={$val['code']}">
+                                  <a href="javascript:;">
+                                    <switch name="spc.formtype">
+                                      <case value="color">
+                                        <notempty name="val.item_pic">
+                                          <img class="cloudzoom-gallery" src="__ROOT__{:get_image_thumb($val['item_pic'], 100, 100)}">
+                                        <else/>
+                                          <notempty name="val.pic">
+                                            <img src="__ROOT__{$val.pic|get_cover='path'}" title="{$val['option']}" />
+                                          <else/>
+                                            <i style="background:{$val['color']}"></i>
+                                          </notempty>
+                                        </notempty>
+                                      </case>
+                                      <case value="image">
+                                        <img src="__ROOT__{$val.pic|get_cover='path'}" alt="{$val['option']}" title="{$val['option']}" />
+                                      </case>
+                                      <default/>{$val['option']}
+                                    </switch>
+                                    <span>已选中</span>
+                                  </a>
+                                </li>
+                              </volist>
+                            </ul>
+                          </dd>
+                        </notempty>
+                      </dl>
+                    </volist>
+                  </div>
+                </notempty>
+                <!-- 商品数量 -->
+                <dl class="dl-horizontal item num">
+                  <dt>数量：</dt>
+                  <dd>
+                    <a href="javascript:;" class="minus disabled J_quantity_act" data-option="minus"><i>-</i></a>
+                    <input type="input" id="J_item_quantity" value="1" pattern="[0-9]*" min="1">
+                    <a href="javascript:;" class="plus J_quantity_act {$data['quota_num'] == 1 ? 'disabled' : ''}" data-option="plus"><i>+</i></a>
+                    <span class="stock">
+                      库存 <em class="J_spec_quantity">{$data.stock}</em> 件 
+                      <notempty name="data.quota_num">
+                        （{$data.id|quota_text}限购 <span class="text-danger J_quota_num">{$data.quota_num}</span> 件）
+                      </notempty>
+                    </span>
+                  </dd>
+                </dl>
+                <!-- 运费 -->
+                <dl class="dl-horizontal item deliver">
+                  <dt>运费：</dt>
+                  <dd>
+                    由<strong><eq name="data.supplier_id" value="0">{:C('WEB_SITE_TITLE')}<else/>{$data.supplier_id|get_supplier_text}</eq></strong>发货并提供售后服务
+                    <span class="delivery_free text-danger">
+                      <php>$a_pr = get_supplier_free_amount($data['supplier_id']);</php>
+                      <gt name="a_pr" value="0">
+                      （满{$data.supplier_id|get_supplier_free_amount}元包邮）
+                      <else/>
+                      （免运费）
+                      </gt>
+                      <notempty name="data.SecondPieces">
+                      （限购2件）
+                      </notempty>
+                    </span>
+                    <!--(仅限西安三环以内)-->
+                  </dd>
+                </dl>
+                <input type="hidden" id="J_item_id" name="item_id" value="{$data.id}">
+                <input type="hidden" id="J_item_price" name="price" value="{$data.price}">
+                <!-- 第二件打折，限购2件 -->
+                <notempty name="data.SecondPieces">
+                <input type="hidden" id="J_item_stock" data-stock="2" value="2" />
+                <else/>
+                <input type="hidden" id="J_item_stock" value="{$data.stock}" />
+                </notempty>
+                <input type="hidden" id="J_item_image" value="{$data.cover_path}">
+                <input type="hidden" id="J_item_spec" name="specifiction" value="">
+                <input type="hidden" id="J_item_code" name="item_code" value="{$data.number}">
+              </div>
+
+              <!-- 购买按钮 -->
+              <div class="buy clearfix">
+                <if condition="$data['seckill']">
+                  <span class="item seckill-box text-center J_seckill_time">
+                    秒杀活动已结束
+                  </span>
+                  <span class="item"><a href="javascript:;" class="btn btn-block btn-positive disabled J_seckill_btn"><i class="icon icon-recharge"></i>立即抢购</a></span>
+                <else />
+                  <gt name="data.stock" value="0">
+                    <span class="item"><a href="javascript:;" class="btn btn-block btn-positive J_item_buynow"><i class="icon icon-recharge"></i>立即购买</a></span>
+                    <span class="item"><a href="javascript:;" class="btn btn-block btn-negative add2cart J_item_add2cart"><i class="icon icon-cart"></i>加入购物车</a></span>
+                  <else/>
+                    <span class="item"><a href="javascript:;" class="btn btn-positive disabled">抱歉，卖光了……</a></span>
+                    <span class="item"><a href="{:U('/Item/search')}" class="btn btn-block">去看看别的</a></span>
+                  </gt>
+                </if>               
+              </div>
+
+              <!-- 微信二维码 -->
+              <div class="wechat">
+                <img src="__ROOT__/Uploads/QRcode/Item/{$data['id']}.png" width="100" height="100" alt="">
+                <h4><i class="icon icon-wechat"></i>微信扫购</h4>
+                <p>一键购买，快捷无忧！</p>
+                
+              </div>
+
+              <!-- 社会化分享 -->
+              <div class="share clearfix">
+                <span class="pull-left text-share">分享到：</span>
+                <a href="http://www.jiathis.com/send/?webid=tsina&url={$meta_share.link}&title={$data.name}" class="item" title="分享到新浪微博" target="_blank"><i class="icon icon-share-weibo"></i></a>
+                <a href="http://www.jiathis.com/send/?webid=qzone&url={$meta_share.link}&title={$data.name}" class="item" title="分享到QQ空间" target="_blank"><i class="icon icon-share-qzone"></i></a>
+                <a href="http://www.jiathis.com/send/?webid=weixin&url={$meta_share.link}&title={$data.name}" class="item" title="分享到微信" target="_blank"><i class="icon icon-share-weixin"></i></a>
+                <div class="fav-add">
+                  <a href="javascript:;" data-id="{$data.id}" id="J_item_{$data.id}" class="J_add_fav">
+                    <eq name="data.is_fav" value="1">
+                    <i class="icon icon-like-fill"></i> 已收藏
+                    <else/>
+                    <i class="icon icon-like"></i> 加入收藏
+                    </eq>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+          
+    <!-- 左侧相关商品 -->
+    <div class="col-xs-3 padd0">
+      <div class="item-relative">
+        <div class="page-header">
+          <h4>看过本商品的用户还购买过</h4>
+        </div>
+        <notempty name="data.relative">
+          <ul>
+            <volist name="data.relative" id="vo">
+              <li>
+                <a href="{:U('Item/detail', array('id' => $vo['id']))}" target="_blank">
+                  <img src="__IMG__/img-pai-bg.png" data-url="{:get_image_thumb($vo['cover_path'], 300, 300)}">
+                </a>
+                <h4 class="name"><a href="{:U('Item/detail', array('id' => $vo['id']))}" target="_blank">{$vo.name}</a></h4>
+                <p class="price">
+                  <span class="text-danger"><em class="yen">&yen;</em>{$vo.price}</span>
+                  <if condition="C('IS_SHOW_BUYNUM')"><span class="pull-right text-info">已有{$vo.buynum}人购买</span></if>
+                </p>
+              </li>
+            </volist>
+          </ul>
+        <else/>
+          <p>暂无相关商品！</p>
+        </notempty>
+      </div>
+    </div>
+
+    <!-- 右侧商品详情 -->
+    <div class="col-xs-9 padd0">
+      <div class="item-intro clearfix">
+        <!-- 商品详情tabs -->
+        <ul class="nav nav-tabs" id="J_item_navtabs">
+          <li class="active"><a href="#content" data-toggle="tab">商品介绍</a></li>
+          <li><a href="#comment" data-toggle="tab">用户评价<span id="_plnub">({$data['comment_total']})</span></a></li>
+          <!-- <li><a href="#account" data-toggle="tab">Account</a></li> -->
+          <!-- <li class="disabled"><a>Disabled</a></li> -->
+        </ul>
+        <notempty name="data.property.property_attribute">
+        <!-- 商品参数 -->
+        <div class="property" id="property">
+          <div class="page-header">
+            <h3>商品参数</h3>
+          </div>
+          <div class="row">
+            <volist name="data.property.property_attribute" id="prp">
+              <neq name="prp.info.0" value="">
+              <div class="col-xs-4"><span>{$prp.cname}：</span>
+                <notempty name="prp.info">
+                  <volist name="prp.info" id="val">
+                    <in name="prp.formtype" value="input,textarea">
+                    {$val}
+                    <else/>
+                    <eq name="prp.formtype" value="color">
+                      <notempty name="val.item_pic">
+                        <img src="{$val.item_pic}" alt="{$val['option']}" title="{$val['option']}" class="item_pic" />
+                      <else/>
+                        <notempty name="val.pic">
+                          <img src="__ROOT__{$val.pic|get_cover='path'}" alt="{$val['option']}" title="{$val['option']}" />
+                        <else/>
+                          <i style="background:{$val['color']}"></i>
+                        </notempty>
+                      </notempty>
+                    </eq>
+                    <eq name="prp.formtype" value="image">
+                      <img src="__ROOT__{$val.pic|get_cover='path'}" alt="{$val['option']}" title="{$val['option']}" />
+                    </eq>
+                    {$val['option']}&nbsp;
+                    </in>
+                  </volist>
+                </notempty>
+              </div>
+              </neq>
+            </volist>
+          </div>
+        </div>
+        </notempty>
+        <!-- 商品详情 -->
+        <div class="content" id="content">
+          <div class="page-header">
+            <h3>商品详情</h3>
+          </div>
+          {$data.intro}
+        </div>
+
+        <!-- 用户评价 -->
+        <div class="comment" id="comment">
+          <div class="page-header">
+            <h3>用户评价</h3>
+          </div>
+          <div class="list">
+            <notempty name="data.comment">
+            <volist name="data.comment" id="vo">
+              <div class="list-item">
+                <div class="media">
+                  <div class="media-left">
+                    <if condition="$vo['Member']">
+                      <img class="media-object img-circle" src="<notempty name="vo.Member.avatar">{:get_image_thumb($vo['Member']['avatar'], 120, 120)}<else/>__IMG__/avatar-default.png</notempty>" onerror="this.src='__IMG__/avatar-default.png';" width="60">
+                    <else />
+                      <img class="media-object img-circle" src="<notempty name="vo.image">{:get_image_thumb(get_cover($vo['image'], 'path'), 120, 120)}<else/>__IMG__/avatar-default.png</notempty>" onerror="this.src='__IMG__/avatar-default.png';" width="60">
+                    </if>
+                  </div>
+                  <div class="media-body">
+                    <h4 class="media-heading" id="media-heading">
+                      <if condition="$vo['Member']">
+                        {$vo.Member.nickname|get_hidden_mobile}
+                      <else />
+                        {$vo.nickname}
+                      </if>   
+                      <small>{$vo.create_time|time_format}</small>
+                    </h4>
+                    {$vo.content}
+                    <notempty name="vo.reply">
+                      <div class="media">
+                        <div class="media-left">
+                          <img class="media-object img-circle" src="__IMG__/logo-avatar.png" width="60" onerror="this.src='__IMG__/thumbnail.png'">
+                        </div>
+                        <div class="media-body">
+                          <h4 class="media-heading">{:C('WEB_SITE_TITLE')}回复<small> {$vo.reply.create_time|time_format}</small><a class="anchorjs-link" href="#nested-media-heading"><span class="anchorjs-icon"></span></a></h4>
+                          {$vo.reply.content}
+                        </div>
+                      </div>
+                    </notempty>
+                  </div>
+                </div>
+              </div>
+            </volist>
+            <else/>
+            <div class="list-empty">刚刚上架的宝贝，还没有评论信息~</div>
+            </notempty>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 浮动导航按钮 -->
+    <div class="navbar navbar-default navbar-fixed-top item-navbar" id="J_fixed_navbar">
+      <div class="container">
+        <div class="navbar-header">
+          <h4 class="name">{:get_short($data['name'], 16)}</h4>
+        </div>
+        <div class="navbar-collapse collapse navbar-responsive-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#content">商品介绍</a></li>
+            <li><a href="#comment">用户评价<span id="_plnub">({$data['comment_total']})</span></a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <if condition="$data['seckill']">
+              <h4 class="item name text-center J_seckill_time">
+                秒杀活动已结束
+              </h4>
+              <span class="item"><a href="javascript:;" class="pull-right btn btn-negative btn-positive disabled J_seckill_btn"><i class="icon icon-recharge"></i>立即抢购</a></span>
+            <else />
+              <gt name="data.stock" value="0">
+                <span class="price text-danger"><em class="yen">&yen;</em>{$data.price}元</span>
+                <a href="javascript:;" class="pull-right btn btn-negative J_item_add2cart"><i class="icon icon-cart"></i>加入购物车</a>
+              <else/>
+                <span class="price text-danger"><em class="yen">&yen;</em>{$data.price}元</span>
+                <a href="javascript:;" class="pull-right btn btn-negative disabled"><i class="icon icon-cart"></i>抱歉，卖光了……</a>
+              </gt>            
+            </if> 
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //规格组合对应的价格，数量值数组
+    var spc_data_info = null;
+    <notempty name="data.property.spc_data">
+      spc_data_info = '{$data.property.spc_data}';
+    </notempty>
+    seajs.use(['item'], function(item){
+      if({$data.stock} > 0){
+        item.init(spc_data_info, {:json_encode($data['seckill'])});
+      }else{
+        item.init(spc_data_info, null);
+      }
+    });
+  </script>
+</block>

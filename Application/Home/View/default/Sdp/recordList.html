@@ -1,0 +1,20 @@
+<volist name="lists" id="vo">
+  <div class="col-xs-12">
+    <div class="bd clearfix">
+      <div class="col-xs-7">
+        {$vo.item.name}
+        <notempty name="vo.item.spec">
+          <span class="text-info">
+            <foreach name="vo.item.spec" item="sp">
+              {$sp.key}：{$sp.val}
+            </foreach>
+          </span>
+        </notempty>
+      </div>
+      <div class="col-xs-2">
+        <span class="text-danger">+{$vo.cashback_amount}</span>
+      </div>
+      <div class="col-xs-3">{$vo.create_time|time_format}</div>
+    </div>
+  </div>
+</volist>

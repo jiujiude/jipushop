@@ -1,0 +1,27 @@
+<extend name="Base/common" />
+<block name="body">
+  <div class="content-padded">
+    <form action="__SELF__" method="post" id="Z_reship_form">
+      <div class="control-group">
+      {:nl2br(C('RESHIP_CONTENT'))}
+    </div>
+      <div class="control-group">
+        <input type="text" name="company_name" value="" placeholder="快递公司名称">
+      </div>
+      <div class="control-group">
+        <input type="tel" name="ship_number" value="" placeholder="快递单号">
+      </div>
+      <div class="control-action">
+        <button type="submit" class="btn btn-positive btn-block">提交保存</button>
+      </div>
+      <input type="hidden" name="order_id" value="{$order['id']}">
+    </form>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    (function(){
+    })();
+  </script>
+</block>

@@ -1,0 +1,78 @@
+<extend name="Public/base" />
+
+<block name="body">
+	<!-- 标题栏 -->
+	<div class="main-title">
+		<h2>商品评价({$_total})</h2>
+	</div>
+	<div>
+    <if condition="I('get.item_id')">
+      <a href="{:U('add', array('item_id' => I('get.item_id')))}" class="btn">新增评价</a>
+      <a class="btn" href="{:U('index')}">刷 新 <span style="font-size:12px;font-weight:normal">(清空搜索条件)</span></a>
+    </if>
+	</div>
+
+	<!-- 数据列表 -->
+	<div class="data-table table-striped">
+		<table>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>评价星级</th>
+					<th >评价商品</th>
+					<th>评价用户</th>
+					<th>评价时间</th>
+					<th width="500">评价内容</th>
+					<th>是否回复</th>
+          <th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<notempty name="lists">
+				<volist name="lists" id="vo">
+				<tr>
+					<td>{$vo.id}</td>
+					<td>{$vo.star_amount}</td>
+					<td>
+            <a href="{:U('/Item/detail?id='.$vo['item_id'])}" target="_blank">{$vo.item_id|get_item_name}</a>
+          </td>
+					<td>
+            <if condition="0 eq $vo['uid']">
+              {$vo.nickname}
+            <else />
+             <a href="{:U('User/view', array('id' => $vo['uid']))}">{$vo.uid|get_nickname}</a>
+            </if>    
+          </td>
+					<td>{$vo.create_time|time_format}</td>
+					<td>{$vo.content}</td>
+					<td>
+            <if condition="get_item_comment_reply($vo['id'])">
+              <span class="text-success">已回复</span>
+            <else />
+              <span class="text-danger">未回复</span>
+            </if>
+          </td>
+          <td>
+            <a href="javascript:;" onclick="UI.load('{:U('reply?id='.$vo['id'])}', '回复评价')">[回复]</a>
+            <a href="{:U('edit?id='.$vo['id'])}">[编辑]</a>
+            <a href="{:U('setStatus?status=-1&ids='.$vo['id'])}" class="confirm ajax-get">[删除]</a>
+          </td>
+				</tr>
+				</volist>
+				<else/>
+				<td colspan="6" class="text-center"> aOh! 暂时还没有内容! </td>
+				</notempty>
+			</tbody>
+		</table>
+	</div>
+	<!-- 分页 -->
+    <div class="page">
+        {$_page}
+    </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    highlight_subnav("{:U('index')}");
+  </script>
+</block>

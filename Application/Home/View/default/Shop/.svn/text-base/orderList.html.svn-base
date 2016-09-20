@@ -1,0 +1,47 @@
+<notempty name="lists">
+  <volist name="lists" id="vo">
+    <div class="item">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="hd clearfix">
+            <span class="col-xs-9">下单时间：{$vo.create_time|time_format}</span>
+            <span class="text-right col-xs-3">订单号：{$vo.order_sn}</span>
+          </div>
+        </div>
+        <div class="col-xs-12 bd clearfix">
+          <div class="col-xs-4">
+            <volist name="vo.OrderItem" id="vl">
+              <elt name="key" value="3">
+                <a href="{:U('Item/detail', array('id' => $vl['item_id']))}" class="pic" target="_blank"><img src="{:get_image_thumb($vl['cover_path'], 60, 60)}" width="60" /></a>
+              </elt>
+            </volist>
+          </div>
+          <div class="col-xs-3 text-center">
+            <span class="text-danger text-amount">{:sprintf('%.2f',$vo['total_amount'] + $vo['finance_amount'])}元</span>
+          </div>
+          <div class="col-xs-3 text-center">
+            已返现 <span class="text-danger">{$vo.id|get_cashback_amount}</span> 元
+          </div>
+        </div>
+      </div>
+      <!-- <p>
+        <em>订单号：{$vo['order_sn']}</em>
+        <em class="pull-right">{:time_format($vo['create_time'], 'Y-m-d')}</em>
+      </p>
+      <a href="javascript:;" class="item">
+        <ul>
+          <volist name="vo.OrderItem" id="vl">
+            <li><img src="__ROOT__{:get_image_thumb($vl['cover_path'], 100, 100)}" alt=""></li>
+          </volist>
+        </ul>
+        <span>{$vo['total_package']}个包裹 (共{$vo['total_quantity']}件商品)</span>
+      </a>
+      <div class="info">
+        <span class="pull-right text-danger price">&yen;<em>{$vo['total_amount']}</em></span>
+        <div class="status" id="Z_order_{$vo['id']}">
+          已返现 <span class="text-danger">{$vo.id|get_cashback_amount}</span> 元
+        </div>
+      </div> -->
+    </div>
+  </volist>
+</notempty>

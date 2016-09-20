@@ -1,0 +1,211 @@
+<extend name="Base/common"/>
+<block name="header"> {:hook('mobileTopNav',array('title'=>$meta_title))} </block>
+<block name="body">
+<link href="__CSS__/order.css" rel="stylesheet">
+  <div class="order">
+    <form action="{:U('add')}" id="Z_checkout_form" method="post">
+      <!-- 收货地址 -->
+      <h4>收货地址</h4>
+      <notempty name="data.default_receiver"> <a href="{:U('Receiver/index/buynow/'.$buynow)}" class="receiver">
+        <h5>{$data.default_receiver.name}</h5>
+        <p>{$data.default_receiver.area}{$data.default_receiver.address}</p>
+        <p>{$data.default_receiver.mobile}</p>
+        <i class="icon icon-arrow-right"></i>
+        <input type="radio" name="receiver_id" class="hide" value="{$data.default_receiver.id}" checked="checked">
+        </a>
+        <else/>
+        <div class="content-padded"> <a href="{:U('Receiver/index')}" class="btn btn-block btn-positive">选择收货地址</a> </div>
+      </notempty>
+      
+      <!-- 付款方式 -->
+      <h4>付款方式</h4>
+      <ul class="payment" id="Z_payment">
+        <if condition="is_weixin()">
+          <li class="item selected"> <span class="icon weixin"></span>
+            <input type="radio" name="payment_type" value="wechatpay" checked="checked">
+            <em class="arrow"></em> </li>
+          <li class="item"> <span class="icon alipay"></span>
+            <input type="radio" name="payment_type" value="alipaywap">
+            <em class="arrow"></em> </li>
+          <else/>
+          <li class="item selected"> <span class="icon alipay"></span>
+            <input type="radio" name="payment_type" value="alipaywap" checked="checked">
+            <em class="arrow"></em> </li>
+        </if>
+      </ul>
+      <div class="payment-ext Z_payment_list">
+        <ul class="table-view">
+          <!-- 优惠券支付 -->
+          <notempty name="data.coupons.lists">
+            <li class="table-view-cell Z_itemlist" id="Z_order_coupon_box">
+              <input type="checkbox" class="Z_payment_item" name="use_coupon" id="use_coupon">
+              <i class="icon icon-square"></i> 使用优惠券（<em class="text-danger">有可用优惠券</em>） <i class="icon icon-arrow-bottom" id="Z_coupon_arrow"></i> </li>
+            <div class="payment-box hide Z_itemlist" id="Z_coupon_box">
+              <div class="con-item-bd">
+                <ul class="coupon-list" id="Z_coupon_list">
+                  <volist name="data.coupons.lists" id="vo">
+                    <li>
+                      <label for="coupon_item_{$vo.Coupon.id}">
+                        <input type="radio" name="order[coupons][]" value="{$vo.Coupon.number}" id="coupon_item_{$vo.Coupon.id}" />
+                        <i>{$vo.Coupon.name}（
+                        <eq name="vo.Coupon.norm" value="0">全场不限制
+                          <else/>
+                          满{$vo.Coupon.norm}元使用</eq>
+                        ）</i> <span>{$vo.Coupon.amount} 元</span> </label>
+                    </li>
+                  </volist>
+                </ul>
+              </div>
+              <div class="con-item-ft">
+                <p class="coupon-tip" id="checkCouponTip2"></p>
+                <a href="javascript:void(0);" class="btn" id="Z_coupon_cancel">取消使用</a> <a href="javascript:void(0);" class="btn btn-positive" id="Z_coupon_check">确认使用</a> </div>
+            </div>
+          </notempty>
+          
+          <!-- 礼品卡支付 -->
+          <notempty name="data.cards.lists">
+            <li class="table-view-cell" id="Z_order_card_box">
+              <input type="checkbox" class="Z_payment_item" name="use_coupon" id="use_card">
+              <i class="icon icon-square"></i> 使用礼品卡（<em class="text-danger">有可用礼品卡</em>） <i class="icon icon-arrow-bottom" id="Z_card_arrow"></i> </li>
+            <div class="payment-box hide Z_itemlist" id="Z_card_box">
+              <div class="con-item-bd">
+                <ul class="coupon-list" id="Z_card_list">
+                  <volist name="data.cards.lists" id="vo">
+                    <li>
+                      <label for="cards_item_{$vo.Card.id}">
+                        <input type="checkbox" name="order[cards][]" value="{$vo.Card.number}" id="cards_item_{$vo.Card.id}" />
+                        <i>{$vo.Card.name}</i> <span>{$vo.Card.balance} 元</span> </label>
+                    </li>
+                  </volist>
+                </ul>
+              </div>
+              <div class="con-item-ft"> <a href="javascript:void(0);" class="btn" id="Z_card_cancel">取消使用</a> <a href="javascript:void(0);" class="btn btn-positive" id="Z_card_check">确认使用</a> </div>
+            </div>
+          </notempty>
+          <if condition="(C('SCORE_EXCHANGE_STATUS') eq 1) AND ($member['score'] gt 0)"> 
+            <!-- 积分支付 -->
+            <li class="table-view-cell" id="Z_order_score_box">
+              <input type="checkbox" class="hide Z_payment_item" name="use_score_input" id="Z_use_score">
+              <i class="icon icon-square"></i> 使用积分抵扣（可用：<em class="text-danger">{$member.score}</em> 积分） </li>
+          </if>
+          <!-- 账户余额支付 -->
+          <if condition="$member['finance'] gt 0">
+            <li class="table-view-cell" id="Z_order_finance_box">
+              <input type="checkbox" class="hide Z_payment_item" name="use_finance" id="Z_use_finance">
+              <i class="icon icon-square"></i> 使用账户余额（可用余额：<em class="text-danger">{$member.finance}</em> 元） </li>
+          </if>
+        </ul>
+      </div>
+      <if condition="C('IS_RECEIPT') eq 1">
+        <!-- 发票信息 -->
+        <h4>发票信息</h4>
+        <p class="payment"> <span> 不开发票&nbsp</span> <a class="text-danger" href="#invoice" >修改</a> </p>
+      </if>
+      <h4>商品清单 <span class="pr-h4">共 <span class="text-danger">{$order_count['total_quantity']}</span> 件商品</span></h4>
+      <div class="items">
+        <notempty name="data.items">
+          <div class="package">
+            <volist name="data.items" id="supp">
+              <div class="supplier-box">
+                <div class="supplier-title">
+                  <gt name="supp.supplier_id" value="0">{$supp.supplier_name}
+                    <else />
+                    <span class="is-self">自营</span></gt>
+                  <div class="pull-right">
+                    <notempty name="order_count[supplier][$supp['supplier_id']][delivery]">
+                      <select name="delivery_id[{$supp['supplier_id']}]" class="Z_delivery_id">
+                        <volist name="order_count['supplier'][$supp['supplier_id']][delivery]" id="d_li">
+                          <option value="{$d_li.id}" data-price="{$d_li.price}">{$d_li.company}（运费{$d_li.price}元）</option>
+                        </volist>
+                      </select>
+                      <else />
+                      <select name="delivery_id[{$supp['supplier_id']}]" class="Z_delivery_id" style="background:none;">
+                        <option value="0" data-price="0">快递免邮</option>
+                      </select>
+                    </notempty>
+                  </div>
+                </div>
+                <volist name="supp.item" id="vo">
+                  <div class="item">
+                    <div class="pic"><img src="__ROOT__{:get_image_thumb($vo['cover_path'], 100, 100)}" width="58" height="58"></div>
+                    <div class="name">{$vo['name']}</div>
+                    <if condition="$vo['stock'] lt $vo['quantity']"><em class="text-danger">此商品所购买数量大于库存</em></if>
+                    <notempty name="vo.spec">
+                      <div class="spec">
+                        <volist name="vo.spec" id="vl"> <span class="mr-sm">{$vl.key}：{$vl.val}</span> </volist>
+                      </div>
+                    </notempty>
+                    <div class="attr"> <span class="text-danger"> &yen;{$vo['price']} &times; {$vo['quantity']}
+                      <if condition="$vo.dis_price gt 0"><span class="price-tip">老客户立减</span></if>
+                      <if condition="$vo['discount_name']"> <span class="price-tip">{$vo.discount_name}</span> </if>
+                      </span> </div>
+                  </div>
+                </volist>
+                <div class="send-items Z_send_supp_{$supp.supplier_id}"></div>
+              </div>
+            </volist>
+          </div>
+        </notempty>
+      </div>
+      <!-- 订单支付信息汇总 -->
+      <div class="count">
+        <ul>
+          <li>商品总价：<span>{$order_count['total_price']} 元</span></li>
+          <li>运费：<span id="Z_delivery_fee">0 元</span></li>
+          
+          <notempty name="data.coupons.lists">
+          <li>优惠券抵扣：<span id="Z_coupon_desc">-0 元</span></li>
+          </notempty>
+          
+          <notempty name="data.cards.lists">
+          <li>礼品卡抵扣：<span id="Z_card_desc">-0 元</span></li>
+          </notempty>
+          
+          <if condition="(C('SCORE_EXCHANGE_STATUS') eq 1) AND ($member['score'] gt 0)"> 
+          <li class="hide" id="Z_score_desc">积分抵扣：<span>-0 元</span></li>
+          </if>
+          
+          <if condition="$order_count['manjian']">
+            <li>满减优惠：<span id="Z_promote_desc" data-price="0">-{:sprintf('%.2f', $order_count['manjian'])} 元</span></li>
+          </if>
+          <if condition="session('user_auth.group_id') gt 0">
+            <li>{:get_group_name(session('user_auth.group_id'))}：<span id="cardDesc">{:get_group_description(session('user_auth.group_id'))}</span></li>
+          </if>
+          
+          <if condition="$member['finance'] gt 0">
+          <li>账户余额支付：<span id="Z_finance_desc">-0 元</span></li>
+          </if>
+        </ul>
+      </div>
+      <input type="hidden" name="is_use_finance" id="Z_is_use_finance">
+      <input type="hidden" name="coupon_id" id="Z_coupon_id">
+      <input type="hidden" name="card_id" id="Z_card_id">
+      <input type="hidden" name="use_score" id="Z_use_score_number">
+      <input type="hidden" name="score_amount"id="Z_use_score_amount">
+      <input type="hidden" name="buynow" id="buynow" value="{$buynow}">
+      <input type="hidden" name="item_ids" id="Z_item_ids" value="{$item_ids}">
+      <input type="hidden" name="invoice_title" id="invoice_title" >
+    </form>
+  </div>
+</block>
+
+<!-- 底部tab -->
+<block name="footer"> 
+  <!--弹出发票信息 -->
+  <include file="Order/invoice" />
+  <div class="bar bar-tab"> <span class="tab-text"> 应付总额：<strong class="text-danger" id="Z_total_price"><em class="yen">&yen;</em> {:sprintf('%.2f', $order_count['total_price'])}</strong> </span> <span class="pull-right cart-checkout"> <a href="javascript:;" class="btn btn-negative btn-tab" id="Z_order_submit">提交订单</a> </span> </div>
+</block>
+<block name="script">
+  <script>
+    seajs.use(['order', 'cart' ,'invoice'], function(order, cart ,invoice){
+      //满减规则
+      C.manjianRule = {$order_count.manjian|json_encode};
+      
+      var total_price = '{$order_count.total_price}';
+      order.init(total_price);
+      invoice.init();
+      //
+      cart.getSendItem({:I('get.buynow')});
+    });
+  </script> 
+</block>

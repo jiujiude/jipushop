@@ -1,0 +1,25 @@
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{$meta_title}{:C('WEB_SITE_TITLE')}-{:C('WEB_SITE_SUB_TITLE')}</title>
+<meta name="Keywords" content="{:C('WEB_SITE_KEYWORD')}">
+<meta name="Description" content="{:C('WEB_SITE_DESCRIPTION')}">
+<meta property="qc:admins" content="26713603346011413056375" />
+<meta property="wb:webmaster" content="9668f61721702d43" />
+<meta property="formhash" content="{:create_form_hash()}" />
+<link href="__IMG__/favicon.ico" rel="shortcut icon">
+<link href="__CSS__/style.min.css?15112509" rel="stylesheet">
+<link href="__CSS__/hd.css" rel="stylesheet">
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+<script src="__JS__/lib/iesupport/html5shiv.min.js"></script>
+<script src="__JS__/lib/iesupport/respond.min.js"></script>
+<![endif]-->
+
+<block name="style"></block>
+<!-- 页面header钩子，一般用于加载插件CSS文件和代码 -->
+{:hook('pageHeader')}
+<include file="Public/var"/>
+<script src="__JS__/lib/seajs/sea.3.0.0.js" type="text/javascript"></script>
+<script src="__JS__/config.js?{:date('YmdH')}" type="text/javascript"></script>

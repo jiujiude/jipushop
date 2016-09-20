@@ -1,0 +1,4 @@
+<nav class="nav-tabs-wb">
+  <a <if condition="(CONTROLLER_NAME eq 'Withdraw' AND ACTION_NAME eq 'add')">class="active"</if> href="{:U('Withdraw/add')}">申请提现</a>
+  <a <if condition="(CONTROLLER_NAME eq 'Withdraw' AND ACTION_NAME eq 'index')">class=" active"</if> href="{:U('Withdraw/index')}">提现记录</a>
+</nav>

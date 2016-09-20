@@ -1,0 +1,32 @@
+<volist name="lists" id="vo">
+  <div class="order-lists">
+    <p>
+      <em>订单号：{$vo['order_sn']}</em>
+      <em class="pull-right">{:time_format($vo['create_time'], 'Y-m-d')}</em>
+    </p>
+    <a href="{:U('Supplier/detail', array('key' => I('get.key'), 'id' => $vo['id']))}" class="item">
+      <ul>
+        <volist name="vo.OrderItem" id="vl">
+          <li><img src="__ROOT__{:get_image_thumb($vl['cover_path'], 100, 100)}" alt=""></li>
+        </volist>
+      </ul>
+      <span>共{$vo['total_quantity']}件商品</span>
+      <i class="pull-right icon icon-arrow-right"></i>
+    </a>
+    <div class="info">
+      <span class="pull-right price">付款时间：{:time_format($vo['payment_time'])}</span>
+      <div class="status" id="Z_order_2029">
+        
+        <em class="msg">{$vo.o_status|get_o_status_text}</em>
+<!--        <if condition="$vo['o_status'] eq 201">
+          <em class="msg">已发货</em>
+        <else />
+          <a href="{:U('Supplier/detail', array('key' => I('get.key'), 'id' => $vo['id']))}" class="btn btn-positive btn-act">待发货</a>
+        </if>-->
+      </div>
+    </div>
+  </div>
+</volist>
+<script>
+  C.has_more =  '{$_hasmore}';
+</script>

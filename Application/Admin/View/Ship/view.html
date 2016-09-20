@@ -1,0 +1,100 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>查看发货单</h2>
+  </div>    
+  <div class="sub-title">
+    <h3>物流信息</h3>
+  </div>
+  <div class="order-box">
+    <p>
+      <strong>物流公司：</strong>{$info.delivery_name}
+      <span class="sep"></span>
+      <strong>快递单号：</strong>
+      {$info.delivery_sn}
+      <a href="https://www.baidu.com/s?wd={$info.delivery_name}%20{$info.delivery_sn}" target="_blank">[追踪]</a>
+      <span class="sep"></span>
+      <strong>发货时间：</strong>{$info['create_time']|time_format}
+    </p>
+    <notempty name="info.memo">
+    <p>
+      <strong>备注信息：</strong>{$info.memo}
+    </p>
+    </notempty>
+  </div>
+  
+  <div class="sub-title">
+    <h3>收货人信息</h3>
+  </div>
+  <div class="order-box">
+    <p>
+      <strong>姓名：</strong>{$info.ship.ship_uname}
+      <span class="sep"></span>
+      <strong>手机：</strong>{$info.ship.ship_mobile}
+      <if condition="$info['ship']['ship_phone']">
+        <span class="sep"></span>
+        <strong>座机：</strong>{$info.ship.ship_phone}
+      </if> 
+      <span class="sep"></span>
+      <strong>收货地址：</strong>{$info.ship.ship_area}{$info.ship.ship_address}
+      <if condition="$info['ship']['ship_zipcode']">
+        <span class="sep"></span>
+        <strong>邮编：</strong>{$info.ship.ship_zipcode}
+      </if> 
+    </p>
+  </div>
+  
+  <div class="sub-title">
+    <h3>订单信息</h3>
+  </div>
+  <div class="order-box">
+    <p>
+      <strong>订单编号：</strong><a href="{:U('Order/view', array('id'=>$orderInfo['id']))}">{$orderInfo.order_sn}</a>
+      <span class="sep"></span>
+      <strong>下单时间：</strong>{$orderInfo.create_time|time_format}
+      <span class="sep"></span>
+      <strong>付款时间：</strong>{$orderInfo.payment_time|time_format}
+    </p>
+  </div>
+  
+  <div class="order-item-table mb-20">    
+    <div class="sub-title">
+      <h3>发货清单</h3>
+    </div>
+    <table class="dynamic-table">
+      <thead>
+        <tr>
+          <th>商品编号</th>
+          <th>商品名称</th>
+          <th>商品规格</th>
+          <th width="100">商品数量</th>
+        </tr>
+      </thead>
+      <tbody>
+        <volist name="orderItemInfo" id="vo">
+        <tr>
+          <td><a href="{:U('/Item/detail?id='.$vo['item_id'])}" target="_blank">{$vo.number}</a></td>
+          <td class="aleft">
+            <a href="{:U('/Item/detail', array('id' => $vo['item_id']))}" target="_blank">
+              <img src="__ROOT__{:get_image_thumb(get_cover($vo['thumb'], 'path'), 100, 100)}" class="goods-thumb" alt="{$vo.name}">
+            </a>
+            <a href="{:U('/Item/detail?id='.$vo['item_id'])}" target="_blank">{$vo.name}</a>
+          </td>
+          <td>{$vo.spec|default='无'}</td>
+          <td>{$vo.quantity}</td>
+        </tr>
+        </volist>
+      </tbody>
+    </table> 
+  </div>
+
+  <div><a href="{$Think.cookie.__forward__}" class="btn btn-return">返 回</a></div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //导航高亮
+    highlight_subnav("{:U('index')}");
+  </script>
+</block>

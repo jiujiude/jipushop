@@ -1,0 +1,76 @@
+<div class="form-box form-horizontal order-comment-box">
+  <div class="form-group">
+    <label class="col-xs-3 control-label">评价星级：</label>
+    <div class="col-xs-8">
+      <div class="stars J_comment_star">
+        <span class="icon-star-large icon-star-large-blank J_star"></span>
+        <span class="icon-star-large icon-star-large-blank J_star"></span>
+        <span class="icon-star-large icon-star-large-blank J_star"></span>
+        <span class="icon-star-large icon-star-large-blank J_star"></span>
+        <span class="icon-star-large icon-star-large-blank J_star"></span>
+      </div>
+      <div class="star_info hide J_mi_starInfo">质量不太好</div>
+      <div class="star_info hide J_mi_starInfo">商品一般般</div>
+      <div class="star_info hide J_mi_starInfo">其实还不错</div>
+      <div class="star_info hide J_mi_starInfo">质量很好</div>
+      <div class="star_info hide J_mi_starInfo">超高品质</div>
+      <div class="validate-error hide J_star_error">
+        <span class="">您还没有对商品评星哦。</span>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label">评价内容：</label>
+    <div class="col-xs-8">
+      <textarea name="content" class="form-control text text-comment input-lg J_comment_content"></textarea>
+      <div class="validate-error hide J_comment_error">
+        <span class="">亲，评价内容请大于2个字。</span>
+      </div>
+    </div>
+  </div>
+  <input type="hidden" name="is_reload" id="is_reload" value="{$is_reload}">
+  <div class="form-group">
+    <label class="col-xs-3 control-label">&nbsp;</label>
+    <input type="hidden" name="item_id" class="J_comment_itemid" value="{$data.item_id}">
+    <input type="hidden" name="order_id" class="J_comment_orderid" value="{$data.order_id}">
+    <div class="col-xs-8">
+      <a href="javascript:comment.update();" class="btn btn-positive">提交</a>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  // 初始化评价星标
+  $('.J_comment_star').find('.J_star').click(function() {
+    $(this).siblings('.J_star').removeClass('icon-star-large-full').addClass('icon-star-large-blank');
+    $('.J_mi_starInfo').hide();
+    var item = $(this).index();
+    $('.J_mi_starInfo').eq(item).show();
+    // a = item;
+    for(var i = 0; item >= i; i++){
+      $('.J_comment_star').find('.J_star').eq(i).addClass('icon-star-large-full').removeClass('icon-star-large-blank');
+    }
+
+    var star_amount = 0;
+    $('.J_comment_star').find('.J_star').each(function() {
+      $(this).hasClass('icon-star-large-full') && star_amount++;
+    });
+    if(star_amount > 0){
+      $('.J_star_error').hide();
+    }
+  })
+  $('.J_comment_star').find('.J_star').hover(function(){
+    $('.J_comment_star').find('.J_star').removeClass('icon-star-large-full').addClass('icon-star-large-blank');
+    var item = $(this).index();
+    $('.J_mi_starInfo').hide();
+    $('.J_mi_starInfo').eq(item).show();
+    for(var i = 0; item >= i; i++){
+      $('.J_comment_star').find('.J_star').eq(i).addClass('icon-star-large-full')
+    }
+  });
+  $('.J_comment_content').keypress(function(){
+    var len = $('.J_comment_content').text().length;
+    if(len >= 2){
+      $('.J_comment_error').hide();
+    }
+  });
+</script>

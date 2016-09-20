@@ -1,0 +1,50 @@
+<block name="body">
+	<select name="province" id="province"></select>
+	<select name="district" id="district" class="mlr-sm"></select>
+	<select name="city" id="city"></select>
+</block>
+<block name="script">
+<script type="text/javascript">
+$(function(){
+	var area = {
+		getProvince: function(){
+			$.getJSON('{:addons_url("AreaSelect://AreaSelect/getParent")}', function(data){
+				$.each(data, function(i, item){
+					$('<option></option>').val(item['id']).text(item['title']).appendTo($('#province'));
+				});
+				$("#province option[value='{$param.province}']").attr('selected', true);
+				area.getDistrict();
+			});
+		},
+		getDistrict: function(){
+			$("#district").empty();
+			$.getJSON('{:addons_url("AreaSelect://AreaSelect/getChild")}', {pid:$("#province").val()}, function(data){
+				$.each(data, function(i, item){
+					$("<option></option>").val(item['id']).text(item['title']).appendTo($("#district"));
+				});
+				$("#district option[value='{$param.district}']").attr('selected', true);
+				area.getCity();
+			});
+		},
+		getCity: function(){
+			$("#city").empty();
+			$.getJSON('{:addons_url("AreaSelect://AreaSelect/getChild")}', {pid:$("#district").val()}, function(data){
+				$.each(data, function(i, item){
+					$("<option></option>").val(item['id']).text(item['title']).appendTo($("#city"));
+				});
+				$("#city option[value='{$param.city}']").attr('selected', true);
+			});
+		}
+	}
+
+	area.getProvince();
+	$("#province").change(function(){
+		area.getDistrict();
+	});
+
+	$("#district").change(function(){
+		area.getCity();
+	});
+});
+</script>
+</block>

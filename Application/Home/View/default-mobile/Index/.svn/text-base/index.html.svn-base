@@ -1,0 +1,41 @@
+<extend name="Base/common"/>
+
+<block name="header">
+  <header class="bar bar-nav">
+    <a href="{:U('/')}" class="logo"><img src="{:get_cover(C('WAP_LOGO'),'path')}" height="34" alt="{:C('WEB_SITE_TITLE')}"></a>
+    <span class="nav-invite">客服：<a class="text-danger" href="TEL:{:C('WEB_SITE_TEL')}">{:C('WEB_SITE_TEL')}</a></span>
+  </header>
+</block>
+
+<block name="body">
+  <!-- 首页幻灯 -->
+  {:hook('advertise', array('where' => 'tid = 1 AND status = 1', 'num' => 8, 'tpl' => 'theme2'))}
+
+  <!-- 首页横幅广告 -->
+  {:hook('advertise', array('where' => 'tid = 3 AND status = 1', 'num' => 1, 'tpl' => 'theme2'))}
+  
+  <!-- 搜索 -->
+  <form action="{:U('Item/search')}" class="content-padded" method="get">
+    <div class="control-group search">
+      <i class="icon icon-search"></i>
+      <input type="search" name="keyword" placeholder="请输入关键词">
+    </div>
+  </form>
+  
+  <!-- 首页商品分类 -->
+  {:W('ItemCategory/category', array(array('where'=>array('is_display'=>'1'),'limit' =>8)))}
+
+  <!-- 首页小图广告 -->
+  {:hook('advertise', array('where' => 'tid = 2 AND status = 1', 'num' => 6, 'tpl' => 'index_1x4'))}
+  
+  <!-- 首页商品列表 -->
+  {:W('Item/indexItemList', array(array('trait'=> 2, 'num'=> 24)))}
+</block>
+
+<block name="script">
+  <script>
+    seajs.use(['index', 'wechat'], function(index, wechat){
+      wechat.init();
+    });
+  </script>
+</block>

@@ -1,0 +1,35 @@
+<notempty name="lists">
+  <volist name="lists" id="vo">
+    <div class="item Z_item_list" data-href="{:U('Item/detail', array('id' => $vo['id']))}">
+      <div class="inner">
+        <a href="{:U('Item/detail', array('id' => $vo['id']))}"><img src="{:get_image_thumb($vo['cover_path'], 400, 400)}" class="lazy" alt="{$vo.name}"></a>
+        <div class="info">
+          <a href="{:U('Item/detail', array('id' => $vo['id']))}" class="name">{$vo.name}</a>
+          <p class="price">
+            <span class="text-danger"><em class="yen">&yen;</em>{$vo.price}</span>
+            <span class="text-danger sdp-price text-sizeh">
+               每件返现
+              <if condition="$vo.sdp_type eq 0">
+                {$vo.sdp}元
+              <elseif condition="$vo.sdp_type eq 1"/>
+                {$vo.sdp}%
+              </if>
+            </span>
+          </p>
+        </div>
+        <if condition="in_array($vo['id'], $shop_data['items'])">
+          <if condition="ACTION_NAME eq item">
+            <a href="javascript:;" class="btn-act Z_item_remove" data-itemid="{$vo.id}"><i class="icon icon-close"></i></a>
+          <elseif condition="ACTION_NAME eq selectItem"/>
+            <a href="javascript:;" class="btn-act added "><i class="icon icon-check"></i></a>
+          </if>
+        <else/>
+          <a href="javascript:;" class="btn-act Z_item_add" data-itemid="{$vo.id}"><i class="icon icon-add"></i></a>
+        </if>
+      </div>
+    </div>
+  </volist>
+</notempty>
+<script>
+  C.has_more = '{$_hasmore}';
+</script>

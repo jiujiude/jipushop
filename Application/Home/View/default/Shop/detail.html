@@ -1,0 +1,82 @@
+<extend name="Base/index"/>
+
+<block name="body">
+  <div class="shop">
+    <div class="detail">
+      <div class="head">
+        <div class="container">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="info clearfix">
+                <span class="pull-left shop-logo">
+                  <notempty name="data.logo">
+                    <img src="{:get_image_thumb($data['logo'], 200, 200)}" alt="">
+                  <else />
+                    <img src="__IMG__/demo/logo-sm.png" alt="">
+                  </notempty>
+                </span>
+                <div class="shop-desc">
+                  <h1 class="title"><notempty name="meta_title">{$meta_title|get_short=12}<else/>{:C('WEB_SITE_TITLE')}</notempty></h1>
+                  <p class="intro">{$data.intro}</p>
+<!--                  <ul class="count clearfix">
+                    <li>
+                      <span href="" class="btn btn-sm">
+                        <i class="icon icon-cart"></i>商品<span><gt name="data.items_num" value="0">({$data.items_num})</gt></span>
+                      </span>
+                    </li>
+                    <li>
+                      <span href="" class="btn btn-sm">
+                        <i class="icon icon-form"></i>销量
+                      </span>
+                    </li>
+                    <li>
+                      <span href="" class="btn btn-sm">
+                        <i class="icon icon-appreciate"></i>评价
+                      </span>
+                    </li>
+                  </ul>-->
+                  <div class="manage">
+                    <if condition="$data.uid eq UID">
+                      <a href="{:U('Shop/manage')}" class="btn btn-positive btn-tab" id="Z_shop_manage">店铺设置</a>
+                    </if>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-xs-12">
+            <!-- 店铺商品列表 -->
+            <div class="item-title">
+              <h3><a class="clearfix" href="/Item/search/cid/1.html">精选优品</a></h3>
+            </div>
+            
+            <notempty name="lists">
+              <div class="row item-list" id="J_item_list">
+                <include file="Item/itemList"/>
+              </div>
+              <div class="page">
+                {$_page}
+              </div>
+            <else/>
+              <p class="list-empty">
+                暂无商品！<br>
+                <a href="{:U('Item/search')}" class="btn btn-positive">去看看别的</a>
+              </p>
+            </notempty>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block>
+<block name="script">
+  <script>
+    seajs.use('common');
+  </script>
+</block>

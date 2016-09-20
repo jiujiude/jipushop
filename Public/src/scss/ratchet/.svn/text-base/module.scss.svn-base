@@ -1,0 +1,53 @@
+/**********首页模块**********/
+.nav-invite {
+  float: right;
+
+  .icon {
+    color: #d06c5c
+  }
+}
+
+/*首页商品分类*/
+.index-category {
+  padding-bottom: 10px;
+  border-bottom: $border-default;
+
+  > .flex-box {
+    
+    &:first-child {
+      margin-bottom: 10px;
+    }
+
+    li {
+      text-align: center;
+
+      a {
+        display: block;
+        color: #666;
+
+        > .item {
+          display: inline-block;
+          margin: .5em 0;
+          width: 4em;
+          height: 4em;
+          border-radius: 50%;
+
+          > .icon {
+            width: 2em;
+            height: 2em;
+            font-size: 2em;
+            line-height: 2em;
+            color: #fff;
+          }
+        }
+
+        > .name {
+          display: block;
+          padding: 0 15px;
+          line-height: 1.2em;
+          font-size: 12px;
+        }
+      }
+    }
+  }      
+}

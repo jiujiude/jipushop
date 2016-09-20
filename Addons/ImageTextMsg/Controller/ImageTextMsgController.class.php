@@ -1,0 +1,129 @@
+<?php
+/**
+ * 图文选择控制器
+ * @version 2015040714
+ * @author Max.Yu <max@jipu.com>
+ */
+
+namespace Addons\ImageTextMsg\Controller;
+use Home\Controller\AddonsController;
+
+class ImageTextMsgController extends AddonsController{
+  
+  //每行显示数
+  private $listRows = 10;
+  
+  /**
+   * 弹窗页面
+   * @author Max.Yu <max@jipu.com>
+   */
+  public function index(){
+    $where = array();
+    $wx_mid = session('default_wx_mid');
+    $event = I('get.event');
+    //关键词
+    $keywords = I('get.keywords', '');
+    //内容类型
+    $cont_type = I('get.cont_type', 'article');
+    if($cont_type == 'article'){
+      $keywords != '' && $where['title|description|content'] = array('LIKE', '%'.$keywords.'%');
+      $model = M('Article');
+      $showurl = 'Article/edit';
+    }elseif($cont_type == 'item'){
+      $keywords != '' && $where['name'] = array('LIKE', '%'.$keywords.'%');
+      $model = M('Item');
+      $showurl = 'item/edit';
+    }
+    //获取分页信息
+    $page = $this->_page($model, $where);
+    foreach($page['list'] as $k => &$v){
+      $v['img'] = get_cover($v['images']);
+    }
+    //显示模板
+    $this->assign(array(
+      'keywords' => $keywords,
+      'cont_type' => $cont_type,
+      'page' => $page,
+      'showurl' => $showurl,
+      'event' => $event,
+      'event_sel' => session('tmp_'.$event)
+     ));
+    $url = $this->_returnTpl('index');
+    $this->display($url);
+  }
+
+  /**
+   * 选择/取消选择
+   * @author Max.Yu <max@jipu.com>
+   */
+  public function sel(){
+    $checked = I('post.checked');
+    $val = I('post.val');
+    $event = I('request.event');
+    $session_name = 'tmp_'.$event; 
+    $s_value = session($session_name);
+    if(empty($s_value)){
+      $s_value = array();
+    }
+    if($checked == 'true' && !in_array($val, $s_value)){
+      $s_value[] = $val;
+    }elseif($checked == 'false' && in_array($val, $s_value)){
+      unset($s_value[array_search($val, $s_value)]);
+    }
+    session($session_name, $s_value);
+    $this->ajaxReturn(array('status'=> 1, 's_value' => implode(',',$s_value)));
+  }
+  
+  /**
+   * 显示
+   * @author Max.Yu <max@jipu.com>
+   */
+  public function detail(){
+    $event = I('request.event');
+    $s_value = session('tmp_'.$event);
+    $itm_list = get_itmlist($s_value);
+    $this->assign('itm_list', $itm_list);
+    $this->display($this->_returnTpl('detail'));
+  }
+  
+  /**
+   * 保存排序
+   * @author Max.Yu <max@jipu.com>
+   */
+  public function saveOrder(){
+    $event = I('request.event');
+    $s_value = I('post.order_data');
+    //保存到session
+    session('tmp_'.$event, $s_value);
+    $this->ajaxReturn(array('status'=>1));
+  }
+
+  /**
+   * 获取自定义模板文件地址
+   * @author Max.Yu <max@jipu.com> 
+   */
+  protected function _returnTpl($filename){
+    $path = dirname(dirname(__FILE__)).'/Tpl/'.$filename.'.html';
+    return $path;
+  }
+
+  /**
+   * 分页数据
+   * @author Max.Yu <max@jipu.com>
+   */
+  protected function _page($model, $where = array(), $order = 'id DESC'){
+    $REQUEST = (array) I('request.');
+    $count = $model->where($where)->count();
+    $page = new \Think\Page($count, $this->listRows, $REQUEST);
+    if($count > $this->listRows){
+      $page->setConfig('theme', '%FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END% %HEADER%');
+    }
+    $p = $page->show();
+    $first_row = $page->firstRow;
+    $list = $model->where($where)->limit($first_row, $this->listRows)->order($order)->select();
+    return array(
+      'list' => $list,
+      'p' => $p,
+    );
+  }
+}

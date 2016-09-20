@@ -1,0 +1,116 @@
+<extend name="Base/common"/>
+
+<block name="header">
+  <header class="bar bar-nav">
+    <a href="{:U('Index/index')}" class="pull-left icon icon-arrow-left"></a>
+    <a href="{:U('Crowdfunding/doing', array('id' => $info['id'], 'oid' => $info['order_id']))}" class="pull-right icon icon-refresh"></a>
+    <h1 class="title">{:get_short($meta_title,10,'…')}</h1>
+  </header>
+</block>
+
+<block name="body">
+  <div class="crowdfunding">
+    <notempty name="info">
+      <!-- 顶部信息 -->
+      <div class="head">
+        <p>{$info.msg}</p>
+        <img src="__IMG__/crowdfunding-avatar.png" class="avatar">
+        <p class="msg">等待真爱路过…</p>
+      </div>
+      <!-- 进度 -->
+      <div class="progress">
+        <div class="bars Z_progress"><p class="percent Z_percent"></p></div>
+        <eq name="info.has_finish" value="0">
+          <p class="text">已完成<i class="text-danger">{$info.percent}</i>，还差<i class="text-danger">{$info.surplus_amount}元</i></p>
+        <else/>
+          <p class="text">众筹已完成</p>
+        </eq>
+      </div>
+      <!-- 商品信息 -->
+      <div class="info">
+        <div class="hd">来自{$order.ship_uname}的众筹订单</div>
+        <div class="bd">
+          <img src="{$order.OrderItem.cover_path}" class="img" width="60" height="60">
+          <h5 class="name">{$order.OrderItem.name}</h5>
+          <div class="detail">
+            <p>{$order.ship|get_short=20}</p>
+            <p>{$order.ship_uname} {$order.ship_mobile}</p>
+            <p><span class="text-danger"><em class="yen">&yen;</em>{$order.total_amount}</span></p>
+            <a href="{:U('Item/detail',array('id'=>$order['OrderItem']['item_id']))}" class="btn"><i class="icon icon-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 众筹用户列表 -->
+      <notempty name="info.CrowdfundingUsers">
+        <eq name="info.is_self" value="0">
+          <div class="content-padded">
+            <a href="{:U('Item/detail', array('id' => $order['OrderItem']['item_id']))}" class="btn btn-block">我也要去玩</a>
+          </div>
+        </eq>
+        <div class="userlists">
+          <volist name="info.CrowdfundingUsers" id="vo">
+            <div class="item">
+              <img src="__IMG__/avatar/avatar-{:rand(1, 15)}.png" alt="" class="avatar">
+              <div class="detail">
+                <span class="arrow"></span>
+                <div class="hd">
+                  <span class="pull-left">{$vo.username} 说：</span>
+                  <span class="pull-right text-info">{$vo.create_time}</span>
+                </div>
+                <div class="bd">{$vo.msg}</div>
+                <div class="fd">贡献了：<i class="text-danger">{$vo.pay_money}元</i></div>
+              </div>
+            </div>
+          </volist>
+        </div>
+      </notempty>
+
+      <!-- 无人参与时，显示3个按钮 -->
+      <empty name="info.CrowdfundingUsers">
+        <div class="content-padded">
+          <a href="{:U('Crowdfunding/join', array('id' => $info['id'], 'oid' => $info['order_id']))}" class="btn btn-block btn-negative"><eq name="info.is_self" value="1">我为自己众筹<else/>为TA付款</eq></a>
+          <a href="javascript:;" class="btn btn-block Z_help_pay">找小伙伴帮忙</a>
+          <eq name="info.is_self" value="0">
+            <a href="{:U('Item/detail', array('id' => $order['OrderItem']['item_id']))}" class="btn btn-block">我也要去玩</a>
+          </eq>
+        </div>
+      </empty>
+        
+    <else/>
+      <a href="{:U('Index/index')}" class="btn btn-block btn-positive">亲，请先下单</a>
+    </notempty>
+  </div>
+</block>
+
+<!-- 已有人参与，显示底部浮动按钮 -->
+<block name="footer">
+  <notempty name="info.CrowdfundingUsers">
+    <nav class="bar bar-tab">
+      <ul class="flex-box btn-act">
+        <!-- 未完成 -->
+        <eq name="info.has_finish" value="0">
+          <li>
+            <a href="javascript:;" class="btn btn-block Z_help_pay">找小伙伴帮忙</a>
+          </li>
+          <li>
+            <a href="{:U('Crowdfunding/join', array('id' => $info['id'], 'oid' => $info['order_id']))}" class="btn btn-block btn-negative Z_help_pay"><eq name="info.is_self" value="1">我为自己众筹<else/>为TA付款</eq></a>
+          </li>
+        <else/>
+          <!-- 已完成 -->
+          <span class="btn btn-block">众筹已完成</span>
+        </eq>
+      </ul>
+    </nav>
+  </notempty>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use(['crowdfunding','wechat'], function(crowdfunding,wechat) {
+      wechat.init();
+      crowdfunding.init();
+      crowdfunding.progress("{$info['percent']}", {$info['id']}, {$info['order_id']});
+    });
+  </script>
+</block>

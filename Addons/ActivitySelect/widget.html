@@ -1,0 +1,41 @@
+<block name="body">
+	<select name="type" id="type"></select> 
+	<select name="tid" id="activity" style="display:none;"></select>
+</block>
+<block name="script">
+<script type="text/javascript">
+$(function(){
+	var activity = {
+		getType: function(){
+			$.getJSON('{:addons_url("ActivitySelect://ActivitySelect/getType")}', function(data){
+				if(data){
+					$.each(data, function(i, item){
+						$('<option></option>').val(i).text(item).appendTo($('#type'));
+					});
+					$("#type option[value='{$param.type}']").attr('selected', true);
+					activity.getActivity();
+				}
+			});
+		},
+		getActivity: function(){
+			$("#activity").empty().show();
+			$.getJSON('{:addons_url("ActivitySelect://ActivitySelect/getActivity")}', {tid:$("#type").val()}, function(data){
+				if(data){
+					$("#activity").show();
+					$.each(data, function(i, item){
+						$("<option></option>").val(item['id']).text(item['name']).appendTo($("#activity"));
+					});
+					$("#activity option[value='{$param.activity}']").attr('selected', true);
+				}else{
+					$("#activity").hide();
+				}
+			});
+		}
+	}
+	activity.getType();
+	$("#type").change(function(){
+		activity.getActivity();
+	});
+});
+</script>
+</block>

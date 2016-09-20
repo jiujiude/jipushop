@@ -1,0 +1,294 @@
+/** 
+ * 描    述：定义公共类名及jquery插件样式
+ * 作用范围: 公共，独立样式
+ */
+
+/* 实心小三角 */
+.arrow {
+	display: inline-block;
+	width: 0;
+	height: 0;
+	line-height: 0;
+	vertical-align: middle;
+	border: 4px dashed transparent;
+}
+.arrow-down {
+	border-top-style: solid;
+	border-top-color: #000;
+	border-bottom-width: 0;
+}
+.arrow-up {
+	border-bottom-style: solid;
+	border-bottom-color: #000;
+	border-top-width: 0;
+}
+.arrow-left {
+	border-right-style: solid;
+	border-right-color: #000;
+	border-left-width: 0;
+}
+.arrow-right {
+	border-left-style: solid;
+	border-left-color: #000;
+	border-right-width: 0;
+}
+
+/* 提醒框 */
+.alert {
+	color: #c09853;
+	font-weight: bold;
+	border-bottom: 1px solid #fbeed5;
+	background-color: #fcf8e3;
+}
+.alert .close {
+  float: right;
+  position: relative;
+  top: -2px;
+  right: -21px;
+  font: bold 20px/20px arial; 
+  color: #000000;
+  opacity: 0.4;
+}
+.alert .close:hover {
+	opacity: 0.6;
+}
+button.close {
+  padding: 0;
+  cursor: pointer;
+  border: 0 none;
+	background: none;
+}
+.close {
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 20px;
+  color: #000000;
+  text-shadow: 0 1px 0 #ffffff;
+  opacity: 0.2;
+  filter: alpha(opacity=20);
+}
+.alert-info {
+	background-color: #D9EDF7;
+  border-color: #BCE8F1;
+  color: #3A87AD;
+}
+.alert-error {
+	color: white;
+	border-color: #d44c4a;
+	background-color: #FF6666;
+}
+.alert-success {
+  color: #468847;
+  background-color: #CCFF99;
+  border-color: #a5d371;
+}
+#top-alert {
+  display: block;
+  top: 30px;
+  left: 180px;
+  right: 0;
+  z-index: 3000;
+	margin-top: 20px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+  overflow: hidden;
+  font-size: 14px;
+}
+#top-alert .close{
+  position: fixed;
+  top:55px;
+  right:35px;
+}
+.alert-content{
+	margin-left: 14px;
+  max-width:600px;
+  word-wrap: break-word;
+  word-break:break-all;
+}
+
+/* uploadify上传插件样式 */
+.uploadify {
+	display: inline-block;
+}
+.uploadify-button {
+	position: relative;
+	padding: 0 0 0 17px;
+	text-align: center;
+	color: #999;
+	cursor: pointer;
+	font-size: 14px;
+	background: #27ae60 url(../images/add_mini.png) 9px center no-repeat;
+  background-size: 20px 20px;
+  border-radius: 22px;
+}
+.uploadify-queue-item {
+	position: absolute;
+  z-index: 10;
+	margin-top: 4px;
+	padding: 15px;
+	width: 470px;
+	border: 1px solid #ccc;
+	background-color: #fff;
+}
+.uploadify-queue-item .cancel {
+	float: right;
+}
+.uploadify-queue-item .cancel a,
+.uploadify-queue-item .cancel a:hover {
+	font-family: Consolas;
+	color: #404040;
+	text-decoration: none;
+	border-bottom: 0 none;
+}
+.uploadify-queue-item .fileName {
+	color: #2D7200;
+}
+.uploadify-error {
+	background-color: #FDE5DD !important;
+}
+.uploadify-queue-item.completed {
+	background-color: #E5E5E5;
+}
+.uploadify-progress {
+	background-color: #E5E5E5;
+	margin-top: 10px;
+	width: 100%;
+}
+.uploadify-progress-bar {
+	background-color: #0099FF;
+	height: 3px;
+	width: 1px;
+}
+.upload-img-box {
+	margin-top: 3px;
+}
+.upload-img-box > div{
+  float: left;
+	position: relative;
+  margin-right: 10px;
+	padding: 1px;
+	width: 100px;
+	max-height: 100px;
+	text-align: center;
+  overflow: visible;
+	cursor: pointer;
+	border:1px dashed #CCC;
+	background-color: #e4f6ff;
+}
+.upload-img-box .upload-pre-item {
+  background-color: #fff;
+	border-style: solid;
+}
+
+.upload-img-box .upload-pre-item label.set {
+	/*display: inline-block;*/
+	display: none;
+	width: 100px;
+	height: 30px;
+	line-height: 30px;
+	border-top: 1px solid #ddd;
+	background-color: #eee;
+	cursor: pointer;
+}
+.upload-img-box .upload-pre-item label.set input[type='radio'] {
+	vertical-align: top;
+	margin-top: 8px;
+}
+.upload-img-box .upload-pre-item img {
+	vertical-align: top;
+	height: 100px;
+}
+.upload-img-box .upload-pre-file {
+	padding: 0 10px;
+	width: 380px;
+	height: 35px;
+	line-height: 35px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	border: 1px dashed #ccc;
+	background-color: #fff;
+}
+.upload-img-box .upload-pre-item .btn-close{
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 17px;
+  height: 17px;
+  background: url(../images/bg_icon.png) no-repeat -25px 0;
+  cursor: pointer;
+}
+.upload-img-box .upload-pre-item .btn-close:hover {
+  text-decoration: none;
+  border-bottom: 0 none;
+}
+
+/* 上传图片点击弹出层 */
+.upload-img-popup {
+	position: fixed;
+	z-index: 9999;
+	padding: 3px;
+	border: 1px solid #c3c3c3;
+	background-color: #fff;
+	box-shadow: 0 0 4px rgba(0,0,0,.5);
+}
+.upload-img-popup .close-pop {
+	position: absolute;
+	top: -8px;
+	right: -8px;
+	width: 17px;
+	height: 17px;
+	background: url(../images/bg_icon.png) no-repeat -25px 0;
+}
+.upload-img-popup .close-pop:hover {
+	text-decoration: none;
+	border-bottom: 0 none;
+}
+.upload-img-popup img {
+	display: block;
+}
+.upload_icon_all {
+	width: 15px;
+	height: 15px;
+	background: url(../images/attachment_1.png);
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 5px
+}
+
+/*统计-图表页面*/
+.chart-body{
+    position: relative;
+}
+.chart-body .cache-by{
+    position: absolute;
+    right:80px;
+    top:10px;
+}
+
+/*返现小图标*/
+.order-sdp {
+  background: #f2966e;
+  border-radius: 10px;
+  box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+  color: #FFF;
+  font-size:10px;
+  padding:3px 5px;
+  font-style: normal;
+  height: 12px;
+  line-height: 12px;
+  overflow: hidden;
+}
+
+.page-tip {
+  margin: 100px 0;
+  text-align:center;
+}
+.page-tip i.icon {
+  font-size: 60px;
+}
+.page-tip h3 {
+  margin-top: 20px;
+  font-size: 20px;
+}

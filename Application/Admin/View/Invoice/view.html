@@ -1,0 +1,194 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <eq name="info.invoice_status" value="0">
+      <h2>处理发票申请</h2>
+    <else/>
+      <h2>查看发票申请</h2>
+    </eq>
+  </div>
+
+  <style type="text/css">
+  .order-box {
+    background: #efefef;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 3px;
+  }
+
+  .order-box p{
+    height: 40px;
+    line-height: 40px;
+  }
+
+  .order-box p.line{
+    border-bottom: 1px solid #E0E0E0;
+  }
+
+  .data-table thead th {
+    background-color: #DDDDDD;
+    color: #2D7200;
+    font-weight: 700;
+    border-bottom: 2px solid #2D7200;
+  }
+  </style>
+
+  <!-- 标签页导航 -->
+  <div class="tab-wrap">
+    <ul class="tab-nav nav">
+      <li class="current" data-tab="tab1"><a href="javascript:void(0);">发票申请单</a></li>
+      <eq name="info.express_status" value="0">
+      <li data-tab="tab2"><a href="javascript:void(0);">发件处理</a></li>
+      </eq>
+    </ul>
+    <div class="tab-content"> 
+      <div class="tab-pane tab1 in" id="tab1">
+        <div class="order-box">
+          <p>
+            <strong>发票编号：</strong>{$info.invoice_sn}&nbsp;&nbsp;
+            <strong>发票状态：</strong>
+            <switch name="info.invoice_status">
+              <case value="0"><font color="#aaa">未出票</font></case>
+              <case value="1"><font color="#86DB00">已出票</font></case>
+            </switch>
+            &nbsp;&nbsp;
+            <strong>发件状态：</strong>
+            <switch name="info.express_status">
+              <case value="0"><font color="#aaa">未发件</font></case>
+              <case value="1"><font color="#86DB00">已发件</font></case>
+              <case value="1"><font color="#86DB00">已收件</font></case>
+            </switch>
+            &nbsp;&nbsp;
+            <strong>申请时间：</strong>{$info.create_time|time_format}
+          </p>
+          <p>
+            <strong>发票抬头：</strong>{$info.invoice_title}&nbsp;&nbsp;
+            <strong>发票类型：</strong>{$info.invoice_type}&nbsp;&nbsp;
+            <strong>发票金额：</strong><font color="red">￥{$orderCount['total_amount']}</font>&nbsp;&nbsp;
+          </p>
+          <p>
+            <strong>收&nbsp;&nbsp;件 &nbsp;人：</strong>{$info.recipient_name}&nbsp;&nbsp;
+            <strong>手机：</strong>{$info.recipient_mobile|default='无'}&nbsp;&nbsp;
+            <strong>座机：</strong>{$info.recipient_phone|default='无'}&nbsp;&nbsp;
+            <strong>收件地址：</strong>{$info.recipient_addr}
+            <strong>邮政编码：</strong>{$info.recipient_zipcode}
+          </p>
+          <eq name="info.express_status" value="1">
+          <p>
+            <strong>快递公司：</strong>{$info.express_company}&nbsp;&nbsp;
+            <strong>快递单号：</strong>{$info.express_number}&nbsp;&nbsp;
+          </p>
+          </eq>
+        </div>
+
+        <div class="data-table">    
+          <div class="sub-title">
+            <h3>开票订单明细</h3>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th width="150">订单编号</th>
+                <th>订单明细</th>
+                <th width="100">订单总额</th>
+                <th width="130">下单时间</th>
+              </tr>
+            </thead>
+            <tbody>
+              <volist name="list" id="vo">
+              <tr>
+                <td><a href="{:U('Order/view?id='.$vo['id'])}">{$vo.order_sn}</a></td>
+                <td style="font-size: 13px; line-height:24px;">{:getOrderItemForInvoice($vo['id'])}</td>
+                <td>￥{$vo.total_amount}</td>
+                <td>{$vo.create_time|time_format}</td>
+              </tr>
+              </volist>
+            </tbody>
+          </table> 
+        </div>
+
+        <!-- 按钮工具栏 -->
+        <div class="cf">
+          <div class="fl">
+            <a href="{$Think.cookie.__forward__}" class="btn">返 回</a>
+          </div>
+          <!-- 结算合计 -->
+          <div class="fr cf">
+            商品共计: <font color="red">{$orderCount['total_quantity']}</font> 件&nbsp;&nbsp;&nbsp;&nbsp;
+            商品总金额(不含运费): <font color="red">￥{$orderCount['total_amount']}</font>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-pane tab2" id="tab2">
+        <div class="order-box">
+          <p>
+            <strong>发票编号：</strong>{$info.invoice_sn}&nbsp;&nbsp;
+            <strong>发票状态：</strong>
+            <switch name="info.invoice_status">
+              <case value="0"><font color="#aaa">未出票</font></case>
+              <case value="1"><font color="#86DB00">已出票</font></case>
+            </switch>
+            &nbsp;&nbsp;
+            <strong>发件状态：</strong>
+            <switch name="info.express_status">
+              <case value="0"><font color="#aaa">未发件</font></case>
+              <case value="1"><font color="#86DB00">已发件</font></case>
+              <case value="1"><font color="#86DB00">已收件</font></case>
+            </switch>
+            &nbsp;&nbsp;
+            <strong>申请时间：</strong>{$info.create_time|time_format}
+          </p>
+          <p>
+            <strong>发票抬头：</strong>{$info.invoice_title}&nbsp;&nbsp;
+            <strong>发票类型：</strong>{$info.invoice_type}&nbsp;&nbsp;
+            <strong>发票金额：</strong><font color="red">￥{$orderCount['total_amount']}</font>&nbsp;&nbsp;
+          </p>
+          <p>
+            <strong>收&nbsp;&nbsp;件 &nbsp;人：</strong>{$info.recipient_name}&nbsp;&nbsp;
+            <strong>手机：</strong>{$info.recipient_mobile|default='无'}&nbsp;&nbsp;
+            <strong>座机：</strong>{$info.recipient_phone|default='无'}&nbsp;&nbsp;
+            <strong>收件地址：</strong>{$info.recipient_addr}
+            <strong>邮政编码：</strong>{$info.recipient_zipcode}
+          </p>
+        </div>
+        <form action="{:U('edit')}" method="post" class="bhm-form form-payment">
+          <div class="form-item">
+            <label class="item-label">快递公司</label>
+            <div class="controls">
+              <input type="text" class="text input-large" name="express_company" value="">
+            </div>
+          </div>
+          <div class="form-item">
+            <label class="item-label">快递单号</label>
+            <div class="controls">
+              <input type="text" class="text input-large" name="express_number" value="">
+            </div>
+          </div>
+          <div class="form-item large-item">
+            <input type="hidden" name="id" value="{$info.id|default=''}">
+            <input type="hidden" name="invoice_status" value="1">
+            <input type="hidden" name="express_status" value="1">
+            <input type="hidden" name="orderids" value="{$info.order_ids}">
+            <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-payment">确 定</button>
+            <a href="{$Think.cookie.__forward__}" class="btn btn-return">返 回</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //标签页导航
+    $(function(){
+      showTab();
+    });
+
+    //导航高亮
+    highlight_subnav("{:U('index')}");
+  </script>
+</block>

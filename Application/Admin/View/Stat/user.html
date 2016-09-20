@@ -1,0 +1,142 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>用户统计</h2>
+  </div>
+
+  <!-- 按钮工具栏 -->
+  <div class="cf">
+    <div class="fl">
+      <a class="btn" href="{:U('',array('export' => 1))}">导出</a>
+      <a class="btn" href="{:U()}">刷 新</a>（点击"刷新"按钮清除搜索条件，显示全部信息。）
+    </div>
+
+    <!-- 高级搜索 -->
+    <form action="{:U()}" method="GET" id="J_search_form">
+    <div class="search-form fr cf">
+      <div class="sleft">
+        <input type="text" name="start_time" class="search-input w-100 date_select" value="{$start_time}" placeholder="起始时间"/>
+        <span class="fl line-h">至</span>
+        <input type="text" name="end_time" class="search-input w-100 date_select" value="{$end_time}" placeholder="今天"/>
+        <a class="sch-btn" href="javascript:;" id="J_search" url="{:U()}"><i class="btn-search"></i></a>
+      </div>
+    </div>
+    </form>
+  </div>
+  <!-- 数据表格 -->
+  <div class="data-table table-striped">
+    <table>
+      <thead>
+        <tr>
+          <th>平台名称</th>
+          <th>昨日</th>
+          <th>今日</th>
+          <th>上周</th>
+          <th>本周</th>
+          <th>总注册人数</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{$stat.shopname}</td>
+          <td>{$stat.stat_num.user_yesterday_count|default='-'}</td>
+          <td>{$stat.stat_num.user_today_count|default='-'}</td>
+          <td>{$stat.stat_num.user_pweek_count|default='-'}</td>
+          <td>{$stat.stat_num.user_week_count|default='-'}</td>
+          <td>{$stat.stat_num.user_count|default='-'}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="chart-body">
+    <div id="chart_box"></div>
+    <div class="cache-by">
+      数据缓存于：
+      {$stat.cacheTime|format_date}
+      <empty name="stat.is_new">
+        &nbsp; <a href="javascript:clearCache();">更新</a>
+      </empty>
+    </div>
+  </div>
+</block>
+
+<block name="script"> 
+  <script language="javascript" type="text/javascript" src="__JS__/echarts/echarts-all.js"></script>
+  <script language="javascript" type="text/javascript" src="__JS__/My97Date/WdatePicker.js"></script>
+  <script type="text/javascript">
+    var clearCache = function(){
+      url = window.location.href;
+      $.get(url, {'reload':1}, function(){
+        window.location.reload();
+      });
+    };
+    $(function() {
+      //搜索
+      $("#search").click(function() {
+        var url = $(this).attr('url');
+        var query = $('.search-form').find("select,input").serialize();
+        query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g, '');
+        query = query.replace(/^&/g, '');
+        url += query ? ((url.indexOf('?') > - 1 ? '&' : '?') + query) : '';
+        window.location.href = url;
+      });
+      //回车自动提交
+      $('.search-form').find('input').keyup(function(event) {
+        if(event.keyCode === 13) {
+          $("#search").click();
+        }
+      });
+      //导航高亮
+      highlight_subnav("{:U('Stat/user')}");
+      $('.date_select').focus(function() {
+        WdatePicker({skin: 'twoer', dateFmt: 'yyyy-MM-dd', maxDate: '%y-%M-%d'});
+      });
+      //结束日期智能化判断
+      if($('input[name="end_time"]').val() === "{$today}"){
+        $('input[name="end_time"]').val("");
+      }
+    });  
+    $('#chart_box').css({height:'400px', marginTop:'50px'});
+    $('#search-form').css({marginTop:'400px'});
+    var myChart = echarts.init(document.getElementById('chart_box'));
+    option = {
+      title : {
+        text : '用户注册趋势'
+      },
+      tooltip: {
+        trigger: 'axis'
+      },
+      legend: {
+        data: {$stat.chartData.legend}
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          mark: {show: true},
+          dataView: {show: false, readOnly: false},
+          magicType: {show: true, type: ['line', 'bar', 'tiled']},
+          restore: {show: true},
+          saveAsImage: {show: true},
+          type : ['tiled'],
+        },
+        x : '130',
+      },
+      calculable: true,
+      xAxis: [
+        {
+          type: 'category',
+          boundaryGap: false,
+          data: {$stat.chartData.xAxis}
+        }
+      ],
+      yAxis: [
+        {
+          type: 'value'
+        }
+      ],
+      series: {$stat.chartData.data}
+    };
+    myChart.setOption(option);
+  </script>
+</block>

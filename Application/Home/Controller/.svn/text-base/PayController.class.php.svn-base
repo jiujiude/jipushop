@@ -1,0 +1,392 @@
+<?php
+/**
+ * 支付控制器
+ * @version 2014092214
+ * @author Max.Yu <max@winhu.com>
+ */
+
+namespace Home\Controller;
+
+use Org\Wechat\WechatAuth;
+
+class PayController extends HomeController{
+
+  private $payEvent;
+
+  public function _initialize(){
+    parent::_initialize();
+    //跳过验证登录
+    $jump_loginlist = array('index', 'weixinPay', 'crowdfundingPay', 'weixinOrderQuery');
+    if(!in_array(ACTION_NAME, $jump_loginlist)){
+      parent::login();
+    }
+    //pay事件模型
+    $this->payEvent = A('Pay', 'Event');
+  }
+
+  /**
+   * 构造支付请求数据并发起支付请求
+   * @author Max.Yu <max@winhu.com>
+   */
+  public function index(){
+    $order_type = 'item_order';
+    //订单检测
+    $order = $this->checkOrder();
+    //定义支付请求数据
+    $payment_data = array();
+    $bank_name = I('post.bank_name');
+    if($bank_name){
+      $payment_type = 'bankpay';
+      $payment_data['bank_name'] = $bank_name;
+    }else{
+      $payment_type = (!I('payment_type')) ? $order['payment_type'] : I('payment_type');
+    }
+    
+    //获取订单商品名称
+    $item_names = D('Item')->getItemNamesForPay($order['item_ids']);
+    //订单描述
+    $subject = '网站购物-'.$item_names;
+    //构建支付请求数据
+    $payment_data['out_trade_no'] = $order['order_sn'];
+    $payment_data['subject'] = $subject;
+    $payment_data['body'] = $subject;
+    $payment_data['total_fee'] = $order['total_amount'];
+    //设置商品订单支付方式
+    $this->payEvent->updateOrderPayment($order['id'], $payment_type, $order_type);
+    //微信支付特殊处理
+    if($payment_type == 'wechatpay'){
+      redirect(U('Pay/weixinPay').'?showwxpaytitle=1&order_id='.$order['id'].'&order_type='.$order_type.'&'.time());
+    }else{
+      //根据支付类型设置支付接口参数
+      $payment_config = $this->payEvent->setPaymentConfig($payment_type, $order_type);
+      //实例化支付接口
+      $pay = new \Think\Pay($payment_type, $payment_config);
+      echo $pay->buildRequestForm($payment_data);
+    }
+  }
+
+  /**
+   * 众筹支付功能
+   * @author Tony <Tony@winhu.com>
+   */
+  public function crowdfundingPay(){
+    $sum = 0;
+    if(!is_weixin())$this->error('此功能暂仅支持微信！');
+    $map['order_id'] = $data['order_id'] = $where['id'] = I('id');
+    $map['crowdfunding_id'] = $data['crowdfunding_id'] = I('crowdfunding_id');
+    $data['pay_money'] = I('pay_money');
+    $payment_type = $data['payment_type'] = I('payment_type');
+    $data['open_id'] = I('open_id');
+    if(empty($data['order_id']) || empty($data['crowdfunding_id']) || empty($data['pay_money']) || empty($payment_type) || empty($data['open_id'])){
+      $this->error('订单号、众筹号、用户或支付金额不能为空！');
+    }
+    //对支付金额进行有效验证
+    is_numeric($data['pay_money']) ? '' : $this->error('支付金额非法！');
+    $pay_money_check = explode('.' , $data['pay_money']);
+    strlen($pay_money_check[1]) > 2 ? $this->error('只能保留2位小数！') : '';
+    $data['username'] = I('username') ? I('username') : '好心人';
+    $data['msg'] = I('msg') ? I('msg') : '略表心意';
+    //订单检测
+    $order = $this->checkOrder($where, false);
+    //已支付金额合法性检测
+    $map['payment_status'] = 1;
+    $sum_payed = $this->checkOrderPayedMoney($map);
+    $sum = $sum_payed + (float)$data['pay_money'];
+    if($sum > $order['total_amount']){
+      $surplus = $order['total_amount'] - $sum_payed;
+      $this->error("支付金额超出，众筹剩余可支付金额{$surplus}元");
+    }
+    $pay_id = D('CrowdfundingUsers')->update($data);
+    //订单描述
+    //$subject = '众筹购物-'.$item_names;
+    $subject = '众筹购物';
+    //构建支付请求数据
+    $payment_data['out_trade_no'] = $pay_id;
+    $payment_data['subject'] = $subject;
+    $payment_data['body'] = $subject;
+    $payment_data['total_fee'] = $data['pay_money'];
+    //微信支付特殊处理
+    if($payment_type == 'wechatpay'){
+      $auto_id = M('CrowdfundingUsers')->getFieldByPayId($pay_id, 'id');
+      $open_id = I('open_id');
+      redirect(U('Pay/weixinPay').'?order_id='.$auto_id.'&order_type=crowdfunding_order'.'&open_id='.$open_id.'&code=1&'.time());
+    }else{
+      //根据支付类型设置支付接口参数
+      $payment_config = $this->payEvent->setPaymentConfig($payment_type, 'crowdfunding_order');
+      //实例化支付接口
+      $pay = new \Think\Pay($payment_type, $payment_config);
+      echo $pay->buildRequestForm($payment_data);
+    }
+  }
+
+  /**
+   * 红包支付功能
+   * @author Tony <Tony@winhu.com>
+   */
+  public function redpacketPay(){
+    //定义最小群红包数量为2
+    $minNum = 2;
+    //定义最大红包数量为1000
+    $maxNum = 1000;
+    $data['quantity'] = I('quantity');
+    $data['amount'] = I('amount');
+    $data['msg'] = trim(I('msg'));
+    $data['type'] = trim(I('type'));
+    $payment_type = $data['payment_type'] = I('payment_type');
+    $data['redpacket_status'] = 'send';
+    if(empty($data['quantity']) || empty($data['amount']) || empty($data['type']) || empty($data['payment_type'])){
+      $this->error('红包数量、金额、类型及支付方式不能为空！');
+    }
+
+    //对支付金额进行有效验证
+    is_numeric($data['amount']) ? '' : $this->error('支付金额非法！');
+    $pay_money_check = explode('.' , $data['amount']);
+    strlen($pay_money_check[1]) > 2 ? $this->error('只能保留2位小数！') : '';
+    is_numeric($data['quantity']) ? '' : $this->error('数量非法！');
+    //普通红包时，红包金额为数量和单个金额的乘积
+    $data['quantity'] = intval($data['quantity']);
+    $data['amount'] = (float)$data['amount'];
+    if($data['type'] == 'single'){
+      $data['amount'] = $data['amount'] * $data['quantity'];
+    }else if($data['type'] == 'multi' && $data['quantity'] < $minNum){
+      $this->error("群红包数量不能小于{$minNum}！");
+    }
+    if($data['quantity'] > $maxNum){
+      $this->error("红包数量不能大于{$maxNum}个！");
+    }
+    if($data['amount']*100 < $data['quantity']){
+      $this->error("红包可分配金额少于要分配数量");
+    }
+    $id = D('Redpacket')->update($data);
+    $order_sn = M('Redpacket')->getFieldById($id, 'order_sn');
+    $subject = '发红包';
+    //构建支付请求数据
+    $payment_data['out_trade_no'] = $order_sn;
+    $payment_data['subject'] = $subject;
+    $payment_data['body'] = $subject;
+    $payment_data['total_fee'] = $data['amount'];
+    //微信支付特殊处理
+    if($payment_type == 'wechatpay'){
+      $auto_id = $id;
+      redirect(U('Pay/weixinPay').'?order_id='.$auto_id.'&order_type=redpacket_order&'.time());
+    }else{
+      //根据支付类型设置支付接口参数
+      $payment_config = $this->payEvent->setPaymentConfig($payment_type, 'redpacket_order');
+      //实例化支付接口
+      $pay = new \Think\Pay($payment_type, $payment_config);
+      echo $pay->buildRequestForm($payment_data);
+    }
+  }
+
+  /**
+   * 微信支付页面（微信收银台）
+   * @author Max.Yu <max@winhu.com>
+   */
+  public function weixinPay(){
+    $order_id = I('get.order_id');
+    $order_type = I('get.order_type', 'item_order');
+    //设置支付方式:微信
+    $this->payEvent->updateOrderPayment($order_id, 'wechatpay', $order_type);
+
+    //不加载微信分享js
+    $this->unload_weixinjs = 1;
+    $this->order_id = $order_id;
+    $this->order_type = $order_type;
+    $this->meta_title = '微信收银台';
+    $this->display();
+  }
+
+  /**
+   * 检测订单已支付金额与总金额关系
+   * @author Max.Yu <max@winhu.com>
+   */
+  private function checkOrderPayedMoney($map){
+    if(!$map){
+      return false;
+    }
+    $sum_payed = D('CrowdfundingUsers')->sumPayed($map);
+    return $sum_payed;
+  }
+
+  /**
+   * 快速支付，使用电子账户、优惠券、礼品卡 
+   * @author Max.Yu <max@winhu.com>
+   */
+  public function quick(){
+    //订单检测
+    $order = $this->checkOrder();
+    //支付密码验证
+    $randcode = I('randcode');
+    if(empty($randcode)){
+      $this->error('请您输入验证码');
+    }
+    if(strlen($randcode) !== 6){
+      $this->error('验证码长度错误');
+    }
+    $mobile = session('user_auth.mobile');
+    //$valid_status = valid_randcode_sms($mobile, $randcode, 'finance_pay'); //天翼接口
+    $valid_status = check_ypsms_code($mobile, 9, $randcode); 
+    if(!$valid_status){
+      $this->error('支付验证码错误！');
+    }
+
+    //礼品卡、优惠券、账户余额扣减成功后，更新订单状态
+    $quickpay = $this->payEvent->doQuickPay($order);
+    if($quickpay){
+      //更新订单支付状态
+      $order_map = array(
+        'id' => $order['id'],
+      );
+      $order_data = array(
+        'o_status' => 200,
+        'payment_time' => NOW_TIME,
+      );
+      $update_order = M('Order')->where($order_map)->setField($order_data);
+      $payment = M('Payment')->find($order['payment_id']);
+      if($update_order){
+        //订单支付记录写入数据库
+        $payment_data = array(
+          'id' => $order['payment_id'],
+          'uid' => $order['uid'],
+          'order_id' => $order['id'],
+          'order_sn' => $order['order_sn'],
+          'payment_sn' => create_sn(),
+          'payment_type' => $payment['payment_type'],
+          'payment_amount' => 0,
+          'payment_account' => $mobile,
+          'payment_status' => 1
+        );
+        D('Payment')->update($payment_data);
+        
+        //支付完成回调
+        $this->payEvent->payCallBack($order);
+          
+        $this->success('支付成功！', U('Member/order'));
+      }else{
+        $this->error('支付失败');
+      }
+    }else{
+      $this->error('支付失败');
+    }
+  }
+
+  /**
+   * 查询订单并更新订单状态至数据库
+   * @author Max.Yu <max@winhu.com>
+   */
+  public function weixinOrderQuery(){
+    $order_id = I('get.order_id');
+    $order_type = I('get.order_type', 'item_order');
+    $res = $this->payEvent->weixinOrderQuery($order_id, $order_type);
+    if($res['code'] == 200){
+      redirect(U('Order/info', array('order_id' => $order_id, 'order_type' => $order_type)));
+    }else{
+      $tourl = isset($res['data']['order_sn']) ? ('Order/preview/order_sn/'.$res['data']['order_sn']) : 'Member/order';
+      $this->error($res['error'], U($tourl));
+    }
+  }
+
+  /**
+   * 订单提交支付前检测
+   * @author Max.Yu <max@winhu.com>
+   * @return
+   */
+  public function checkOrder($where = '', $flag = true){
+    if(!$where){
+      $order_sn = I('get.order_sn', '');
+      $order_id = I('order_id', '');
+      if(empty($order_sn) && empty($order_id)){
+        $this->error('订单ID不能为空！');
+      }elseif(!empty($order_id) && is_nan($order_id)){
+        $this->error('非法订单ID！');
+      }
+      //获取订单数据
+      $where = array();
+      if(!is_weixin()){
+        $where['uid'] = UID;
+      }
+      if($order_id){
+        $where['id'] = $order_id;
+      }elseif($order_sn){
+        $where['order_sn'] = $order_sn;
+      }
+    }
+    $order = M('Order')->where($where)->find();
+
+    if($order){
+      $payment_where['id'] = $order['payment_id'];
+      $payment_data = M('Payment')->where($payment_where)->find();
+      $order_id = $order['id'];
+      if(empty($order['order_sn'])){
+        $this->error('订单编号不能为空！');
+      }
+      if($order['o_status'] != 0){
+        $this->error('该订单不可付款！');
+      }
+      if($flag){
+        //检测订单中商品的当前库存是否大于等于客户订单中购买的数量
+        if(!$this->payEvent->checkItemStock($order_id)){
+          $this->error('您购买的商品库存不足！');
+        }
+      }
+      //检测订单中商品的限购情况
+      if(!$this->payEvent->checkItemQuota($order_id)){
+        $this->error('部分商品超过了限购数量！');
+      }
+      
+      //判断优惠券是否在有效期内且未使用
+      if($payment_data['is_use_coupon'] == 1){
+        if(!$this->payEvent->checkCoupon($order['uid'], $payment_data['coupon_id'])){
+          $this->error('优惠券已经被使用或已过期！');
+        }
+      }
+
+      //判断当前有效期内的礼品卡余额总和是否大于订单中礼品卡使用额度
+      if($payment_data['is_use_card'] == 1){
+        if(!$this->payEvent->checkCard($order['uid'], $payment_data['card_id'], $payment_data['card_amount'])){
+          $this->error('礼品卡余额不足或已过期！');
+        }
+      }
+      
+      //判断当前积分是否够用
+      if($payment_data['use_score'] > M('Member')->getFieldByUid($order['uid'], 'score')){
+        $this->error('积分不足！');
+      }
+
+      //判断当前账户余额是否大于订单中的账户使用额度
+      if($payment_data['is_use_finance'] == 1){
+        if(!$this->payEvent->checkFinance($order['uid'], $payment_data['finance_amount'])){
+          $this->error('账户余额不足！');
+        }
+      }
+      return $order;
+    }else{
+      $this->error('订单不存在！');
+    }
+  }
+  
+  /**
+   * PC端微信支付
+   * @author Max.Yu <max@winhu.com>
+   */
+  public function weixinPayCode($order_id = 0, $get_status = 0){
+    $data = M('Order')->where(array('id' => $order_id, 'uid' => UID))->find();
+    if($data['o_status'] == 200){
+      $this->success('微信支付成功！', U('Order/info', array('order_id' => $order_id)));
+    }elseif(IS_AJAX && $get_status == 1){
+      $this->ajaxReturn(array('status' => 0));
+      //未支付
+    }else{
+      //订单号为空或无登录下单非法数据请求
+      if(UID==0 && !in_array($order_id, session('new_order'))){
+        $this->error('非法请求', U('User/order'));
+      }else{
+        $page_url = U('Api/qrcode');
+        $pay_url = U('Pay/index/payment_type/wechatpay/', array('order_id' => $order_id));
+        $data['qrcode_src'] = $page_url . (strpos($page_url, '?') > 0 ? '&' : '?') . 'sec_code=H&data='.urlencode(SITE_URL.$pay_url);
+        $this->data = $data;
+        $this->display();
+      }
+    }
+  }
+}

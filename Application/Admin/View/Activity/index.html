@@ -1,0 +1,83 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>专题管理({$_total})</h2>
+  </div>
+  
+  <!-- 按钮工具栏 -->
+  <div class="cf">
+    <div class="fl">
+      <div class="btn-group">
+        <a class="btn item_add" href="{:U('Activity/add')}">新 增</a>
+      </div>
+      <button class="btn ajax-post confirm" url="{:U('del')}" target-form="ids">删 除</button>
+    </div>
+  </div>
+
+  <!-- 数据表格 -->
+  <div class="category J_form_table">
+    <div class="hd cf">
+      <div class="check"><input class="check-all" type="checkbox"></div>
+      <div class="check">ID</div>
+      <div class="title title-450">专题名称</div>
+      <div class="w-120">专题图片</div>
+      <!--<div class="w-420">链接地址</div>-->
+      <div class="cate">添加时间</div>
+      <div class="order">状态</div>
+    </div>
+    <notempty name="lists">
+      <volist name="lists" id="vo">
+        <dl class="cate-item">
+          <dt class="cf  status_dtclass_{$vo.status}">
+            <form action="{:U('updateField')}" method="post">
+              <span class="help-inline msg"></span>
+              <div class="check"><input name="ids[]" class="ids" type="checkbox" value="{$vo['id']}"></div>
+              <div class="check">{$vo.id}</div>
+              <div class="title title-450">
+                <input type="text" name="name" class="text" value="{$vo['name']}"> 
+                <a href="{:SITE_URL}/Activity/detail/id/{$vo.id}.html" target="_blank">[预览]</a>
+              </div>
+              <div class="w-120">
+                <if condition="$vo['src']">
+                  <img src="__ROOT__{$vo.src}" height="30" alt="">
+                <else />
+                  暂无图片
+                </if>  
+              </div>
+              <div class="cate">{$vo['create_time']|time_format}</div>
+              <div class="order">{$vo['status_text']}</div>
+              <div class="btn-toolbar opt-btn cf">
+                <if condition="$vo.status eq 0">
+                  <a href="{:U('setStatus?status=1&ids='.$vo['id'])}" class='ajax-get'>[启用]</a>
+                <else/>
+                  <a href="{:U('setStatus?status=0&ids='.$vo['id'])}" class='ajax-get'>[禁用]</a>
+                </if>
+                <a href="{:U('edit?id='.$vo['id'])}">[编辑]</a>
+                <a href="{:U('del?ids='.$vo['id'])}" class="confirm ajax-get">[删除]</a>
+              </div>
+              <input type="hidden" name="background" value="{$vo.background}">
+              <input type="hidden" name="id" value="{$vo['id']}">
+            </form>
+          </dt>
+        </dl>
+      </volist>
+    <else/>
+      <p class="text-center"> 暂无专题!  <a href="{:U('Activity/add')}" class="btn btn-mini">&plus;立即添加</a></p>
+    </notempty>
+  </div>
+  <!-- 分页 -->
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script src="__JS__/lib/module.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    $(function(){
+      activity.init();
+    });
+  </script>
+</block>

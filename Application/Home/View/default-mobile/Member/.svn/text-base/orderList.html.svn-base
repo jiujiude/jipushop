@@ -1,0 +1,74 @@
+<notempty name="lists">
+  <volist name="lists" id="vo">
+    <div class="order-lists">
+      <p>
+        <em>订单号：{$vo['order_sn']}</em>
+        <em class="pull-right">{:time_format($vo['create_time'], 'Y-m-d')}</em>
+      </p>
+      <a href="{:U('Order/detail', array('order_sn' => $vo['order_sn']))}" class="item">
+        <ul>
+          <volist name="vo.OrderItem" id="vl">
+            <li><img src="__ROOT__{:get_image_thumb($vl['cover_path'], 100, 100)}" alt=""></li>
+          </volist>
+        </ul>
+        <span>共 {$vo['total_quantity']} 件商品</span>
+        <i class="pull-right icon icon-arrow-right"></i>
+      </a>
+      <div class="info">
+        <span class="text-danger price"><small class="yen">&yen; </small><em>{:sprintf('%.2f', $vo['total_amount']+$vo['finance_amount'])}</em></span>
+        <span class="status" id="Z_order_{$vo['id']}">
+          <em class="msg">{:get_order_status_text($vo['o_status'])}</em>
+          <!--已删除|还原或清空-->
+          <if condition="I('type') eq 'recycle'">
+            <a href="javascript:order.setStatus({$vo['id']}, 'restore');" class="btn" data-id="{$vo.id}" title="还原订单">还原订单</a>
+            <a href="javascript:order.setStatus({$vo['id']}, 'delete');" class="btn" data-id="{$vo.id}" title="删除订单">删除订单</a>
+          <else/>
+            <if condition="$vo.o_status eq 0">
+              <!-- 众筹订单跳转至众筹页面 -->
+              <eq name="vo.order_type.name" value="crowdfunding">
+                <a href="{:U('Crowdfunding/doing', array('id' => $vo['order_type']['data']['id'], 'oid' => $vo['id']))}" class="btn btn-positive btn-act"><eq name="vo.order_type.data.has_finish" value="1">众筹完成<else/>正在众筹…</eq></a>
+              <else/>
+                <a href="{:U('Order/preview', array('order_id' => $vo['id']))}" class="btn btn-positive btn-act">立即支付</a>
+              </eq>
+            </if>
+          </if>
+        </span>
+      </div>
+      <if condition="I('type') neq 'recycle' AND !in_array($vo['o_status'], array(0, 302))">
+      <div class="info info-tw">
+        <div class="status">
+        <notempty name='vo.refuse_message'>
+          {$vo.refuse_message}
+        </notempty>
+          <!--物流-->
+          <if condition="in_array($vo['o_status'], array(201, 202))">
+            <a href="javascript:$.ui.load('{:U('Order/getDelivery?order_id='.$vo['id'])}', '物流配送信息');" class="btn">查看物流</a>
+          </if>
+          <switch name="vo.o_status">
+            <case value="201">
+              <a href="javascript:order.confirm({$vo['id']});" class="btn btn-positive btn-act">确认收货</a>
+            </case>
+            <case value="300">
+              <a href="javascript:order.unrefund({$vo['id']});" class="btn btn-act">撤销退款申请</a>
+            </case>
+            <case value="301">
+              <a href="{:U('Order/reShip',array('order_id' => $vo['id']))}" class="btn btn-positive btn-act">立即退货</a>
+            </case>
+          </switch>
+          <!--退货退款-->
+          <if condition="in_array($vo['o_status'], array(200,201)) OR ($vo['o_status'] eq 202 AND ($vo['complete_time'] gt time()-7*24*3600))">
+            <a href="javascript:order.refund({$vo['id']});" class="btn">申请退货/退款</a>
+          </if>
+          <!--删除订单-->
+          <if condition="in_array($vo['o_status'], array(202, -1, 303, 404))">
+             <a href="javascript:order.setStatus({$vo['id']}, 'recycle');" class="btn" data-id="{$vo.id}" title="删除订单">删除订单</a>
+          </if>
+        </div>
+      </div>
+      </if>
+    </div>
+  </volist>
+</notempty>
+<script>
+  C.has_more =  '{$_hasmore}';
+</script>

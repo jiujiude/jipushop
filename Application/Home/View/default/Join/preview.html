@@ -1,0 +1,193 @@
+<extend name="Base/common"/>
+
+<block name="body">
+  <form action="{:U('Pay/joinPay')}" id="J_payment_{$data.id}" method="post" target="_blank">
+    <input type="hidden" name="order_id" value="{$data.id}">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="order-preview">
+          <div class="info">
+            <h3 class="pc-fk"><i class="icon icon-round-check"></i>您的订单已提交成功！请您完成支付。 拼团成功后，24小时内将为您发货！</h3>
+            <p>订单编号：{$data.join_sn}</p>
+            <gt name="data.total_amount" value="0">
+              <p>应付总额：<span class="text-danger">{$data.total_amount}元</span></p>
+            </gt>
+            <p>
+              配送地址：{$data.ship.ship_area} {$data.ship.ship_address} {$data.ship.ship_uname}({$data.ship.ship_mobile})
+            </p>
+            <notempty name='data.memo'>
+            <p>备注：{$data.memo}</p>
+            </notempty>
+          </div>
+          <!-- 第三方支付 -->
+          <gt name="data.total_amount" value="0">
+            <div id="J_third_pay" class="thirdpay">
+              <h4>支付平台支付</h4>
+              <ul class="list clearfix">
+              <if condition="C('ALIPAY_STATUS') eq 1" >
+                <li class="active J_payment_type">
+                  <label for="alipay">
+                    <input type="radio" name="payment_type" id="alipay" value="alipay" checked="checked">
+                    <i class="icon icon-round-check"></i>
+                    <img src="__IMG__/pay/PAY_ALIPAY.png" alt="支付宝">
+                  </label>
+                </li>
+              </if>
+              <if condition="C('WXPAY_STATUS') eq 1" >
+                <li class="<if condition='C("ALIPAY_STATUS") eq 0'>active</if> J_payment_type">
+                  <label for="wechatpay">
+                    <input type="radio" name="payment_type" id="wechatpay" value="wechatpay">
+                    <i class="icon icon-round-check"></i>
+                    <img src="__IMG__/pay/PAY_WECHAT.png" alt="微信支付">
+                  </label>
+                </li>
+              </if>
+              </ul>
+              <if condition="C('BANKPAY_STATUS') eq 1" >
+              <h4>银行卡网银支付</h4>
+              <ul class="list clearfix">
+                <li class="J_payment_type">
+                  <label for="ICBCB2C">
+                    <input type="radio" name="bank_name" id="ICBCB2C" value="ICBCB2C">
+                    <i class="icon icon-round-check"></i>
+                    <img src="__IMG__/pay/PAY_ICBC.png" alt="中国工商银行">
+                  </label>
+                </li>
+                <li class="J_payment_type">
+                  <label for="CCB">
+                    <input type="radio" name="bank_name" id="CCB" value="CCB">
+                    <i class="icon icon-round-check"></i>
+                    <img src="__IMG__/pay/PAY_CCB.png" alt="中国建设银行">
+                  </label>
+                </li>
+                <li class="J_payment_type">
+                  <label for="ABC">
+                    <input type="radio" name="bank_name" id="ABC" value="ABC">
+                    <i class="icon icon-round-check"></i>
+                    <img src="__IMG__/pay/PAY_ABC.png" alt="中国农业银行">
+                  </label>
+                </li>
+                <li class="J_payment_type">
+                  <label for="CMB">
+                    <input type="radio" name="bank_name" id="CMB" value="CMB">
+                    <i class="icon icon-round-check"></i>
+                    <img src="__IMG__/pay/PAY_CMB.png" alt="招商银行">
+                  </label>
+                </li>
+                <li class="J_payment_type">
+                  <label for="BOC-DEBIT">
+                    <input type="radio" name="bank_name" id="BOC-DEBIT" value="BOC-DEBIT">
+                    <i class="icon icon-round-check"></i>
+                    <img src="__IMG__/pay/PAY_BOC.png" alt="中国银行">
+                  </label>
+                </li>
+                <li class="J_payment_type">
+                  <label for="COMM">
+                    <input type="radio" name="bank_name" id="COMM" value="COMM">
+                    <i class="icon icon-round-check"></i>
+                    <img src="__IMG__/pay/PAY_BCOM.png" alt="交通银行">
+                  </label>
+                </li>
+                <li class="J_payment_type">
+                  <label for="PSBC-DEBIT">
+                    <input type="radio" name="bank_name" id="PSBC-DEBIT" value="PSBC-DEBIT">
+                    <i class="icon icon-round-check"></i>
+                    <img src="__IMG__/pay/PAY_PSBC.png" alt="中国邮政储蓄银行">
+                  </label>
+                </li>
+                <li class="J_payment_type">
+                  <label for="GDB">
+                    <input type="radio" name="bank_name" id="GDB" value="GDB">
+                    <i class="icon icon-round-check"></i>
+                    <img src="__IMG__/pay/PAY_GDB.png" alt="广发银行">
+                  </label>
+                </li>
+                <li class="J_payment_type">
+                  <label for="SPDB">
+                    <input type="radio" name="bank_name" id="SPDB" value="SPDB">
+                    <i class="icon icon-round-check"></i>
+                    <img src="__IMG__/pay/PAY_SPDB.png" alt="浦发银行">
+                  </label>
+                </li>
+                <!-- <li class="J_payment_type">
+                  <label for="CEBBANK">
+                    <input type="radio" name="bank_name" id="CEBBANK" value="CEBBANK">
+                    <i class="icon icon-round-check"></i>
+                    <img src="__IMG__/pay/PAY_CEB.png" alt="中国光大银行">
+                  </label>
+                </li> -->
+                <li class="J_payment_type">
+                  <label for="SPABANK">
+                    <input type="radio" name="bank_name" id="SPABANK" value="SPABANK">
+                    <i class="icon icon-round-check"></i>
+                    <img src="__IMG__/pay/PAY_PAB.png" alt="平安银行">
+                  </label>
+                </li>
+                <li class="J_payment_type">
+                  <label for="CIB">
+                    <input type="radio" name="bank_name" id="CIB" value="CIB">
+                    <i class="icon icon-round-check"></i>
+                    <img src="__IMG__/pay/PAY_CIB.png" alt="兴业银行">
+                  </label>
+                </li>
+                <li class="J_payment_type">
+                  <label for="CMBC">
+                    <input type="radio" name="bank_name" id="CMBC" value="CMBC">
+                    <i class="icon icon-round-check"></i>
+                    <img src="__IMG__/pay/PAY_CMBC.png" alt="中国民生银行">
+                  </label>
+                </li>
+                <!-- <li class="J_payment_type">
+                  <label for="CITIC">
+                    <input type="radio" name="bank_name" id="CITIC" value="CITIC">
+                    <i class="icon icon-round-check"></i>
+                    <img src="__IMG__/pay/PAY_CITIC.png" alt="中信银行">
+                  </label>
+                </li> -->
+                <li class="J_payment_type">
+                  <label for="SHBANK">
+                    <input type="radio" name="bank_name" id="SHBANK" value="SHBANK">
+                    <i class="icon icon-round-check"></i>
+                    <img src="__IMG__/pay/PAY_SHBANK.png" alt="上海银行">
+                  </label>
+                </li>
+                <li class="J_payment_type">
+                  <label for="BJRCB">
+                    <input type="radio" name="bank_name" id="BJRCB" value="BJRCB">
+                    <i class="icon icon-round-check"></i>
+                    <img src="__IMG__/pay/PAY_BJRCB.png" alt="北京农商银行">
+                  </label>
+                </li>
+                <li class="J_payment_type">
+                  <label for="HZCBB2C">
+                    <input type="radio" name="bank_name" id="HZCBB2C" value="HZCBB2C">
+                    <i class="icon icon-round-check"></i>
+                    <img src="__IMG__/pay/PAY_HZCB.png" alt="杭州银行">
+                  </label>
+                </li>
+              </ul>
+            </if>
+            </div>
+            <div class="pay">
+              订单金额：<span class="text-danger">{$data.total_price|default='0.00'}元</span>
+              运费总额：<span class="text-danger">{$data.delivery_fee|default='0.00'}元</span>
+              您还需要支付：<span class="text-danger">{$data.total_amount|default='0.00'}元</span>
+              <button id="J_order_pay" class="pull-right btn btn-positive" data-id="{$data.id}">立即支付</button>
+            </div>
+          </gt>
+        </div>
+      </div>
+    </div>
+  </form>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    var order;
+    seajs.use(['join'], function(join){
+      join.selectPayment();
+      join.pay('{$data.id}');
+    });
+  </script>
+  
+</block>

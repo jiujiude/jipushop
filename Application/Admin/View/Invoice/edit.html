@@ -1,0 +1,66 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>{:isset($info['id'])?'编辑':'新增'}收货地址</h2>
+  </div>
+  <form action="{:U()}" method="post" class="form-horizontal">
+    <div class="form-item">
+      <label class="item-label">姓名<span class="check-tips"></span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="name" value="{$info.name|default=''}">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">地区<span class="check-tips"></span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="area" value="{$info.area|default=''}">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">地址<span class="check-tips"></span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="address" value="{$info.address|default=''}">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">手机<span class="check-tips"></span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="mobile" value="{$info.mobile|default=''}">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">座机<span class="check-tips"></span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="phone" value="{$info.phone|default=''}">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">邮编<span class="check-tips"></span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="zipcode" value="{$info.zipcode|default=''}">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">是否默认<span class="check-tips"></span></label>
+      <div class="controls">
+        <label class="radio"><input type="radio" name="is_default" value="1">是</label>
+        <label class="radio"><input type="radio" name="is_default" value="0">否</label>
+      </div>
+    </div>
+    <div class="form-item">
+      <input type="hidden" name="id" value="{$info.id|default=''}">
+      <input type="hidden" name="user_id" value="{$Think.UID}">
+      <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+  </form>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    Core.setValue('is_default', '{$info.is_default|default = 0}');
+    //导航高亮
+    highlight_subnav("{:U('index')}");
+  </script>
+</block>

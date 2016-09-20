@@ -1,0 +1,49 @@
+<extend name="Base/member"/>
+
+<block name="breadcrumb">
+  <ul class="breadcrumb">
+    <li><a href="{:U('/')}">首页</a></li>
+    <li class="active">我的收藏</li>
+  </ul>
+</block>
+
+<block name="body">
+  <div class="user-box">
+    <h3>我的收藏</h3>
+    <div class="row item-list J_item_list">
+      <notempty name="lists">
+        <volist name="lists" id="vo">
+          <div class="col-xs-3 item J_item" id="J_favitem_{$vo.id}">
+            <div class="thumbnail thumbnail-fav">
+              <a href="{:U('Item/detail', array('id' => $vo['id']))}" target="_blank"><img src="{:get_image_thumb($vo['cover_path'], 220, 220)}" class="pic"></a>
+              <div class="caption">
+                <h5 class="thumbnail-label">
+                  <a href="{:U('Item/detail', array('id' => $vo['id']))}">{$vo.name}</a>
+                </h5>
+                <p class="thumbnail-info">
+                  <span class="text-danger"><em class="yen">&yen;</em>{$vo.price}</span>
+                  <if condition="C('IS_SHOW_BUYNUM')"><a href="{:U('Item/detail', array('id' => $vo['id']))}" class="pull-right text-info"><i class="icon icon-cart-fill"></i> {$vo.buynum}人购买</a></if>
+                </p>
+                <p class="thumbnail-menu">
+                  <a href="{:U('Item/detail', array('id' => $vo['id']))}" class="btn btn-mini">购物车</a> 
+                  <a href="javascript:;" data-id="{$vo.id}" class="btn btn-mini pull-right btn btn-negative J_remove_nav">删除</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </volist>
+      <else/>
+        <p class="list-empty">您暂时没有收藏商品。</p>
+      </notempty>
+    </div>
+  </div>
+</block>
+<block name="script">
+  <script>
+    seajs.use('item', function(item){
+      $('.J_remove_nav').on('click', function(){
+        item.removeFav($(this).data('id'));
+      });
+    });
+  </script>
+</block>

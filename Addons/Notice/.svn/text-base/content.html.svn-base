@@ -1,0 +1,32 @@
+<php>if($conf['notice_status'] == 1){</php>
+<switch name="conf.notice_type">
+	<case value="1">
+		<script type="text/javascript">
+		seajs.use('core',function(){
+			$.ui.alert("{$conf['notice_text']}","{$conf.time}");
+		});
+		</script>
+	</case>
+	<case value="2">
+		<script type="text/javascript">
+		seajs.use('core',function(){
+			$.ui.message.show("{$conf['notice_text']}",'confirm',"{$conf.time}");
+		});
+		</script>
+	</case>
+	<case value="3">
+		<script type="text/javascript">
+		seajs.use('core',function(){
+			$.ui.message.show("{$conf['notice_text']}",'text',60000);
+		});
+		</script>
+	</case>
+	<case value="4">
+		<script type="text/javascript">
+		seajs.use('core',function(){
+			$.ui.box.show("{$conf['notice_text']}","{$conf['notice_title']}");
+		});
+		</script>
+	</case>
+</switch>
+<php>}</php>

@@ -1,0 +1,111 @@
+//
+// Shop
+// --------------------------------------------------
+
+.shop {
+  
+  > .banner {
+    
+  }
+
+  > .item-list {
+    margin-top: 10px;
+
+    > .item {
+
+      > .inner{
+        position: relative;
+
+        > .btn-act {
+          position: absolute;
+          top: 10px;
+          right: 12px;
+          padding: 10px;
+          width: 44px;
+          height: 44px;
+          background-color: rgba(255,255,255,.9);
+          box-shadow: 0 0 5px #ddd;
+          border-radius: 50%;
+          color: $positive-color;
+          text-align: center;
+
+          &:active {
+            background-color: rgba(0,0,0,.25);
+            color: #fff;
+            @include transition(.1s ease-in-out);
+            @include transform(scale(1.25));
+          }
+
+          &.added {
+            background-color: rgba(255,255,255,.55);
+            color: #fff;
+            right: 0;
+            text-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+            border: 0;
+            
+            &:active {
+              color: #fff;
+            }
+            
+            i.icon-check{
+              margin-top: 30px;
+              font-size: 64px;
+              
+              &:after {
+                content: "已选择";
+                font-size: 16px;
+                line-height: 22px;
+                display: block;
+                margin-top: 10px;
+                padding: 5px 12px 4px;
+                background: rgba(0, 0, 0, 0.3);
+                border-radius: 20px;
+                color: #FFF;
+              }
+            }
+            
+          }
+        }
+      }
+    }
+  }
+
+
+  //stat
+  .chart-title-pos {
+    padding:15px 15px 0;
+    line-height: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+  .chart-body {
+    margin: 0px;
+    width: 100%;
+    height: 240px;
+    
+    > .waiting{
+      padding: 30px 15px;
+      color: #AAA;
+      
+      > img {
+        vertical-align: middle;
+        width: 24px;
+      }
+    }
+  }
+}
+
+.shop-logo {
+  margin: 5px 0;
+  width: 34px;
+  height: 34px;
+  border: $border-default;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 5px #eee;
+  overflow: hidden;
+}

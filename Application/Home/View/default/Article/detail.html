@@ -1,0 +1,28 @@
+<extend name="Base/article"/>
+
+<block name="nav">
+  <div class="user-nav" id="">
+    <foreach name="category" item="cat" >
+      <h3>{$cat['name']}</h3>
+      <ul class="list">
+        <foreach name="cat.article" item="art" >
+        <li {$active_css[$art['id']]}><a href="{:U('Article/detail', array('id' => $art['id']))}">{$art['title']}</a></li>
+        </foreach>
+      </ul>
+    </foreach>
+  </div>
+</block>
+
+<!-- 文章详情 -->
+<block name="content">
+  <div class="content" id="content">
+    <h3>{$data.title}</h3>
+    {$data.content}
+  </div>
+</block>
+
+
+<block name="script">
+  <script>
+  </script>
+</block>

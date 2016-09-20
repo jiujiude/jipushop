@@ -1,0 +1,322 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>{:isset($info['id'])?'编辑':'新增'}商品{$type_name}</h2>
+  </div>
+  <form action="{:U()}" method="post" class="form-horizontal">
+    <input type="hidden" name="type" value="{$type}">
+    <div class="form-item cf">
+      <label class="item-label">绑定分类</label>
+      <div class="controls">
+        {:getCategorySelect()}
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">{$type_name}名称<span class="check-tips"></span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="cname" value="{$info.cname|default=''}">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">{$type_name}标识<span class="check-tips">({$type_name}名称对应的拼音或者英文单词)</span></label>
+      <div class="controls">
+        <input type="text" class="text input-mid" name="ename" value="{$info.ename|default=''}">
+      </div>
+    </div>
+
+    <div class="form-item">
+      <label class="item-label">表单类型<span class="check-tips"></span></label>
+      <div class="controls">
+        <select name="formtype" id="formtype">
+          <volist name="formtype" id="vo">
+            <option value="{$key}" <eq name="key" value="$info.formtype">selected="selected"</eq>>{$vo}</option>
+          </volist>
+        </select>
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">排序<span class="check-tips"></span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="displayorder" value="{$info.displayorder|default='0'}">
+      </div>
+    </div>
+  <!--<div class="form-item">
+    <label class="item-label">是否必填<span class="check-tips"></span></label>
+    <div class="controls">
+      <label class="radio"><input type="radio" name="isrequired" value="1">是</label>
+      <label class="radio"><input type="radio" name="isrequired" value="0">否</label>
+    </div>
+  </div>-->
+    <div class="form-item option-item">
+      <label class="item-label">{$type_name}选项值配置  <span class="check-tips">（属性值配置改动后需点击下方的"确定"提交按钮方能生效）</span></label>
+      <div class="controls option-controls"></div>
+      <input type="button" class="btn addTR" value="+新增一项">
+    </div>
+    <div class="form-item">
+      <input type="hidden" name="id" value="{$info.id|default=''}">
+      <input type="hidden" name="user_id" value="{$Think.UID}">
+      <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+  </form>
+</block>
+
+<block name="script">
+  <script type="text/javascript" language="javascript" src="__JS__/jquery/jquery.form.js"></script>
+  <script type="text/javascript">
+    //设置单选，复选，下拉菜单的值
+    //Core.setValue('isrequired', '{$info.isrequired|default = 0}');
+    Core.setValue('cid', '{$info.cid|default = 1}');
+
+    //导航高亮
+    highlight_subnav("{:U('index?type='.$type)}");
+
+    //当前选中表单类型值
+    var formtype = $('#formtype').val();
+
+    //创建表头
+    function createThead(){
+      var thead_content  = '';
+
+      thead_content+= '<table class="option-table dynamic-table" border="0" cellspacing="1" cellpadding="2">';
+      thead_content+= '<thead>';
+      thead_content+= '<tr>';
+      thead_content+= ' <th>ID</th>';
+      thead_content+= ' <th class="thead-option">{$type_name}值</th>';
+
+      if(formtype=='color'){
+        thead_content+= ' <th>颜色值</th>';
+        thead_content+= ' <th class="pic">{$type_name}值图片<span style="font-size:12px;font-weight:normal;color:#999;">（60px * 60px）</span></th>';
+      }
+
+      if(formtype=='image'){
+        thead_content+= ' <th class="pic">{$type_name}值图片<span style="font-size:12px;font-weight:normal;color:#999;">（60px * 60px）</span></th>';
+      }
+
+      thead_content+= ' <th>排序</th>';
+      thead_content+= ' <th>删除</th>';
+      thead_content+= '</tr>';
+      thead_content+= '</thead>';
+      thead_content+= '<tbody>';
+      thead_content+= '</tbody>';
+      thead_content+= '</table>';
+      
+      $(".option-controls").append(thead_content);
+    }
+
+    //创建不带数据的空表行
+    function create_empty_tr(){
+      var tr_content  = '';
+
+      tr_content+= '<tr>';
+      tr_content+= '  <td><input type="text" name="number" size="2" value="1" style="text-align:center; border:none; background:#fff;" readonly="readonly" /></td>';
+      tr_content+= '  <td><input type="hidden" name="code[]" /><input type="text" name="option[]" /></td>';
+
+      if(formtype=='color'){
+        tr_content+= '  <td><input type="text" name="color[]" /></td>';
+        tr_content+= '  <td class="pic">';
+        tr_content+= '  <input type="file" name="uploadfile" class="uploadfile" /> ';
+        tr_content+= '  <input type="hidden" name="pic[]" /> ';
+        tr_content+= '  <input type="button" value="选择图片" class="btn btn-mini-24 selectPic">';
+        tr_content+= '  </td>';
+      }
+
+      if(formtype=='image'){
+        tr_content+= '  <td class="pic">';
+        tr_content+= '  <input type="file" name="uploadfile" class="uploadfile" /> ';
+        tr_content+= '  <input type="hidden" name="pic[]" /> ';
+        tr_content+= '  <input type="button" value="选择图片" class="btn btn-mini-24 selectPic">';
+        tr_content+= '  </td>';
+      }
+
+      tr_content+= '  <td class="sort"><input type="text" name="sort[]" size="6" value="1" /></td>';
+      tr_content+= '  <td><input type="button" value="删除" class="btn submit-btn btn-mini-24 delTR"></td>';
+      tr_content+= '</tr>';
+
+      $(".option-table tbody").append(tr_content);  //在表格后面添加一行
+    }
+
+    //创建带数据的表行
+    function create_data_tr(option_data){
+      if(!$.isEmptyObject(option_data)) {
+        var tr_content  = '';
+        var code = '';
+        var option = '';
+        var color = '';
+        var pic = '';
+        var path = '';
+        var sort = '';
+
+        $.each(option_data,function(k,opt){
+          code = opt.code;
+          option = opt.option;
+          color = opt.color;
+          pic = opt.pic;
+          path = opt.path;
+          sort = opt.sort;
+
+          tr_content+= '<tr>';
+          tr_content+= '  <td><input type="text" name="number" size="2" value="1" style="text-align:center; border:none; background:#fff;" readonly="readonly" /></td>';
+          tr_content+= '  <td><input type="hidden" name="code[]" value="' + code + '" /><input type="text" name="option[]" value="' + option + '" /></td>';
+
+          if(formtype=='color'){
+            tr_content+= '  <td><input type="text" name="color[]" value="' + color + '" /></td>';
+            tr_content+= '  <td class="pic">';
+            tr_content+= '  <input type="file" name="uploadfile" class="uploadfile" /> ';
+            tr_content+= '  <input type="hidden" name="pic[]" value="' + pic + '" /> ';
+            tr_content+= '  <input type="button" value="选择图片" class="btn btn-mini-24 selectPic">';
+            if(opt.path){
+              tr_content+= '<img src="' + path + '" height="24" width="24" class="pre-img" />';
+            }
+            tr_content+= '  </td>';
+          }
+      
+          if(formtype=='image'){
+            tr_content+= '  <td class="pic">';
+            tr_content+= '  <input type="file" name="uploadfile" class="uploadfile" /> ';
+            tr_content+= '  <input type="hidden" name="pic[]" value="' + pic + '" /> ';
+            tr_content+= '  <input type="button" value="选择图片" class="btn btn-mini-24 selectPic">';
+            if(opt.path){
+              tr_content+= '<img src="' + path + '" height="24" width="24" class="pre-img" />';
+            }
+            tr_content+= '  </td>';
+          }
+
+          tr_content+= '  <td class="sort"><input type="text" name="sort[]" size="6" value="' + sort + '" /></td>';
+          tr_content+= '  <td><input type="button" value="删除" class="btn btn-mini-24 delTR"></td>';
+          tr_content+= '</tr>';
+        });
+
+        $(".option-table tbody").append(tr_content);  //在表格后面添加一行
+      }
+    }
+
+    //创建表行
+    function createTR(){  
+      // 属性值数据
+      var option_data = null;
+
+      <notempty name="option">
+        option_data = $.parseJSON('{$option}');
+      </notempty >
+
+      if(!$.isEmptyObject(option_data)) {
+        create_data_tr(option_data);  //创建带数据的表行
+      }else{
+        create_empty_tr();  //创建空表行
+      }
+    }
+
+    // 更新行号和排序
+    function changeIndex() {
+      var i = 1;
+      var j = 1;
+      $(".option-table tbody tr").each(function () {  //循环tab tbody下的tr
+        $(this).find("input[name='number']").val(i++);  //更新行号
+        $(this).find("input[name='sort[]']").val(j++);  //更新行号
+      });
+    }
+
+    // 动态创建属性值输入文本框
+    $().ready(function(){
+      var show_count = 500;  //要显示的条数
+      var count = 1;  //递增的开始值，这里是你的ID
+
+      $(".addTR").click(function(){
+        var length = $(".option-table tbody tr").length;
+
+        //点击时候，如果当前的数字小于递增结束的条件
+        if (length < show_count){
+          //创建空表行
+          create_empty_tr();
+          //更新行号
+          changeIndex();
+        }else{
+          alert("最多只能配置"+show_count+"个选项值");
+        }
+      });
+
+      //删除表行：解决Jquery无法为动态添加元素添加事件的问题（jQuery1.9中删除了live和die，用on来代替）
+      $(document).on("click",".delTR",function(){
+      //$(".delTR").die().live('click', function () {
+        var length = $(".option-table tbody tr").length;
+        if (length <= 1) {
+          alert("请至少保留一行");
+        }else{
+          $(this).parent().parent().remove(); //移除当前行
+          changeIndex();
+        }
+      });
+
+      //校验排序文本框输入合法性
+      $(document).on("keyup",".sort input",function(){
+        //如果输入非数字，则替换为''
+        this.value = this.value.replace(/[^\d]/g, '');
+      });
+
+      //给表单类型下拉选项框绑定change事件
+      $("#formtype").change(function () {
+        formtype = $('#formtype').val();
+        $('.option-controls').empty();
+        createOptionTable();
+      });
+
+      //根据表单类型动态创建对应的属性选项填写表格
+      function createOptionTable(){
+        if(formtype=='input' || formtype == 'textarea') {
+          $('.option-item').hide();
+        }else{
+          $('.option-item').show();
+
+          //创建表头
+          createThead();
+
+          //创建表行
+          createTR();
+          
+          //更新行号
+          changeIndex();
+        }
+      }
+
+      //初始化属性选项填写表格
+      createOptionTable();  
+    });
+
+    // 利用Jquery from 实现ajax上传属性选项值图片
+    $(function () {
+      $(document).on("change", ".uploadfile", function(){
+        var self_ = this;
+
+        if($(self_).nextAll('.selectPic').val()=='选择图片') {
+          $(this).wrap("<form class=\"upload_form\" action=\"{:U('upload')}\" method=\"post\" enctype=\"multipart/form-data\"></form>");
+        }
+
+        $(self_).parent("form.upload_form").ajaxSubmit({
+          dataType:  'json',
+          beforeSend: function() {
+            $(self_).parent().nextAll('.selectPic').val("上传中...");
+          },
+          success: function(data) {
+            console.log(data);
+            if(data){
+              $(self_).parent().nextAll('.selectPic').val("重新上传");
+              $(self_).parent().nextAll('.selectPic').addClass("upload-success");
+              if(data.uploadfile.id){
+                $(self_).parent().next('input').val(data.uploadfile.id);
+              }
+              $(self_).parent().nextAll('.selectPic').next('.pre-img').remove();
+              if(data.uploadfile.path){
+                $(self_).parent().nextAll('.selectPic').after('<img src="' + data.uploadfile.path + '" height="24" width="24" class="pre-img" />');
+              }
+            }
+          },
+          error:function(xhr){
+            $(self_).parent().nextAll('.selectPic').val("上传失败");
+          }
+        });
+      });
+    });
+  </script>
+</block>

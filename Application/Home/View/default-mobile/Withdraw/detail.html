@@ -1,0 +1,91 @@
+<extend name="Base/common"/>
+
+<block name="body">
+  <div class="withdraw">
+    <div class="detail">
+      <div class="content-padded">
+        <h2 class="amount"><small>+ </small><span class="text-danger">{$data.amount}</span> <i>元</i></h2>
+      </div>
+
+      <ul class="table-view">
+        <li class="table-view-cell step">
+          <ul class="flex-box">
+            <li class="active">
+              <i class="icon icon-form"></i>
+              <p class="status">申请提现</p>
+              <p class="text-info time">{$data.create_time|time_format}</p>
+            </li>
+            <li <if condition="$data['status'] gt 100">class="active"</if>>
+              <i class="icon icon-time"></i>
+              <p class="status">处理中</p>
+            </li>
+            <switch name="data.status">
+              <case value="101">
+                <li class="active">
+                  <i class="icon icon-round-close-fill"></i>
+                  <p class="status">提现失败</p>
+                  <p class="text-info time">{$data.admin_refuse_time|time_format}</p>
+                </li>
+              </case>
+              <case value="201">
+                <li class="active">
+                  <i class="icon icon-round-close-fill"></i>
+                  <p class="status">提现失败</p>
+                  <p class="text-info time">{$data.bank_refuse_time|time_format}</p>
+                </li>
+              </case>
+              <case value="300">
+                <li class="active">
+                  <i class="icon icon-round-check-fill"></i>
+                  <p class="status">提现成功</p>
+                  <p class="text-info time">{$data.success_time|time_format}</p>
+                </li>
+              </case>
+              <default />
+                <li>
+                    <i class="icon icon-round-check-fill"></i>
+                    <p class="status">提现成功</p>
+                  </li>
+                </case>
+            </switch>
+          </ul>
+        </li>
+        <li class="table-view-cell">
+          <span class="th">提现到</span>
+          <eq name="data.type" value="alipay">
+            {$data.type|get_user_account_text} {$data.account|get_hidden_alipay}
+          <else />
+            {:C('BANK_LISTS.'.$data['bankname'])} {$data.account|get_hidden_bankcard}
+          </eq>
+        </li>
+        <li class="table-view-cell">
+          <span class="th">提现状态</span>
+          {$data.status|get_withdraw_text}
+        </li>
+        <li class="table-view-cell">
+          <span class="th">提现时间</span>
+          {$data.create_time|time_format}
+        </li>
+        <php>$refuse = array(101, 201);</php>
+        <if condition="in_array($data['status'], $refuse)">
+          <li class="table-view-cell">
+            <span class="th">拒绝原因</span>
+            {$data.memo}
+          </li>
+        </if>
+        <if condition="$data['status'] eq 200">
+          <li class="table-view-cell">
+            <span class="th">手续费</span>
+            {$data.fee}
+          </li>
+        </if>
+      </ul>
+    </div>
+  </div>
+</block>
+
+<block name="script">
+  <script>
+    
+  </script>
+</block>

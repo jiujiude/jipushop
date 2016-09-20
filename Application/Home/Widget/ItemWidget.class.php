@@ -1,0 +1,120 @@
+<?php
+/**
+ * 商品Widget
+ * 用于调用商品相关信息
+ * @version 2014122412
+ * @author Max.Yu <max@jipu.com>
+ */
+
+namespace Home\Widget;
+
+use Home\Model\ItemModel;
+
+class ItemWidget extends BaseWidget{
+
+  /**
+   * 调用商品列表
+   * @param $order 排序
+   * @param $limit 调用数量
+   * @author Max.Yu <max@jipu.com>
+   */
+  public function itemLists($where, $field = true, $order = '`is_top` DESC, `sort` ASC', $limit = 10){
+    $item_model = D('Item');
+    $field = 'id, name, subname, price, mprice, buynum, is_top, sort, is_recommend, is_hot, is_promote, thumb, status';
+    $order = '`is_top` DESC, `sort` ASC';
+    //获取首页商品
+    $data['lists'] = $item_model->lists($where, $field, $order, $limit);
+    //模板输出变量赋值
+    $this->data = $data;
+    $this->display('Widget/itemLists');
+  }
+
+  /**
+   * 调用商品列表
+   * @param $order 排序
+   * @param $limit 调用数量
+   * @author Max.Yu <max@jipu.com>
+   * {:W('Item/itemListsByCate', array('11, 1, 3, 14, 2, 18, 10', '', '', 16))}
+   */
+  public function itemListsByCate($cids = '', $field = true, $order = '`is_top` DESC, `sort` ASC', $limit = 10){
+    //获取首页商品
+    if($cids){
+      $item_model = D('Item');
+      $field = 'id, cid_1, name, subname, summary, price, mprice, buynum, is_top, sort, is_recommend, is_hot, is_promote, thumb, status';
+      $order = '`is_top` DESC, `sort` ASC';
+      $item_lists = array();
+      $where = array(
+          'id' => array('IN', $cids),
+        //'pid' => 0
+      );
+      $lists = D('ItemCategory')->lists($where, 'id, name, ename', 'field(id, '.$cids.') ASC');
+      $no_list_key=array();
+      if($lists && is_array($lists)){
+        foreach($lists as $key => &$value){
+          $map = array(
+              'cid_1|cid_2|cid_3' => $value['id'],
+              'status' => array('gt', '0'), //下架商品不显示
+              'is_recommend' => 1
+          );
+          $count = $item_model->where($map)->count();
+          $value['item_lists'] = $item_model->lists($map, $field, $order, $limit <= $count ? $limit : 8);
+          if(empty($value['item_lists']))$no_list_key[]=$key;
+        }
+      }
+      foreach($no_list_key as $v)unset($lists[$v]);
+      $this->lists = $lists;
+    }
+    $this->display('Widget/itemListsByCate');
+  }
+
+  /**
+   * 调用商品列表
+   * @param array $cid_setting array(1=>20) 代表1分类20条数据
+   * @author Max.Yu <max@jipu.com>
+   * {:W('Item/itemListsByCate', array('11, 1, 3, 14, 2, 18, 10', '', '', 16))}
+   */
+  public function indexItemList($cid_setting = array()){
+
+    //获取首页商品
+    if($cid_setting){
+
+      $item_model = D('Item');
+      $field = 'id, cid_1, name, subname, summary, price, mprice, buynum, is_top, sort, is_recommend, is_hot, is_promote, thumb, status';
+      $order = '`is_top` DESC, `sort` ASC';
+      if(!isset($cid_setting['trait'])){
+        $cids = implode(',', array_keys($cid_setting));
+        $where = array(
+            'id' => array('IN', $cids),
+          //'pid' => 0
+        );
+        $lists = D('ItemCategory')->lists($where, 'id, name, ename,trait', 'field(id, '.$cids.') ASC');
+      }else{
+        $where = array(
+            'trait' => array('LIKE', '%,'.$cid_setting['trait'].',%'),
+        );
+        $lists = D('ItemCategory')->lists($where, 'id, name, ename,trait,sort', 'field(id, sort) ASC');
+      }
+      
+      $no_list_key=array();
+      if($lists && is_array($lists)){
+        foreach($lists as $key => &$value){
+          $map = array(
+              'cid_1|cid_2|cid_3' => $value['id'],
+              'status' => array('gt', '0'), //下架商品不显示
+              'is_recommend' => 1
+          );
+          $count = $item_model->where($map)->count();
+          $show_num = $cid_setting[$value['id']];
+          if(isset($cid_setting['num']))$show_num=$cid_setting['num'];
+          $total = ($count >= $show_num) ? $show_num : ($count - $count%4);
+          $value['item_lists'] = $item_model->lists($map, $field, $order, $total);
+          if(empty($value['item_lists']))$no_list_key[]=$key;
+        }
+      }
+      foreach($no_list_key as $v)unset($lists[$v]);
+      $this->lists = $lists;
+    }
+    $this->display('Widget/itemListsByCate');
+  }
+
+}

@@ -1,0 +1,119 @@
+<extend name="Base/common"/>
+
+<block name="body">
+  <div class="order">
+    <div class="order-detail">
+      <!-- 基本信息 -->
+      <h4>基本信息</h4>
+      <ul class="table-view base">
+        <li class="table-view-cell">
+          <span class="th">订单编号：</span>
+          {$data['order_sn']}          
+        </li>
+        <li class="table-view-cell">
+          <span class="th">下单时间：</span>
+          {$data['create_time']|time_format}
+        </li>
+        <li class="table-view-cell">
+          <span class="th">收货地址：</span>
+          {$data.ship.ship_uname}<br>
+          {$data.ship.ship_area}<br>
+          {$data.ship.ship_address}<br>
+        </li>
+        <li class="table-view-cell">
+          <span class="th">联系电话：</span>
+          <span class="text-danger">{$data.ship.ship_mobile}</span>
+        </li>
+        <notempty name="data.ship.ship_zipcode">
+          <li class="table-view-cell">
+            <span class="th">邮政编码：</span>
+            {$data.ship.ship_zipcode}
+          </li>
+        </notempty>
+      </ul>
+      <!-- 包裹及配送信息 -->
+      <h4>订单内容</h4>
+      <ul class="table-view package supplier">
+        <volist name="data.items" id="vo">
+          <li class="table-view-cell" data-href="{:U('Item/detail', array('id' => $vo['item_id']))}">
+            <span class="thumb"><img src="__ROOT__{:get_image_thumb($vo['cover_path'], 100, 100)}" alt="{$vo.name}"></span>
+            <span class="name">{$vo.name}</span>
+            <span class="spec">{:custom_unserialize($vo['spec'], 1, '，')}</span>
+            <span class="price">{$vo.price}元 <gt name="vo.quantity" value="0">&times; {$vo.quantity}</gt></span>
+          </li>
+        </volist>
+      </ul>
+      <if condition="$data['Ship']">
+        <h4>快递信息</h4>
+        <ul class="table-view base">
+          <li class="table-view-cell">
+            <span class="th">快递公司：</span>
+              {$data.Ship.delivery_name}
+          </li>
+          <li class="table-view-cell">
+            <span class="th">快递单号：</span>
+              {$data.Ship.delivery_sn}
+          </li>
+          <li class="table-view-cell">
+            <span class="th">发货时间：</span>
+              {$data.Ship.create_time|time_format}
+          </li>
+        </ul>
+      <else />
+        <div class="content-padded">
+          <a href="#Z_express_info" class="btn btn-block btn-positive">我要发货</a>
+        </div>
+      </if>
+      
+    </div>
+  </div>
+  
+  <!-- 发货页面 -->
+  <div id="Z_express_info" class="modal modal-spec">
+    <header class="bar bar-nav">
+      <a class="pull-right" href="#Z_express_info"><i class="icon icon-close"></i></a>
+      <h1 class="title">请填写快递信息</h1>
+    </header>
+    <div class="content">
+      <form action="{:U('update')}" method="POST">
+        <div class="control-group">
+          <select name="delivery_name">
+            <option value="">请选择快递公司</option>
+            <php>$express_lists = C('EXPRESS_LISTS');</php>
+            <foreach name="express_lists" item="vo">
+              <option value="{$vo}">{$vo}</option>
+            </foreach>
+          </select>
+        </div>
+        <div class="control-group">
+          <input name="delivery_sn" type="text" class="Z_express_no" value="" placeholder="快递单号" autocomplete="off">
+          <input type="hidden" name="order_id" value="{$data.id}">
+          <input type="hidden" name="key" value="{:I('get.key')}">
+          <input type="hidden" name="uid" value="{$data.uid}">
+          <a href="javascript:;" class="btn btn-primary btn-randcode Z_scanqrcode">扫码输入</a>
+        </div>
+        <div class="control-action">
+          <input type="submit" class="btn btn-block btn-positive Z_submit" value="确定已发货" >
+        </div>
+      </form>
+    </div>
+  </div>
+  
+</block>
+<block name="footer">
+  
+</block>
+<block name="script">
+  <script type="text/javascript">
+    //微信扫码初始化
+    C.WECHAT_CONFIG = {:get_jsapi_config('scanQRCode')};
+    seajs.use(['wechat'], function(wechat){
+      wechat.init();
+      $('.Z_scanqrcode').click(function(){
+        wechat.scanQRCode(function(qrstr){     
+          $('.Z_express_no').val(qrstr.split(',')[1]);
+        });
+      });
+    });
+  </script>
+</block>

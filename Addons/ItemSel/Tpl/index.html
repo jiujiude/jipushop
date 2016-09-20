@@ -1,0 +1,158 @@
+<style>
+  .height-itm{height:auto;}
+  .items-box .itm-table{width:570px;}
+  .items-box .itm-table tbody tr{line-height:22px;border-bottom:1px solid #E9E9E9;}
+  .items-box .itm-table tbody tr.tr2 td{background: #F9F9F9;}
+  .items-box .itm-table tbody tr td{padding:5px;}
+  .title_img{height: 30px;}
+  .itm-search{padding:5px 5px 10px;}
+  .submit_h0{height: 31px; line-height: 20px;}
+  .text-short{width: 150px;}
+</style>
+  <form action="{:addons_url('ItemSel://ItemSel/index')}" id="J-itmsearch-form" method="get">
+    <div class="itm-search">
+      <span id="item_type_span"></span>
+      <input type="text" value="{:I('keywords')}" class="text text-short" name="keywords" placeholder="搜索关键词">
+      <input type="submit" value="查找" class="btn btn-mini btn-return J_itmsearch">
+      <input type="hidden" value="" id="manage_items" name="items">
+    </div>
+  </form>
+  <div class="items-box height-itm">
+    <table id="J_itmtab" class="itm-table" data-pageurl="{$page_url}">
+      <thead class="items-tb-hd">
+        <tr>
+          <th class="col-title" style="padding-left:10px">选择<input type='checkbox' class="allmycheck"></th>
+          <th class="col-title text-left">商品</th>
+          <th class="text-center" width="150">当前价(￥)</th>
+        </tr>
+      </thead>
+      <tbody>
+      <notempty name="page.list">
+        <volist name="page.list" key="k" id="vo" mod="2">
+          <tr <eq name="mod" value="1"> class="tr2"</eq> > 
+            <td class="col-title text-center">
+              <php> $checked = in_array($cont_type.':'.$vo['id'], $event_sel);</php>
+              <input class="J_item" type="{:I('get.type', 'checkbox')}" name="s_item_id" data-stock="{$vo.stock}" value="{$vo.id}" <if condition="$checked">checked</if>/>
+            </td>
+            <td class="title">
+              <notempty name='vo.cover_path_tiny'>
+                <img src="{$vo.cover_path_tiny}" class="title_img" />
+              </notempty>
+              <a href="{:U('/Item/detail', array('id'=>$vo['id']))}" target="_blank">{$vo.name}</a></td>
+            <td class="text-center">{$vo.price}</td>
+          </tr>
+        </volist>
+        <else/>
+        <tr>
+          <td colspan="3">
+            <p class="text-center"> 暂无内容! </p>
+          </td>
+        </tr>
+      </notempty>
+      </tbody>
+    </table>
+  </div>
+  <notempty name="page.list">
+  <div class="page J_ajax-page">
+    {$page.p}
+    <div class="fr">
+      <input type="button" value="确定" class="btn submit-btn btn-mini submit_h0" onclick="$('.J_modal_close').click()">
+    </div>
+  </div>
+  </notempty>
+<script src="__JS__/jquery/jquery.loadtype.js"></script>
+<script>
+    $('.allmycheck').bind('click' ,function(){
+      if($(this).is(':checked')){
+        $('.J_item').prop('checked' ,true);
+      }else{
+        $('.J_item').prop('checked' ,false);
+      }$('#J_itmtab .J_item').change();
+    });
+  (function(){
+
+    //AJAX分页处理
+    $('.J_ajax-page a').click(function(){
+      UI.load($(this).attr('href'), '内容选择');
+      return false;
+    });
+    
+    //加载分类
+    $('#item_type_span').loadtype({
+      type: 'itemCategory', 
+      name1: 'cid_1',
+      name2: 'cid_2', 
+      name3: 'cid_3',
+      value1: "{:I('get.cid_1')}",
+      value2: "{:I('get.cid_2')}",
+      value3: "{:I('get.cid_3')}"
+    });
+    
+    //提交搜索
+    $('#J-itmsearch-form').submit(function(){
+      <notempty name="items">
+        $('#manage_items').val($('#J_itemsel_input{:I("get.param_name")}').val());
+      </notempty>
+      val = $('#J-itmsearch-form').serialize();
+      itemSel{:I('get.param_name')}.search(val);
+      return false;
+    });
+    
+    //选择、取消选择
+    $('#J_itmtab .J_item').change(function(){
+      var seled = $('#J_itemsel_input{:I("get.param_name")}').val();
+      var val = $(this).val();
+      sel = seled!=='' ? seled.split(',') : [];
+      var pos = $.inArray(val, sel);
+      if($(this).is(':checked') && pos === -1){
+        sel.push(val);
+        //显示选择商品列表，参考拼团
+        <notempty name="item_list">
+        var list = '';
+        var name = $(this).parent().siblings('.title').find('a').text();
+        var item_prcie = $(this).parent().siblings('td').last().text();
+        var item_stock = $(this).attr('data-stock');
+        var item_url = "{:U('/Item/detail')}?id="+val;
+        var edit_url = "{:U('Item/detail',array('id'=>1))}";
+        var del_url = "{:U('Item/detail',array('id'=>1))}";
+           list = '<tr id="item_'+val+'" data-id="'+val+'">'
+                  +'<td><input class="ids" type="checkbox" value="'+val+'" name="ids[]"></td>'
+                  +'<td><a href="'+item_url+'" target="_blank">'+name+'</a></td>'
+                  +'<td><span class="text-warning">'+item_prcie+'</span></td>'
+                  +'<td><span class="text-warning">'+item_stock+'</span></td>'
+                  +'<td><a href="'+edit_url+'" class="confirm ajax-get">[编辑]</a>'
+                  +'<a href="'+del_url+'" class="confirm ajax-get">[删除]</a></td>'
+                  +'</tr>';
+           $('div.data-table table tbody').append(list);
+        </notempty>
+      }else if(pos > -1){
+        sel.splice(pos, 1);
+        <notempty name="item_list">
+           $('#item_'+val).remove();
+        </notempty>
+        <notempty name="items">
+        $(this).closest('tr').css({textDecoration: 'line-through'}).fadeOut(300, function(){
+          $(this).remove();
+          if($('#J_itmtab tbody tr').size() === 0){
+            itemSel{:I('get.param_name')}.manage();
+          }
+        });
+        </notempty>
+      }
+      if('{:I("get.type", "checkbox")}' === 'radio'){
+        sel = [val];
+      }
+      $('#J_itemsel_input{:I("get.param_name")}').val(sel.join(','));
+      itemSel{:I('get.param_name')}.selSum();
+    });
+    
+    //默认选择
+    seled = $('#J_itemsel_input{:I("get.param_name")}').val();
+    seled_arr = seled.split(',');
+    $('#J_itmtab .J_item').each(function(e){
+      if($.inArray($(this).val(), seled_arr) > -1){
+        $(this).attr('checked', true);
+      }
+    });
+  })();
+</script>

@@ -1,0 +1,95 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>修改专题</h2>
+  </div>
+  
+  <form action="{:U('update')}" method="post" class="form-horizontal">
+    <notempty name="activity_config.type.1">
+      <div class="form-item">
+        <label class="item-label">专题分类<span class="check-tips">（选择专题所属分类）</span></label>
+        <div class="controls">
+          <select name="tid">
+            <volist name="activity_config.type" id="vo">
+              <option value="{$key}" <eq name="key" value="$data.tid">selected="selected"</eq>>{$vo}</option>
+            </volist>
+          </select>
+        </div>
+      </div>
+    </notempty>
+    <div class="form-item">
+      <label class="item-label">专题名称<span class="check-tips">（例如：“双十一大促”，显示在专题页面title标签中）</span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="name" value="{$data.name}">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">专题背景图片<span class="check-tips" id="size">（{$activity_config.activity_pic.BG_PIC}，手机版会自动压缩适配）</span></label>
+      <div class="controls">
+        {:hook('uploadImages', array('fileid' => 'upload_picture', 'name' => 'background', 'value' => array($data['background']), 'delPicUrl' => U('Activity/delPic'), 'tpl' => 'singel'))}
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">专题背景颜色<span class="check-tips">（例如："#FF0000"）</span></label>
+      <div class="controls">
+        <input type="text" class="text input-small" name="backcolor" value="{$data.backcolor}">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">专题模板</label>
+      <div class="controls">
+        <select name="theme">
+          <volist name="theme['extra']" id="vo">
+            <option value="{$key}" <eq name="data.theme" value="$key">selected</eq>>{$vo}</option>
+          </volist>
+        </select>
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">专题商品<span class="check-tips">（选择专题包含的商品，最多100个商品）</span></label>
+      <div class="controls">
+        {:hook('itemSel', array('name' => 'items' ,'items' => $data['items'],'empty_tip' => '请选择商品'))}
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">专题内容<span class="check-tips" id="size">（{$activity_config.activity_pic.CONTENT_PIC}）</span></label>
+      <div class="controls">
+        <textarea name="content">{$data['content']}</textarea>
+        {:hook('adminArticleEdit', array('name'=>'content', 'value'=>$data['content']))}
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">网页关键词<span class="check-tips">（显示在页面meta标签中，用于SEO）</span></label>
+      <div class="controls">
+        <label class="textarea input-large">
+            <textarea name="keywords">{$data['keywords']}</textarea>
+        </label>
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">网页描述<span class="check-tips">（显示在页面meta标签中，用于SEO）</span></label>
+      <div class="controls">
+        <label class="textarea input-large">
+          <textarea name="description">{$data['description']}</textarea>
+        </label>
+      </div>
+    </div>
+    <div class="form-item">
+      <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+      <input type="hidden" name="id" value="{$data['id']|default=''}"/>
+    </div>
+  </form>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //导航高亮
+    highlight_subnav('{:U("Activity/index")}');
+
+    //设置单选，复选，下拉菜单的值
+    Core.setValue('bg_show', '{$data.bg_show|default = 1}');
+  </script>
+</block>

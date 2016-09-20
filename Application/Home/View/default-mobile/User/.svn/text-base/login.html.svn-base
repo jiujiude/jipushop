@@ -1,0 +1,46 @@
+<extend name="Base/common"/>
+
+<block name="body">
+  <form action="__SELF__" method="post" data-ajax="false">
+    <div class="control-group">
+      <input type="text" name="username" value="{$username}" id="inputEmail" class="first Z_login_username" placeholder="手机" ajaxurl="/member/checkUserEmailUnique.html" errormsg="请输入正确的手机" nullmsg="请输入手机号" datatype="e" >
+    </div>
+    <div class="control-group">
+      <input type="password" name="password" value="" id="inputPassword" class="last Z_login_password" placeholder="密码" errormsg="密码为6-20位" nullmsg="请输入密码" datatype="*6-20">
+    </div>
+    <div class="control-group checkbox">
+      <div class="pull-left toggle active" data-for="remember">
+        <div class="toggle-handle"></div>
+      </div>
+      记住我，下次自动登录
+      <input type="hidden" name="remember" value="1">
+    </div>
+    <div class="control-action">
+      <button class="btn btn-positive btn-block">登 录</button>
+      <a href="{:U('User/register')}" class="btn btn-block">注册新账号</a>
+      <a href="{:U('User/forgetpwd')}" class="btn btn-block">忘记密码？</a>
+    </div>
+  </form>
+
+  <div class="user-third">
+    <ul class="flex-box">
+      <li>
+        <a href="{:U('User/thirdlogin?type=qq')}" title="腾讯QQ用户登录"><i class="icon icon-qq"></i></a>
+        <p>QQ登录</p>
+      </li>
+      <li>
+        <a href="{:U('User/thirdlogin?type=sina')}" title="新浪微博用户登录"><i class="icon icon-weibo"></i></a>
+        <p>微博登录</p>
+      </li>
+      <!-- <li><a href="{:U('User/thirdlogin?type=sina')}" title="新浪微博用户登录"><i class="icon-m-wechat"></i></a></li> -->
+      <!-- <li><a href="{:U('User/thirdlogin?type=taobao')}" class="btn-taobao" title="淘宝用户登录"></a></li> -->
+      <if condition="is_weixin()">
+        <li>
+          <a href="{:U('User/wechatlogin')}" title="微信用户登录"><i class="icon icon-wiexin"></i></a>
+          <p>微信登录</p>
+        </li>
+      </if>
+    </ul>
+  </div>
+</block>
+

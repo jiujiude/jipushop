@@ -1,0 +1,145 @@
+<?php if (!defined('THINK_PATH')) exit();?><!DOCTYPE HTML>
+<html>
+<head>
+  <meta property="qc:admins" content="350710055662105307063757" />
+  <meta property="wb:webmaster" content="fc0bc666c7ffa4c5" />
+  <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>初茶一舍-寻找中国茶最初的味道</title>
+<meta name="Keywords" content="初茶一舍">
+<meta name="Description" content="千金易得，初心难寻。我们为一盏香茗倾心，便执着于发现好茶，并公诸于世。">
+<meta property="qc:admins" content="26713603346011413056375" />
+<meta property="wb:webmaster" content="9668f61721702d43" />
+<meta property="formhash" content="1c41bbe39fe2f56cc06f34148f0995d7" />
+<link href="/Public/Home/default/images/favicon.ico" rel="shortcut icon">
+<link href="/Public/Home/default/css/style.min.css?15112509" rel="stylesheet">
+<link href="/Public/Home/default/css/hd.css" rel="stylesheet">
+
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+<script src="/Public/Home/default/js/lib/iesupport/html5shiv.min.js"></script>
+<script src="/Public/Home/default/js/lib/iesupport/respond.min.js"></script>
+<![endif]-->
+
+
+<!-- 页面header钩子，一般用于加载插件CSS文件和代码 -->
+<script>
+  (function(){
+    var C = window.C = {
+      'ROOT': '', // 当前网站地址
+      'APP': '', // 当前项目地址
+      'PUBLIC': '/Public', // 项目公共目录地址
+      'STATIC': '/Public/Static',
+      'IMG': '/Public/Home/default/images', // 项目图片地址
+      'JS': '/Public/Home/default/js',
+      'CSS': '/Public/Home/default/css',
+      'UPLOADS': '__UPLOADS__',
+      'SITE_URL': 'http://www.ccyishe.com',
+      'IMG': '/Public/Home/default/images', // 项目图片地址
+      'DEEP': "/", // PATHINFO分割符
+      'MODEL': ["2", "", "html"],
+      'VAR': ["m", "c", "a"],
+      'UID': '0'
+    }
+    // var UI = window.UI = {};
+  })();
+</script>
+<script src="/Public/Home/default/js/lib/seajs/sea.3.0.0.js" type="text/javascript"></script>
+<script src="/Public/Home/default/js/config.js?2016090914" type="text/javascript"></script>
+
+
+<body class="a-fadein"   style="background-color: #ddd;">
+  <!-- 头部 -->
+
+<!-- 导航条 -->
+
+  <!-- <header class="bar bar-nav">
+    <a href="javascript:window.history.back(-1);" class="pull-left icon icon-arrow-left"></a>
+    <a href="/Index/index.html" class="pull-right icon icon-home"></a>
+    <h1 class="title">初茶一舍</h1>
+  </header> -->
+
+  <!-- /头部 -->
+
+  <!-- 主体 -->
+  <div class="content" style="width:640px; margin:0 auto;border: 1px solid #ddd;background-color: #ddd;">
+  
+  <!-- 首页幻灯 -->
+  <!---->
+
+  <!-- 首页横幅广告 -->
+  <!---->
+  
+  <!-- 搜索 -->
+   <!--<form action="/Item/search.html" class="content-padded" method="get">-->
+    <!-- <div class="control-group search">-->
+     <!--  <i class="icon icon-search"></i>-->
+     <!--  <input type="search" name="keyword" placeholder="请输入关键词">-->
+    <!-- </div>-->
+   <!--</form>-->
+  
+  <!-- 首页商品分类 -->
+  <!-- -->
+
+  <!-- 首页小图广告 -->
+  <!---->
+  
+  <!-- 首页商品列表 -->
+  <!--<style>.item-title{display:none;}</style>-->
+  <!---->
+   <div>
+     <img src="../Public/Home/default-mobile/images/index/01.png" width="100%">
+     <img src="../Public/Home/default-mobile/images/index/03.png" width="100%" style="margin-top: -50px;">
+     <img src="../Public/Home/default-mobile/images/index/04.png" width="100%" style="margin-top: -10px;">
+     <img src="../Public/Home/default-mobile/images/index/05.png" width="100%" style="margin-top: -10px;">
+   </div>
+
+
+</div>
+  <!-- /主体 -->
+
+  <div class="footer" style="padding-top:0px">
+    <div class="container" style="display:none;">
+      <div class="copyright">
+        <p style="border-top: 0px solid #404040">© &nbsp;初茶一舍&nbsp; @2016 Ccyishe.com 初茶一舍&nbsp;&nbsp;<a target="_blank" href="http://www.miibeian.gov.cn/">浙ICP备16029008号-3</a></p>
+      </div>
+    </div>
+
+    <div class="slde-menu">
+      <ul>
+              
+        <li><a href="javascript:;" id="J_wechat" title="官方微信"><i class="icon icon-wechat"></i></a></li>
+        <li><a href="javascript:;" id="J_goto_top" title="返回顶部"><i class="icon icon-arrow-top"></i></a></li>
+      </ul>
+    
+      <div class="slde-box slde-box-wechat J_wechat_box" style="width:200px;">
+          <a class="icon icon-close J_icon_close" href="javascript:;" title="点击关闭"></a>
+          <img src="/Uploads/Picture/2016-08-30/57c54b46f0d13.jpg" class="qrcode-img">
+      </div>
+    </div>
+  </div>
+
+
+
+    <script type="text/javascript">
+    seajs.use('index',function(){});
+  </script>
+
+<!-- 网站统计代码 -->
+<div class="hidden">
+  <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?edfb6f417a7d1c1f1bc3a315a186d3c0";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script></div>
+<!-- 页面footer钩子，一般用于加载插件JS文件和JS代码 -->
+
+  <!-- /底部 -->
+</body>
+</html>

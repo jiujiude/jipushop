@@ -1,0 +1,18 @@
+@CHARSET "UTF-8";
+#J_load_box{ display:none;}
+#invoice-nav{  position: relative; z-index: 2; display:inline-block;}
+#invoice-nav li.tab-item-selected , .electro_book li.tab-item-selected{border: 2px solid #e4393c;padding: 5px 23px;cursor: default; position:relative}
+#invoice-nav li.tab-nav-item , .electro_book li.tab-nav-item{float: left; position: relative; margin-right: 10px;border: 1px solid #ebebeb;padding: 10px 24px; cursor: pointer;}
+#invoice-box.form .item span.label { float: left;height: 18px;line-height: 18px;padding: 4px 0 3px;width: 75px;text-align: right;}
+#invoice-box .form .item { display: inline-block; display: block;margin-bottom: 15px;line-height: 25px;}
+#invoice-box .fl{ float:left}
+#invoice-box .control-label{ text-align: right; margin-bottom: 0; padding-top: 13px;}
+#invoice-box .fr{ float:right}
+#invoice-box .form-group{ margin-bottom:15px;}
+#invoice-box .form-control a{ text-align:right;}
+#invoice-box .form-cont{ height: 40px;padding: 0 5px 0 16px; margin:0 ; margin:0; border:none;line-height: 1.42857; background-color: #fff; float:left; position:absolute; left:0; top:0}
+#invoice-box input:focus { border-color: #cbcbcb; outline: 0;-webkit-box-shadow: 0 0 1px rgba(203,203,203,.6);box-shadow: 0 0 1px rgba(203,203,203,.6);}
+#invoice-main .select span{    position: absolute; display: block; bottom: 0px; right: 0px; width: 16px;height: 16px;border-image-source: initial;border-image-slice: initial;border-image-width: initial; border-image-outset: initial;  border-image-repeat: initial;text-indent: -999em; border-width: 8px; border-style: solid;border-color: transparent rgb(45, 135, 1) rgb(45, 135, 1) transparent;border-bottom: 8px solid rgb(45, 135, 1); border-right: 8px solid rgb(45, 135, 1);}
+#invoice-main .select{border: 2px solid #2d8701 !important;}
+#invoice-main .select span:after { position: absolute;right: -8px; bottom: -8px;width: 6px; height: 6px; display: inline-block; content: "";background: url("../images/sprite.png") 0px -40px no-repeat;}
+#invoice-main .prompt-box{background: #fffdee;  border: 1px solid #edd28b;color: #f70;padding: 8px 10px;line-height: 20px;}

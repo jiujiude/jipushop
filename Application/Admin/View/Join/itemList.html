@@ -1,0 +1,109 @@
+<extend name="Public/base"/>
+
+<block name="style">
+  <link rel="stylesheet" type="text/css" href="__CSS__/order.css" media="all">
+</block>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>{$data['name']}商品列表({$_total})</h2>
+  </div>
+
+  <!-- 按钮工具栏 -->
+  <div class="cf">
+    <div class="fl">
+      <button class="btn ajax-post confirm" target-form="ids" url="{:U('Join/setItemStatus',array('join_id'=>$data['id'],'status'=>-1))}">删 除</button>
+      <button class="btn ajax-post" target-form="ids" url="{:U('Join/setItemStatus',array('join_id'=>$data['id'],'status'=>1))}">上 架</button>
+      <button class="btn ajax-post confirm" target-form="ids" url="{:U('Join/setItemStatus',array('join_id'=>$data['id'],'status'=>0))}">下 架</button>
+    </div>
+
+    <!-- 高级搜索 -->
+    <form id="J_search_form" action="{:U('Join/itemList')}" method="GET">
+      <div class="search-form fr cf">
+        <div class="sleft">
+          <input type="hidden" name="id" value="{$data['id']}" />
+          <input type="text" name="keywords" class="search-input" value="{:I('keywords')}" placeholder="请输入商品名称或者编号">
+          <a class="sch-btn" href="javascript:;" id="J_search"><i class="btn-search"></i></a>
+        </div>
+      </div>
+    </form>
+  </div>
+  
+  <table class="order-table-head">
+    <tr>
+      <th width="30">
+         <input class="checkbox check-all" type="checkbox">
+      </th>
+      <th width="365">商品基本信息</th>
+      <th width="105" class="text-center">活动通用售价</th>
+      <th width="75">库存</th>
+      <th width="57">拼团人数</th>
+      <th width="110">开团价</th>
+      <th width="125">拼团价</th>
+      <th>&nbsp;</th>
+      <th width="150" class="text-center">操作</th>
+    </tr>
+  </table>
+  <notempty name="list">
+  <volist name="list" key='key' id="vo">
+      <table class="order-table status-{$vo.status}">
+        <tr>
+          <td width="20" class="text-center">
+            <input name="ids[]" class="ids" type="checkbox" value="{$vo['id']}"> 
+          </td>
+          <td width="50" class="item-lists text-center">
+            <a href="{:U('/Item/detail?id='.$vo['id'])}" target="_blank"><img src="{:get_image_thumb(get_cover($vo['images'], 'path'), 60, 60)}" title="{$vo.title}"></a>
+          </td>
+          <td width="285">
+            <a href="{:U('edit?id='.$vo['id'])}">{$vo['name']}</a>
+          </td>
+          <td width="90" class="text-center">
+            <input type="text" data-action="{:U('Join/setFieldValue')}" name="price" data-id="{$vo['id']}" title="修改售价" class="text text-right input-mini J_ajax_updatefield" value="{$vo.price}">
+            元
+          </td>
+          <td width="60" class="text-center">
+            <input type="text" data-action="{:U('Join/setFieldValue')}" name="stock" data-id="{$vo['id']}" title="修改库存" class="text text-right input-xmini J_ajax_updatefield" value="{$vo.stock}">
+            件
+          </td>
+          <td width="60" class="text-center">
+            <input type="text" data-action="{:U('Join/setFieldValue')}" name="join_num" data-id="{$vo['id']}" title="修改拼团人数" class="text text-right input-xmini J_ajax_updatefield" value="{$vo.join_num}">
+            人
+          </td>
+          <td width="90" class="text-center">
+            <input type="text" data-action="{:U('Join/setFieldValue')}" name="first_price" data-id="{$vo['id']}" title="修改开团价" class="text text-right input-mini J_ajax_updatefield" value="{$vo.first_price}">
+            元
+          </td>
+          <td width="90" class="text-center">
+            <input type="text" data-action="{:U('Join/setFieldValue')}" name="join_price" data-id="{$vo['id']}" title="修改拼团价" class="text text-right input-mini J_ajax_updatefield" value="{$vo.join_price}">
+            元
+          </td>
+          <td class="text-right">
+            <a href="{:U('editItem?id='.$vo['id'].'&join_id='.$data['id'])}">[编辑]</a>
+            <a href="{:U('setItemStatus?ids='.$vo['id'].'&status='.abs(1-$vo['status']).'&join_id='.$data['id'])}" class="ajax-get">[{$vo.status_text}]</a>
+            <a href="{:U('setItemStatus?status=-1&ids='.$vo['id'].'&join_id='.$data['id'])}" class="confirm ajax-get">[删除]</a>
+          </td>
+        </tr>
+      </table>
+  </volist>
+  <else/>
+    <div class="list-empty">
+      暂无商品！
+    </div>
+  </notempty>
+  
+  <!-- 分页 -->
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    $(function(){
+      //导航高亮
+      highlight_subnav("{:U('Join/index')}");
+      
+    });
+  </script>
+</block>

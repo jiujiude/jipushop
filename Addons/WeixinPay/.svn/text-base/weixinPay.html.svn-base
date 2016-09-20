@@ -1,0 +1,55 @@
+<script>
+  seajs.use('wx', function(wx){
+    //默认提示
+    $.ui.loading('初始化支付接口...', 60);
+    conf = {$weixinPayParam.c};
+    wx.config(conf);
+    //初始化完成后进行支付
+    var weixin_pay = function(){
+      //初始化微信JS - Config
+      wx.ready(function(){
+        //进入微信支付请求
+        $.ui.loading('正在请求微信支付...');
+        //取消支付后返回地址
+        var cancelpay_tourl = "{:session('cancelpay_tourl')}";
+        //支付成功后跳转地址
+        var successpay_tourl = "{:U('Home/Pay/weixinOrderQuery',array('order_id'=> $param['order_id'], 'order_type' => $param['order_type']))}";
+        //支付未成功调用
+        var error_fun = function(str){
+          $.ui.error(str);
+          window.setTimeout(function(){
+            if(cancelpay_tourl.length < 10){
+              cancelpay_tourl = "{:U('Home/Index/index')}";
+            }
+            window.location.href = cancelpay_tourl;
+          }, 1000);
+        };
+        //支付请求参数
+        cwp = {$weixinPayParam.w};
+        //支付完成后
+        cwp.success = function(res){
+          if(res['errMsg'] === 'chooseWXPay:ok'){
+            $.ui.success('付款成功，正在处理订单信息...');
+            window.setTimeout(function(){
+              if(successpay_tourl){
+                window.location.href = successpay_tourl;
+              }else{
+                window.history.go(-1);
+              }
+            }, 1000);
+          }else{
+            error_fun('付款失败');
+          }
+        };
+        //支付取消后
+        cwp.cancel = function(){
+          error_fun('您取消了付款');
+        };
+        //请求支付
+        wx.chooseWXPay(cwp);
+      });
+    };
+    //启动微信支付
+    weixin_pay();
+  });
+</script>

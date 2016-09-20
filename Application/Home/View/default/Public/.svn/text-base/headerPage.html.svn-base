@@ -1,0 +1,10 @@
+<block name="header">
+  <!-- 导航条  -->
+  <div class="header-page">
+    <div class="container container-md">
+      <div class="logo">
+        <a href="{:U('/')}"><img src="{:get_cover(C('LOGO'),'path')}" alt="{:C('WEB_SITE_TITLE')}" height="40"></a>
+      </div>
+    </div>
+  </div>
+</block>

@@ -1,0 +1,27 @@
+<notempty name="lists">
+  <volist name="lists" id="vo">
+    <div class="order-lists">
+      <p>
+        <em>订单号：{$vo['order_sn']}</em>
+        <em class="pull-right">{:time_format($vo['create_time'], 'Y-m-d')}</em>
+      </p>
+      <a href="javascript:;" class="item">
+        <ul>
+          <volist name="vo.OrderItem" id="vl">
+            <li><img src="__ROOT__{:get_image_thumb($vl['cover_path'], 100, 100)}" alt=""></li>
+          </volist>
+        </ul>
+        <span>{$vo['total_package']}个包裹 (共{$vo['total_quantity']}件商品)</span>
+      </a>
+      <div class="info">
+        <span class="pull-right text-danger price">&yen;<em>{$vo['total_amount']}</em></span>
+        <div class="status" id="Z_order_{$vo['id']}">
+          已返现 <span class="text-danger">{$vo.id|get_cashback_amount}</span> 元
+        </div>
+      </div>
+    </div>
+  </volist>
+</notempty>
+<script>
+  C.has_more =  '{$_hasmore}';
+</script>

@@ -1,0 +1,35 @@
+<form action="{:U()}" method="POST" class="rechange-add-form">
+  <input type="hidden" value="{$member.uid}" name="uid"/>
+  <div class="boxpage-div">
+    <div class="boxpage-line">
+      <label class="fl">用户：</label>
+      <div class="fl">{$member.uid|get_nickname}</div>
+    </div>
+    <div class="boxpage-line">
+      <label class="fl">现有：</label>
+      <div class="fl"><span class="text-danger">{$member.score}</span> 积分</div>
+    </div>
+    <div class="boxpage-line">
+      <label class="fl">操作类型：</label>
+      <div class="fl">
+        <select name="type">
+          <option value="in">赠送</option>
+          <option value="out">扣除</option>
+        </select>
+      </div>
+    </div>
+    <div class="boxpage-line">
+      <label class="fl">积分数量：</label>
+      <div class="fl">
+        <input type="text" name="score" class="text input-2x" value="" autocomplete="off" placeholder="请输入值"> 积分
+      </div>
+    </div>
+    <div class="boxpage-line boxpage-menu">
+      <button class="btn ajax-post" data-target-form="rechange-add-form">确定</button>
+    </div>
+  </div>
+</form>
+
+<script>
+  ajaxpost.init('.rechange-add-form');
+</script>

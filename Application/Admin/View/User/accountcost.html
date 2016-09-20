@@ -1,0 +1,112 @@
+<extend name="Public/base" />
+
+<block name="body">
+  <!-- 标题栏 -->
+  <div class="main-title">
+    <h2>用户现金流水({$_total})</h2>
+  </div>
+  <!-- 按钮工具栏 -->
+  <div class="cf">
+    <div class="fl">
+      <a class="btn" href="{:U('accountcost')}">刷 新<span style='font-size:12px;'>（清空搜索条件）</span></a>
+    </div>
+    <!-- 高级搜索 -->
+    <form action="{:U('accountcost')}" method="GET" id="J_search-form">
+    <div class="search-form fr cf">
+      <notempty name="_GET.uid">
+      <div class="fl">
+        <span class="search-option" id="J_search_uid">
+          用户：{:I('get.uid','',get_nickname)} 
+          <i class="icon icon-close" onclick="$('#J_search_uid').remove();"></i>
+          <input type="hidden" name="uid" value="{:I('get.uid')}"/>
+        </span>
+      </div>
+      </notempty>
+      <div class="fl">
+        <select name="type">
+          <option value="">----全部记录----</option>
+          <foreach name="mode_text" key="k" item="vo" >
+            <option value="{$k}">{$vo}</option>
+          </foreach>
+        </select>
+      </div>
+      <div class="sleft">
+        <select id="time_type" name="time_type" class="fl">
+          <option value="create_time">交易时间</option>
+        </select>
+        <input type="text" name="start_time" class="search-input w-100 date_select" value="{:I('get.start_time')}" placeholder="开始"/>
+        <span class="fl line-h">至</span>
+        <input type="text" name="end_time" class="search-input w-100 date_select" value="{:I('get.end_time')}" placeholder="结束"/>
+        <a class="sch-btn" href="javascript:;" id="search" onclick="$('#J_search-form').submit()"><i class="btn-search"></i></a>
+      </div>
+    </div>
+    </form>
+  </div>
+    <!-- 数据列表 -->
+  <div class="data-table table-striped">
+    <table class="">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>用户</th>
+          <th>交易类型</th>
+          <th>收入/支出(元)</th>
+          <th>交易时间</th>
+          <th>备注信息</th>
+        </tr>
+      </thead>
+      <tbody>
+        <notempty name="list">
+          <volist name="list" id="vo">
+            <tr>
+              <td>{$vo.id}</td>
+              <td><a href="{:U('User/view',array('id'=>$vo['uid']))}">{$vo.uid|get_nickname}</a></td>
+              <td>{$vo.type}</td>
+              <td>
+                <if condition="$vo.flow eq 'in'">
+                  <span class="text-success">+{$vo.amount}</span>
+                  <else/>
+                  <span class="text-danger">-{$vo.amount}</span>
+                </if>
+              </td>
+              <td>
+                <gt name="vo.create_time" value="0"><span>{$vo.create_time|time_format}</span></gt>
+              </td>
+              <td>{$vo.memo}</td>
+            </tr>
+          </volist>
+        <else/>
+          <tr><td colspan="7" class="text-center"> aOh! 暂时还没有内容! </td></tr>
+        </notempty>
+      </tbody>
+    </table>
+  </div>
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script language="javascript" type="text/javascript" src="__PUBLIC__/Admin/js/My97Date/WdatePicker.js"></script>
+  <script type="text/javascript">
+    //回车搜索
+    $(".search-input").keyup(function(e){
+      if(e.keyCode === 13){
+        $("#search").click();
+        return false;
+      }
+    });
+    //搜索下拉菜单及时过滤
+    $('#J_search-form select').change(function(){
+      $("#search").click();
+    });
+     //设置单选，复选，下拉菜单的值
+    Core.setValue('type', '{$_GET['type']|default = ""}');
+    //导航高亮
+    highlight_subnav("{:U('User/accountcost')}");
+    //时间选择
+    $('.date_select').focus(function(){
+      WdatePicker({skin: 'twoer', dateFmt: 'yyyy-MM-dd', maxDate: '%y-%M-%d'});
+    });
+  </script>
+</block>

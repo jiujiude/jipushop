@@ -1,0 +1,99 @@
+<extend name="Base/member"/>
+
+<block name="header">
+  <div class="container breadcrumbs">
+    <a href="/index.php">首页</a><span class="sep">/</span><span>账户充值</span>
+  </div>
+</block>
+
+<block name="body">
+  <div class="xm-line-box uc-box">
+    <div class="box-hd">
+      <h3 class="title">账户充值</h3>
+    </div>
+    <div class="box-bd">
+      <div class="form-field">
+        <form action="{:U('Recharge/index')}" class="J_recharge" method="post" id="recharge">
+          <div class="control-group">
+            <label class="control-label" for="amount">充值金额：</label>
+            <div class="controls">
+              <i class="iconfont">&#xe621;</i>
+              <input name="amount" type="number" class="fl form-text input-sm" id="amount" placeholder="请输入充值金额" min="1" datatype="*" nullmsg="请输入充值金额">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="inputPassword">充值方式：</label>
+            <div class="controls">
+              <div class="payment-bd">
+                <dl class="clearfix payment-box">
+                  <dt>
+                    <strong>支付宝</strong>
+                  </dt>
+                  <dd>
+                    <ul class="payment-list clearfix">
+                      <li>
+                        <label for="alipay">
+                          <input type="radio" name="payment_type" id="alipay" value="alipay" <eq name="data.payment_type" value="alipay">checked="checked"</eq> checked="checked">
+                          <img src="__IMG__/pay/payOnline_zfb.gif" alt="">
+                        </label>
+                      </li>
+                      <li>
+                        <label for="bankpay">
+                          <input type="radio" name="payment_type" id="bankpay" value="bankpay" <eq name="data.payment_type" value="bankpay">checked="checked"</eq>>
+                          <img src="__IMG__/pay/payOnline_union.gif" alt="">
+                        </label>
+                      </li>
+                    </ul>
+                  </dd>
+                </dl>
+                <dl class="clearfix payment-box hide J_bankpay">
+                  <dt>
+                    <strong>银行网银</strong>
+                  </dt>
+                  <dd>
+                    <ul class="payment-list clearfix">
+                      <li><label for="CMB"><input type="radio" name="bank" id="CMB" value="CMB"> <img src="__IMG__/pay/payOnline_zsyh.gif" alt=""></label></li>
+                      <li><label for="ICBCB2C"><input type="radio" name="bank" id="ICBCB2C" value="ICBCB2C"> <img src="__IMG__/pay/payOnline_gsyh.gif" alt=""></label></li>
+                      <li><label for="CCB"><input type="radio" name="bank" id="CCB" value="CCB"> <img src="__IMG__/pay/payOnline_jsyh.gif" alt=""></label></li>
+                      <li><label for="ABC"><input type="radio" name="bank" id="ABC" value="ABC"> <img src="__IMG__/pay/payOnline_nyyh.gif" alt=""></label></li>
+                      <li><label for="BOC-DEBIT"><input type="radio" name="bank" id="BOC-DEBIT" value="BOC-DEBIT"> <img src="__IMG__/pay/payOnline_zgyh.gif" alt=""></label></li>
+                      <li><label for="COMM"><input type="radio" name="bank" id="COMM" value="COMM"> <img src="__IMG__/pay/payOnline_jtyh.gif" alt=""></label></li>
+                      <li><label for="PSBC-DEBIT"><input type="radio" name="bank" id="PSBC-DEBIT" value="PSBC-DEBIT"> <img src="__IMG__/pay/payOnline_youzheng.gif" alt=""></label></li>
+                      <li><label for="GDB"><input type="radio" name="bank" id="GDB" value="GDB"> <img src="__IMG__/pay/payOnline_gfyh.gif" alt=""></label></li>
+                      <li><label for="SPDB"><input type="radio" name="bank" id="SPDB" value="SPDB"> <img src="__IMG__/pay/payOnline_pufa.gif" alt=""></label></li>
+                      <li><label for="CEBBANK"><input type="radio" name="bank" id="CEBBANK" value="CEBBANK"> <img src="__IMG__/pay/payOnline_gdyh.gif" alt=""></label></li>
+                      <li><label for="SPABANK"><input type="radio" name="bank" id="SPABANK" value="SPABANK"> <img src="__IMG__/pay/payOnline_payh.gif" alt=""></label></li>
+                      <li><label for="CIB"><input type="radio" name="bank" id="CIB" value="CIB"> <img src="__IMG__/pay/payOnline_xyyh.gif" alt=""></label></li>
+                      <li><label for="CMBC"><input type="radio" name="bank" id="CMBC" value="CMBC"> <img src="__IMG__/pay/payOnline_msyh.gif" alt=""></label></li>
+                      <li><label for="CITIC"><input type="radio" name="bank" id="CITIC" value="CITIC"> <img src="__IMG__/pay/payOnline_zxyh.gif" alt=""></label></li>
+                      <li><label for="SDB"><input type="radio" name="bank" id="SDB" value="SDB"> <img src="__IMG__/pay/payOnline_sfyh.gif" alt=""></label></li>
+                      <li><label for="SHBANK"><input type="radio" name="bank" id="SHBANK" value="SHBANK"> <img src="__IMG__/pay/payOnline_shyh.gif" alt=""></label></li>
+                      <li><label for="BJRCB"><input type="radio" name="bank" id="BJRCB" value="BJRCB"> <img src="__IMG__/pay/payOnline_bjnsyh.gif" alt=""></label></li>
+                      <li><label for="NBBANK"><input type="radio" name="bank" id="NBBANK" value="NBBANK"> <img src="__IMG__/pay/payOnline_nbyh.gif" alt=""></label></li>
+                      <li><label for="HZCBB2C"><input type="radio" name="bank" id="HZCBB2C" value="HZCBB2C"> <img src="__IMG__/pay/payOnline_hzyh.gif" alt=""></label></li>
+                      <li><label for="SHRCB"><input type="radio" name="bank" id="SHRCB" value="SHRCB"> <img src="__IMG__/pay/payOnline_shnsyh.gif" alt=""></label></li>
+                      <li><label for="FDB"><input type="radio" name="bank" id="FDB" value="FDB"> <img src="__IMG__/pay/payOnline_fcyh.gif" alt=""></label></li>
+                    </ul>
+                  </dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="controls">
+              <button type="submit" class="btn btn-large btn-positive">提 交</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</block>
+<block name="script">
+  <script type="text/javascript">
+    (function(){
+      member.init();
+      $('.J_recharge').Validform();
+    })();
+  </script>
+</block>

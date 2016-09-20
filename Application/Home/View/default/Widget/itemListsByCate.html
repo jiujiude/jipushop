@@ -1,0 +1,59 @@
+<notempty name="lists">
+</style>
+  <div class="row" id="J_load_items">
+    <volist name="lists" id="vo">
+      <div class="col-xs-12">
+        <div class="item-title">
+          <h3>
+            <span><a class="clearfix" href="{:U('Item/search', array('cid' => $vo['id']))}">{$vo.name}
+              <!--small class="pull-right more">更多 &gt;</small-->
+            </a></span>
+          </h3>
+        </div>
+        <!-- 分类商品列表 -->
+        <notempty name="vo.item_lists">
+          <div class="row item-list" id="J_item_list">
+            <volist name="vo.item_lists" id="vl">
+              <!-- 分类置顶商品，仅限一个 -->
+              <div class="item <gt name="vl.is_top" value="0">item-top</gt>">
+                <div class="thumbnail">
+                  <a href="{:U('Item/detail', array('id' => $vl['id']))}" target="_blank"><img src="__IMG__/img-pai-bg.png" data-url="{:get_image_thumb($vl['cover_path'], 300, 300)}" class="pic" alt="{$vl.name}"></a>
+                  <div class="caption">
+                    <h5 class="thumbnail-label">
+                    <a href="{:U('Item/detail', array('id' => $vl['id']))}" target="_blank">{:get_short($vl['name'],23)}</a>
+                    </h5>
+                    <div class="thumbnail-info">
+                      <h3 class="text-danger show"><em class="yen">&yen;</em> {$vl.price}</h3>
+                      <if condition="C('IS_SHOW_BUYNUM')"><a href="{:U('Item/detail', array('id' => $vl['id']))}" class="btn btn-sm btn-default" target="_blank"><!--i class="icon icon-cart-fill"></i> {$vl.buynum}人购买-->立即购买</a></if>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </volist>
+          </div>
+        </notempty>
+      </div>
+    </volist>
+  </div>
+  <script>
+  seajs.use(['jquery','jquery.imglazyload'],function($,lz){
+	var path=$('#J_item_list .item')
+	var reloadWindow=function(){
+		if($(window).width()>1600){
+		  path.removeClass('col-xs-3');
+		  path.addClass('col-xs-2');
+		}else{
+		  path.removeClass('col-xs-2');
+		  path.addClass('col-xs-3');
+		}
+	}
+	$(window).resize( function(){
+		reloadWindow();
+	});
+	reloadWindow()
+	$.imgLazyLoad({ diff: 100 })
+  })
+  </script>
+<else/>
+  <p class="list-empty">暂无相关商品</p>
+</notempty>

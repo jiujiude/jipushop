@@ -1,0 +1,80 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>订单回收站({$_total})</h2>
+  </div>
+
+  <!-- 按钮工具栏 -->
+  <div class="cf">
+    <div class="fl">
+      <button class="btn ajax-post confirm" target-form="ids" url="{:U('del')}" autocomplete="off">删 除</button>（点击"删除"后将彻底删除选中订单，请谨慎操作。）
+    </div>
+  </div>
+
+  <!-- 数据表格 -->
+  <div class="category">
+    <div class="hd cf">
+      <div class="check"><input class="check-all" type="checkbox"></div>
+      <div class="cate">订单编号</div>
+      <div class="price w-110">订单总额</div>
+      <div class="price w-110">第三方支付金额</div>
+      <div class="number">支付方式</div>
+      <div class="number">下单用户</div>
+      <div class="cate">订单状态</div>
+      <div class="cate">下单时间</div>
+    </div>
+    <notempty name="list">
+      <volist name="list" id="vo">
+        <dl class="cate-item">
+          <dt class="cf">
+            <form action="{:U('updateField')}" method="post">
+              <div class="check"><input name="ids[]" class="ids" type="checkbox" value="{$vo['id']}"></div>
+              <div class="cate"><a href="{:U('view?id='.$vo['id'])}">{$vo.order_sn}</a></div>
+              <php>$amount = $vo['finance_amount'] + $vo['total_amount'];</php>
+              <div class="price w-110">{:sprintf('%.2f', $amount)}</div>
+              <div class="price w-110">{$vo.total_amount}</div>
+              <div class="number">
+                <gt name="vo.payment_time" value="0">
+                  <gt name="vo.finance_amount" value="0">余额</gt>
+                  <if condition="$vo.finance_amount gt 0 AND $vo.total_amount gt 0">+</if>
+                  <gt name="vo.total_amount" value="0">{$vo.payment_type|get_payment_type_text}</gt>
+                <else/>
+                  -
+                </gt>
+              </div>
+              <div class="number"><a href="{:U('User/view', array('id' => $vo['uid']))}"><if condition="get_nickname($vo['uid']) neq ''">{$vo.uid|get_nickname}<else/>{$vo.uid|get_username}</if></a></div>
+              <!-- 状态 -->
+              <div class="cate">{$vo.o_status_text}</div>
+              <div class="cate">{$vo.create_time|time_format}</div>
+              <div class="btn-toolbar opt-btn cf">
+                <a href="{:U('view?id='.$vo['id'])}">[查看]</a>
+                <a href="{:U('setStatus?status=1&ids='.$vo['id'])}" class="confirm ajax-get">[还原]</a>
+              </div>
+              <input type="hidden" name="images" value="{$vo.images}">
+              <input type="hidden" name="id" value="{$vo['id']}">
+            </form>
+          </dt>
+        </dl>
+      </volist>
+    <else/>
+      <p class="text-center">暂无已删除订单!</p>
+    </notempty>
+
+
+  </div>
+  <!-- 分页 -->
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    $(function(){
+      //导航高亮
+      highlight_subnav("{:U('recycle')}");
+    });
+  </script>
+</block>

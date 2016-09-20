@@ -1,0 +1,59 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题栏 -->
+  <div class="main-title">
+    <h2>文章回收站({:count($list)})</h2>
+  </div>
+
+  <!-- 按钮工具栏 -->
+  <div class="tools auth-botton">
+    <button url="{:U('setStatus',array('status'=>1))}" class="btn ajax-post" target-form="ids">还 原</button>
+    <button url="{:U('del')}" class="btn confirm ajax-post" target-form="ids">清 空</button>
+  </div>
+
+  <!-- 数据表格 -->
+  <div class="data-table">
+    <table>
+      <!-- 表头 -->
+      <thead>
+        <tr>
+          <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+          <th>ID</th>
+          <th>文章标题</th>
+          <th>文章分类</th>
+          <th>发布人</th>
+          <th>发布时间</th>
+          <th>浏览数</th>
+          <th width="125">操作</th>
+        </tr>
+      </thead>
+
+      <!-- 列表 -->
+      <tbody>
+        <volist name="list" id="vo">
+          <tr>
+              <td><input class="ids" type="checkbox" name="ids[]" value="{$vo.id}" /></td>
+              <td>{$vo.id}</td>
+              <td><a href="{:U('edit?id='.$vo['id'])}">{$vo.title}</a></td>
+              <td>{$vo.category}</td>
+              <td><a href="{:U('Admin/UserManager/detail', array('id' => $vo['uid']))}">{$vo.uid|get_nickname}</a></td>
+              <td>{$vo.create_time|time_format}</td>
+              <td>{$vo.view}</td>
+              <td>
+                <a href="{:U('setStatus',array('ids'=>$vo['id'],'status'=>1))}" class="ajax-get">[还原]</a>
+                <a href="{:U('del',array('ids'=>$vo['id'],'status'=>-1))}" class="confirm ajax-get">[删除]</a>
+              </td>
+            </tr>
+        </volist>
+      </tbody>
+    </table>
+  </div>
+  <!-- 分页 -->
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+</block>

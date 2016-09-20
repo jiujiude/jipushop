@@ -1,0 +1,23 @@
+<extend name="Base/user"/>
+
+<block name="body">
+  <div class="user-box shop sdp">
+    <include file='topbar'/>
+    
+    <notempty name="lists">
+      <div class="row list-info">
+        <div class="col-xs-12">
+          <div class="hd clearfix">
+            <span class="col-xs-7">商品</span>
+            <span class="col-xs-2">金额<small>(元)</small></span>
+            <span class="col-xs-3">时间</span>
+          </div>
+        </div>
+        <include file="recordList"/>
+        <div class="page">{$_page}</div>
+      </div>
+    <else />
+      <p class="list-empty">还没有分销记录哦</p>
+    </notempty>
+  </div>
+</block>

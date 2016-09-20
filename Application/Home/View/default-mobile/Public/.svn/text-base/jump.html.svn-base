@@ -1,0 +1,37 @@
+<extend name="Base/common"/>
+<block name="header">
+  <header class="bar bar-nav">
+    <h1 class="title">跳转提示</h1>
+  </header>
+</block>
+
+<block name="body">
+  <?php
+    if(C('LAYOUT_ON')) {
+      echo '{__NOLAYOUT__}';
+    }
+  ?>
+  <div class="content-padded jump-msg">
+    <present name="message">
+      <p class="hd"><i class="icon icon-round-check-fill"></i><?php echo($message); ?></p>
+    <else/>
+      <p class="hd"><i class="icon icon-round-close-fill"></i><?php echo($error); ?></p>
+    </present>
+    <p class="detail"></p>
+    <p class="time">
+      页面将在<b id="wait"><?php echo($waitSecond); ?></b>秒后自动<a id="href" href="<?php echo($jumpUrl); ?>">跳转</a>
+    </p>
+  </div>
+  <script type="text/javascript">
+  (function(){
+    var wait = document.getElementById('wait'),href = document.getElementById('href').href;
+    var interval = setInterval(function(){
+      var time = --wait.innerHTML;
+      if(time <= 0) {
+        top.location.href = href;
+        clearInterval(interval);
+      };
+    }, 1000);
+  })();
+  </script>
+</block>

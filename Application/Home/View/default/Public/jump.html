@@ -1,0 +1,41 @@
+<extend name="Base/page"/>
+<block name="body">
+<?php
+  if(C('LAYOUT_ON')) {
+    echo '{__NOLAYOUT__}';
+  }
+?>
+<div class="page-wrap">
+  <div class="title">
+    <h3>温馨提示</h3>
+  </div>
+  <div class="warp jump-msg">
+    <present name="message">
+      <p class="subject"><i class="icon icon-success"></i><?php echo($message); ?></p>
+    <else/>
+      <p class="subject"><i class="icon icon-error"></i><?php echo($error); ?></p>
+    </present>
+    <p class="detail"></p>
+    <p class="action">
+      <a href="{:U('/')}" class="btn">去首页</a>
+      <a href="javascript:window.history.back(-1);" class="btn">返回上一页</a>
+    </p>
+    <p class="time">
+    页面将在<b id="wait"><?php echo($waitSecond); ?></b>秒后自动<a id="href" href="<?php echo($jumpUrl); ?>">跳转</a>
+    </p>
+  </div>
+</div>
+<script type="text/javascript">
+(function(){
+var wait = document.getElementById('wait');
+var href = document.getElementById('href').href;
+var interval = setInterval(function(){
+  var time = --wait.innerHTML;
+  if(time <= 0) {
+    top.location.href = href;
+    clearInterval(interval);
+  };
+}, 1000);
+})();
+</script>
+</block>

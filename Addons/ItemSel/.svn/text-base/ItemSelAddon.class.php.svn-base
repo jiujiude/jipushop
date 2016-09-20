@@ -1,0 +1,66 @@
+<?php
+
+namespace Addons\ItemSel;
+use Common\Controller\Addon;
+
+/**
+ * 商品选择器插件
+ * @author Max.Yu <max@winhu.com>
+ */
+
+	class ItemSelAddon extends Addon{
+
+		public $info = array(
+			'name'=>'ItemSel',
+			'title'=>'商品选择器',
+			'description'=>'通用型商品选择器',
+			'status'=>1,
+			'author'=>'Max.Yu',
+			'version'=>'1.0'
+		);
+
+		public function install(){
+			return true;
+		}
+
+		public function uninstall(){
+			return true;
+		}
+    
+    /**
+     * 弹窗选择商品钩子
+     * @param array('name'=>'文本框名字')
+     */
+    public function itemSel($param){
+      //参数初始化处理
+      $this->_paramFormat($param);
+      $this->assign('param', $param);
+      //设置模板
+      $tpl = $param['tpl'] ?: 'widget';
+      $this->display($tpl);
+    }
+    
+    /**
+     * 参数初始化处理
+     * @param array $param 参数数组
+     *   特别注意：param[tpl] == 'setNumber' 时：param[items]的格式为：[{"id":116,"num":"1"},{"id":106,"num":"1"}]
+     * @author Max.Yu <max@winhu.com>
+     */
+    protected function _paramFormat(&$param){
+      //设置赠品数量
+      if($param['tpl'] == 'setNumber'){
+        if($param['items']){
+        $items = json_decode($param['items'], true);
+        //商品ID集合
+        $item_ids = array_column($items, 'id');
+        foreach($items as $item){
+          $info = get_item_info($item['id']);
+          $info['num'] = $item['num'];
+          $item_info[$item['id']] = $info;
+        }
+        $param['items'] = $item_ids ? implode(',', $item_ids): array();
+        $param['item_info'] = $item_info;
+        }
+      }
+    }
+	}

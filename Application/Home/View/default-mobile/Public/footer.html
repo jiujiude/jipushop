@@ -1,0 +1,22 @@
+<!-- 底部 -->
+<block name="footer">
+  <include file="Public/tab"/>
+</block>
+<!-- 底部其他扩展内容 -->
+<block name="extend"></block>
+<block name="script"><script>seajs.use();</script></block> <!-- 用于加载js代码 -->
+<!-- 页面footer钩子，一般用于加载插件JS文件和JS代码 -->
+{:hook('pageFooter', 'widget')}
+<div class="hidden"><!-- 用于加载统计代码等隐藏元素 -->
+  <block name="hidden"></block>
+  <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?edfb6f417a7d1c1f1bc3a315a186d3c0";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+</div>

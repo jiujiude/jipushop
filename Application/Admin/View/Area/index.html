@@ -1,0 +1,99 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2> 配送区域 </h2>
+  </div>
+
+  <div class="cf">
+    <a class="btn" href="{:U('add',array('pid'=>I('get.pid',0)))}">新 增</a>
+    <!--<button class="btn ajax-post confirm" url="{:U('remove')}" target-form="ids">删 除</button>-->
+    <!--<a class="btn" href="javascript:history.go(-1)">返 回</a>-->
+    <a class="btn" href="{:U('index')}">刷 新 <span style="font-size:12px;font-weight:normal">(清空搜索条件)</span></a>
+    <!-- 高级搜索 -->
+    <div class="search-form fr cf">
+      <div class="sleft">
+        <input type="text" name="title" class="search-input" value="{:I('title')}" placeholder="请输入区域名称">
+        <a class="sch-btn" href="javascript:;" id="search" url="__SELF__"><i class="btn-search"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="data-table table-striped">
+    <form class="ids">
+      <table>
+        <thead>
+          <tr>
+            <!--<th class="row-selected">
+              <input class="checkbox check-all" type="checkbox">
+            </th>-->
+            <th>ID</th>
+            <th>名称</th>
+            <th>上级区域</th>
+            <th>排序</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        <notempty name="lists">
+          <volist name="lists" id="vo">
+            <tr>
+              <!--<td><input class="ids row-selected" type="checkbox" name="id[]" value="{$vo.id}"></td>-->
+              <td>{$vo.id}</td>
+              <td>
+                <if condition="check_area_child($vo['id'])">
+                  <a href="{:U('index?pid='.$vo['id'])}">{$vo.title}</a>
+                <else />
+                  {$vo.title}
+                </if>
+              </td>
+              <td>{$vo.up_title|default='无'}</td>
+              <td>{$vo.sort}</td>
+              <td>
+                <a title="编辑" href="{:U('add', array('pid' => $vo['id']))}">[添加子区域]</a>
+                <a title="编辑" href="{:U('edit?id='.$vo['id'])}">[编辑]</a>
+                <a class="confirm ajax-get" title="删除" href="{:U('remove?id='.$vo['id'])}">[删除]</a>
+              </td>
+            </tr>
+          </volist>
+        <else/>
+          <td colspan="10" class="text-center"> aOh! 暂时还没有内容! </td>
+        </notempty>
+        </tbody>
+      </table>
+    </form>
+    <!-- 分页 -->
+    <div class="page">
+      {$_page}
+    </div>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    $(function() {
+      //搜索功能
+      $("#search").click(function() {
+        var url = $(this).attr('url');
+        var query = $('.search-form').find('input').serialize();
+        query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g, '');
+        query = query.replace(/^&/g, '');
+        if (url.indexOf('?') > 0) {
+          url += '&' + query;
+        }else{
+          url += '?' + query;
+        }
+        window.location.href = url;
+      });
+      //回车搜索
+      $(".search-input").keyup(function(e) {
+        if (e.keyCode === 13) {
+          $("#search").click();
+          return false;
+        }
+      });
+      //导航高亮
+      highlight_subnav('{:U('index')}');
+    });
+  </script>
+</block>

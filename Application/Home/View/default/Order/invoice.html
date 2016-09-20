@@ -1,0 +1,144 @@
+<link href="__CSS__/invoice.css" rel="stylesheet">
+<div class="modal fade in" id="J_load_box">
+    <div class="modal-dialog modal-box">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close J_modal_close" data-dismiss="modal">
+                <i class="icon icon-close"></i>
+                </button>
+            <h4 class="modal-title">发票信息</h4>
+            </div>
+        <!-- 内容content -->
+            <div class="modal-body clearfix" id="J_box_content">
+                <div id="invoice-main">
+                      <div class="tab-nav form-group" id="invoice-nav">
+                        <ul>
+                        <volist name="invoiceType" id="vo">
+                          <li data-key="{$key}" class="tab-nav-item <eq name='key' value='1'>select</eq> ">{$vo}<span></span></li>
+                        </volist>
+                        </ul>
+                        <input name="type" type="hidden" value="1">
+                      </div>
+                      <div id="invoice-box">
+                       <!---普通发票---> 
+                       <div class="form" style="display: block;">
+                        <ul class="col-xs-10 ">
+                            <li class="col-xs-12">
+                            <label class="col-xs-3 control-label " >发票抬头:</label>
+                            <div class="col-xs-9 fr ">
+                                <input name="normal_title" type="text" class="form-group form-control" value="个人">
+                                <!--这个盒子用户没填就没有，删除编辑是鼠标进入这个盒子才显示-->
+                                <!--div class="form-group form-control col-xs-12 select">
+                                    <input type="text" class="form-cont col-xs-8" value="个人"> 
+                                    <a class="fr" href="javascript:;" style="display:none">编辑  删除</a>
+                                    <span></span>
+                                </div -->
+                                <!--暂时没有新增div class="form-group col-xs-12"><a class="fl" href="javascript:;" >新增单位发票</a></div -->
+                            </div>
+                            </li>
+                            <li class="form-group col-xs-12">
+                            <label class="col-xs-3 control-label" >发票内容:</label>
+                            <div class="col-xs-9 fr ">
+                                <ul class="electro_book">
+                                <volist name="invoiceContent" id="vo">
+                                  <li data="{$key}" class="tab-nav-item <eq name='key' value='1'> select </eq>">{$vo}<span></span></li>
+                                </volist>
+                                </ul>
+                                <input type="hidden" name="normal_content" value="1"/>
+                            </div>
+                            </li>
+                             <li class="form-group col-xs-12">
+                            <label class="col-xs-3 control-label" >&nbsp;&nbsp;</label>
+                            <div class="col-xs-9 fr ">
+                                <button type="button" data-type="normal" class="btn-submit btn btn-block btn-positive form-group">保存</button>
+                                <div class="form-group col-xs-12">温馨提示：发票的开票金额不包含优惠券、积分支付及余额支付部分。</div>
+                            </div>
+                            </li>
+                        </ul>
+                        </div>
+                       <!---电子发票--->
+                       <div class="form" style="display: none;">
+                         <div class="form-group col-xs-12 prompt-box">电子发票是税局认可的有效凭证，其法律效力、基本用途及使用规定同纸质发票，如需纸质票可自行下载打印。如您本次购买的商品暂未实现电子发票开具，我们将自动更换为普通发票（纸质）同商品一并送达，请您注意查收。</div>
+                        <ul class="col-xs-10">
+                            <li class="col-xs-12">
+                            <label class="col-xs-3 control-label " >发票抬头:</label>
+                            <div class="col-xs-9 fr ">
+                                <input type="text" name="ele_title" class="form-group form-control" value="个人">
+                            </div>
+                            </li>
+                            <li class="form-group col-xs-12">
+                            <label class="col-xs-3 control-label" >发票内容:</label>
+                            <div class="col-xs-9 fr ">
+                                <ul class="electro_book">
+                                <volist name="invoiceContent" id="val">
+                                  <li data="{$key}" class="tab-nav-item <eq name='key' value='1'> select </eq>">{$val}<span></span></li>
+                                </volist>
+                                </ul>
+                                <input type="hidden" name="ele_content" value="1">
+                            </div>
+                            </li>
+                             <li class="form-group col-xs-12">
+                            <label class="col-xs-3 control-label" >&nbsp;&nbsp;</label>
+                            <div class="col-xs-9 fr ">
+                                <button type="button" data-type="ele" class="btn-submit btn btn-block btn-positive form-group">保存</button>
+                                <div class="form-group col-xs-12">温馨提示：发票的开票金额不包含优惠券、积分支付及余额支付部分。</div>
+                            </div>
+                            </li>
+                        </ul>
+                        
+                        </div>
+                        <!---增值税发票--->
+                       <div class="form" style="display: none;">
+                         <div class="form-group col-xs-12 prompt-box">我公司依法开具发票，如您购买的商品按税法规定属于不得从增值税销项税额中抵扣的项目（例如集体福利或个人消费等），请您选择普通发票。</div>
+                        <ul class="col-xs-10">
+                            <li class="col-xs-12">
+                            <label class="col-xs-3 control-label " >单位名称:</label>
+                            <div class="col-xs-9 fr "><input name="unit" type="text" class="form-group form-control" value=""></div>
+                            </li>
+                            <li class="col-xs-12">
+                            <label class="col-xs-3 control-label " >纳税人识别码:</label>
+                            <div class="col-xs-9 fr "><input name="code" type="text" class="form-group form-control" value=""></div>
+                            </li>
+                            <li class="col-xs-12">
+                            <label class="col-xs-3 control-label " >注册地址:</label>
+                            <div class="col-xs-9 fr "><input name="address" type="text" class="form-group form-control" value=""></div>
+                            </li>
+                            <li class="col-xs-12">
+                            <label class="col-xs-3 control-label " >注册电话:</label>
+                            <div class="col-xs-9 fr "><input name="tel" type="text" class="form-group form-control" value=""></div>
+                            </li>
+                            <li class="col-xs-12">
+                            <label class="col-xs-3 control-label " >开户银行:</label>
+                            <div class="col-xs-9 fr "><input name="bank" type="text" class="form-group form-control" value=""></div>
+                            </li>
+                            <li class="col-xs-12">
+                            <label class="col-xs-3 control-label " >银行账户:</label>
+                            <div class="col-xs-9 fr "><input name="account" type="text" class="form-group form-control" value=""></div>
+                            </li>
+                             <li class="form-group col-xs-12">
+                            <label class="col-xs-3 control-label" >发票内容:</label>
+                            <div class="col-xs-9 fr ">
+                                <ul class="electro_book">
+                                <volist name="invoiceContent" id="vals">
+                                  <li data="{$key}" class="tab-nav-item <eq name='key' value='1'> select </eq>">{$vals}<span></span></li>
+                                </volist>
+                                </ul>
+                                <input type="hidden" name="inc_content" value="1">
+                            </div>
+                            </li>
+                             <li class="form-group col-xs-12">
+                            <label class="col-xs-3 control-label" >&nbsp;&nbsp;</label>
+                            <div class="col-xs-9 fr ">
+                                <button type="button" data-type="incr" class="btn-submit btn btn-block btn-positive form-group">保存</button>
+                                <div class="form-group col-xs-12">温馨提示：发票的开票金额不包含优惠券、积分支付及余额支付部分。</div>
+                            </div>
+                            </li>
+                        </ul>
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

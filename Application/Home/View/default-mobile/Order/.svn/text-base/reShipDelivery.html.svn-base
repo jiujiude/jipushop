@@ -1,0 +1,18 @@
+<extend name="Base/common" />
+<block name="body">
+<div class="order">
+  <div class="order-detail">
+      <h4>退货信息</h4>
+      <ul class="table-view base">
+        <li class="table-view-cell">
+          <span class="th">快递公司：</span>
+          {$data.company_name}
+        </li>
+        <li class="table-view-cell">
+          <span class="th">快递单号：</span>
+          {$data.ship_number}
+        </li>
+      </ul>
+  </div>
+</div>
+</block>

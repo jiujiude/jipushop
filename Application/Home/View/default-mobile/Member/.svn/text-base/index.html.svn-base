@@ -1,0 +1,151 @@
+<extend name="Base/common"/>
+
+<block name="body">
+  <!-- 个人资料、头像 -->
+  <div class="user-info">
+    <img src="<notempty name="member.avatar">{$member['avatar']}<else/>__IMG__/avatar-default.png</notempty>" class="avatar" width="80" height="80">
+    <h4 class="name">{:get_nickname()}</h4>
+    <if condition="session('user_auth.group_id') gt 0">
+      会员等级：{:get_group_name(session('user_auth.group_id'))}({:get_group_description(session('user_auth.group_id'))})
+    </if>
+    <ul class="flex-box order-bar">
+      <li><a href="{:U('Member/order', array('type' => 'payment'))}"><span class="num">{$order_num.payment}</span>待付款</a></li>
+      <li><a href="{:U('Member/order', array('type' => 'unship'))}"><span class="num">{$order_num.unship}</span>待发货</a></li>
+      <li><a href="{:U('Member/order', array('type' => 'unreceive'))}"><span class="num">{$order_num.unreceive}</span>待收货</a></li>
+      <li><a href="{:U('Member/order', array('type' => 'success'))}"><span class="num">{$order_num.success}</span>已完成</a></li>
+      <li><a href="{:U('Member/order', array('type' => 'recycle'))}"><span class="num">{$order_num.recycle}</span>回收站</a></li>
+    </ul>
+    <a href="{:U('Member/message')}" class="message">
+      <i class="icon icon-message"></i>
+      <gt name="message_unread" value="0"><s></s></gt>
+    </a>
+  </div>
+
+  <div class="user-table">
+    <ul class="table-view user-table-view">
+      <li class="table-view-cell">
+        <a href="{:U('Member/order')}" class="navigate-right">
+          <span class="media-object pull-left icon icon-list"></span>
+          <p class="media-body">我的订单</p>
+          <span class="badge"><eq name="user_count.order_count" value="">0<else />{$user_count.order_count}</eq></span>
+        </a>
+      </li>
+      <li class="table-view-cell">
+        <a href="{:U('Finance/index')}" class="navigate-right">
+          <span class="media-object pull-left icon icon-recharge"></span>
+          <p class="media-body">现金账户</p>
+          <span class="badge">{$member.finance}元</span>
+        </a>
+      </li>
+      <li class="table-view-cell">
+        <a href="{:U('Member/coupon')}" class="navigate-right">
+          <span class="media-object pull-left icon icon-ticket"></span>
+          <p class="media-body">我的优惠券</p>
+          <span class="badge"><eq name="user_count.coupon_count" value="">0<else />{$user_count.coupon_count}</eq></span>
+        </a>
+      </li>
+      <li class="table-view-cell hide">
+        <a href="{:U('Member/card')}" class="navigate-right">
+          <span class="media-object pull-left icon icon-card"></span>
+          <p class="media-body">我的礼品卡</p>
+          <span class="badge"><eq name="user_count.card_count" value="">0<else />{$user_count.card_count}</eq></span>
+        </a>
+      </li>
+      <li class="table-view-cell">
+        <a href="{:U('Member/score')}" class="navigate-right">
+          <span class="media-object pull-left icon icon-favor"></span>
+          <p class="media-body">我的积分</p>
+          <span class="badge">{$member.score}</span>
+        </a>
+      </li>
+      </ul>
+
+      <ul class="table-view user-table-view">
+      <li class="table-view-cell">
+        <a href="{:U('Member/receiver')}" class="navigate-right">
+          <span class="media-object pull-left icon icon-location"></span>
+          <p class="media-body">收货地址</p>
+          <span class="badge"><eq name="user_count.receiver_count" value="">0<else />{$user_count.receiver_count}</eq></span>
+        </a>
+      </li>
+      <li class="table-view-cell">
+        <a href="{:U('Member/fav')}" class="navigate-right">
+          <span class="media-object pull-left icon icon-like"></span>
+          <p class="media-body">我的收藏</p>
+          <span class="badge"><eq name="user_count.fav_count" value="">0<else />{$user_count.fav_count}</eq></span>
+        </a>
+      </li>
+      <li class="table-view-cell">
+        <a href="{:U('Member/invite')}" class="navigate-right">
+          <span class="media-object pull-left icon icon-invite"></span>
+          <p class="media-body">我的邀请</p>
+        </a>
+      </li>
+      
+      <if condition="C('SDP_IS_OPEN')">
+        <php>$str = SHOP_SECRET;</php>
+        <if condition="empty($str)">
+          <li class="table-view-cell">
+            <a href="{:U('Shop/guide')}" class="navigate-right">
+              <span class="media-object pull-left icon icon-sdp"></span>
+              <p class="media-body">申请分销代理</p>
+            </a>
+          </li>
+          <else/>
+          <li class="table-view-cell">
+            <a href="{:U('Member/sdp')}" class="navigate-right">
+              <span class="media-object pull-left icon icon-sdp"></span>
+              <p class="media-body">分销代理</p>
+            </a>
+          </li>
+        </if>
+<!--        <li class="table-view-cell">
+          <a href="{:U('UserAccount/index')}" class="navigate-right">
+            <span class="media-object pull-left icon icon-withdraw"></span>
+            <p class="media-body">提现账户</p>
+            <span class="badge"><eq name="user_account_count" value="">0<else />{$user_account_count}</eq></span>
+          </a>
+        </li>-->
+      </if>
+      <li class="table-view-cell">
+        <a href="{:U('Member/union')}" class="navigate-right">
+          <span class="media-object pull-left icon icon-link"></span>
+          <p class="media-body">推广联盟</p>
+        </a>
+      </li>
+      
+    </ul>
+
+    <ul class="table-view user-table-view">
+      <li class="table-view-cell">
+        <a href="{:U('Member/editProfile')}" class="navigate-right">
+          <span class="media-object pull-left icon icon-edit"></span>
+          <p class="media-body">个人资料</p>
+        </a>
+      </li>
+      <li class="table-view-cell">
+        <a href="{:U('Member/changepwd')}" class="navigate-right">
+          <span class="media-object pull-left icon icon-lock"></span>
+          <p class="media-body">修改密码</p>
+        </a>
+      </li>
+      <li class="table-view-cell">
+        <a href="{:U('Member/mobileBind')}" class="navigate-right">
+          <span class="media-object pull-left icon icon-mobile"></span>
+          <p class="media-body">绑定手机</p>
+        </a>
+      </li>
+    </ul>
+  </div>
+  
+  <div class="content-padded">
+    <a href="{:U('User/logout')}" class="btn btn-block btn-negative">退出账户</a>
+  </div>
+</block>
+<block name="script">
+  <script>
+    seajs.use('wechat', function(wechat){
+      wechat.init();
+    });
+  </script>
+</block>

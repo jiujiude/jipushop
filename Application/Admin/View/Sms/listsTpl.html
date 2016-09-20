@@ -1,0 +1,85 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>模板列表({:count($lists)})</h2>
+  </div>
+  <div class="tab-wrap">
+    <ul class="tab-nav nav">
+      <li><a href="{:U('index')}">账号信息</a></li>
+      <li class="current"><a href="{:U('listsTpl')}">模板列表</a></li>
+      <li><a href="{:U('listsSend')}">短信记录</a></li>
+      <li><a href="javascript:;" onclick="UI.load('{:U('updateTpl')}', '添加模板')" class="btn btn-radius">添加模板</a></li>
+      <li class="fr">
+        <a href="{:U('clearCache', array('name' => 'sms_tpl_diy'))}" class="clear_cache ajax-get">清空缓存</a>
+      </li>
+    </ul>
+  </div>
+  <!-- 按钮工具栏 -->
+  <div class="data-table table-striped">
+    <table>
+      <thead>
+        <tr class="status_trclass_lr">
+          <th>模板ID</th>
+          <th>模板内容</th>
+          <th>审核状态</th>
+          <th>未通过原因</th>
+          <th class="text-center">模板类型</th>
+          <th width="100" class="text-center">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <notempty name="lists">
+          <volist name="lists" id="vo">
+            <tr class="status_trclass_{$vo['check_status'] == 'SUCCESS' ? 1: 0}">
+              <td>{$vo.tpl_id}</td>
+              <td>{$vo.tpl_content}</td>
+              <td>
+                <switch name="vo.check_status">
+                  <case value="SUCCESS"><span class="text-success">已通过审核</span></case>
+                  <case value="FAIL"><span class="text-danger">未通过审核</span></case>
+                  <case value="CHECKING"><span class="text-cancel">审核中</span></case>
+                </switch>
+              </td>
+              <td>
+                <notempty name="vo.reason">
+                  {$vo.reason}
+                </notempty>
+              </td>
+              <td class="text-center"> 
+                <eq name="vo.is_system_create" value="1">
+                  默认
+                  <else/>
+                  自定义
+                </eq>
+              </td>
+              <td class="text-center">
+                <eq name="vo.is_system_create" value="1">
+                <span class="text-cancel">不可操作</span>
+                <else/>
+                  <a href="javascript:;" onclick="UI.load('{:U('updateTpl', array('tpl_id' => $vo['tpl_id']))}', '编辑模板');">[编辑]</a>
+                  <a href="{:U('removeTpl?tpl_id='.$vo['tpl_id'])}" class="confirm ajax-get">[删除]</a>
+                </eq>
+              </td>
+            </tr>
+          </volist>
+          <else/>
+          <tr>
+            <td colspan="9" class="text-center">
+              aOh! 暂时还没有模板信息! 
+            </td>
+          </tr>
+        </notempty>
+        </tbody>
+    </table>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    $(function(){
+      highlight_subnav(Core.U('/Admin/Sms/index'));
+    });
+  </script>
+</block>

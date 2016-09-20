@@ -1,0 +1,127 @@
+<style>
+  .height-itm{height:auto;}
+  .users-box .itm-table{width:100%;}
+  .users-box .itm-table tbody tr{line-height:22px;border-bottom:1px solid #E9E9E9;}
+  .users-box .itm-table tbody tr.tr2 td{background: #F9F9F9;}
+  .users-box .itm-table tbody tr td{padding:5px;}
+  .title_img{height: 30px;}
+  .itm-search{padding:5px 5px 10px;}
+  .submit_h0{height: 31px; line-height: 20px;}
+  .text-short{width: 150px;}
+</style>
+  <form action="{:addons_url('UserSel://UserSel/index')}" id="J-itmsearch-form" method="get">
+    <div class="itm-search">
+      <span id="user_type_span"></span>
+      <input type="text" value="{:I('username')}" class="text text-large" name="username" placeholder="ID、用户名、昵称、手机">
+      <input type="submit" value="查找" class="btn btn-mini btn-return J_itmsearch">
+    </div>
+  </form>
+  <div class="users-box height-itm">
+    <table id="J_itmtab" class="itm-table" data-pageurl="{$page_url}">
+      <thead class="users-tb-hd">
+        <tr>
+          <th style="padding-left:10px">选择</th>
+          <th width="30"></th>
+          <th align="left" width="140">昵称</th>
+          <th class="text-center">手机</th>
+          <th class="text-center" width="150">最后登录时间</th>
+        </tr>
+      </thead>
+      <tbody>
+      <notempty name="page.list">
+        <volist name="page.list" key="k" id="vo" mod="2">
+          <tr <eq name="mod" value="1"> class="tr2"</eq> > 
+            <td class="col-title text-center">
+              <php> $checked = in_array($cont_type.':'.$vo['id'], $event_sel);</php>
+              <input type="{:I('get.type', 'checkbox')}" class="J_user" name="us_user_id" value="{$vo.id}" <if condition="$checked">checked</if>/>
+            </td>
+            <td>
+              <notempty name="vo.avatar">
+                <img src="{$vo.avatar}" width="32"/>
+              </notempty>
+            </td>
+            <td>
+              <a href="{:U('/Admin/User/view', array('id'=>$vo['id']))}" target="_blank">{$vo.uid|get_nickname}</a></td>
+            <td class="text-center">
+              <a href="{:U('/Admin/User/view', array('id'=>$vo['id']))}" target="_blank">{$vo.mobile}</a></td>
+            <td>{$vo.update_time|time_format}</td>
+          </tr>
+        </volist>
+        <else/>
+        <tr>
+          <td colspan="3">
+            <p class="text-center"> 暂无内容! </p>
+          </td>
+        </tr>
+      </notempty>
+      </tbody>
+    </table>
+  </div>
+  <notempty name="page.list">
+  <div class="page J_ajax-page">
+    {$page.p}
+    <div class="fr">
+      <input type="button" value="确定" class="btn submit-btn btn-mini submit_h0" onclick="$('.J_modal_close').click()">
+    </div>
+  </div>
+  </notempty>
+<script>
+  (function(){
+
+    //AJAX分页处理
+    $('.J_ajax-page a').click(function(){
+      UI.load($(this).attr('href'), '内容选择');
+      return false;
+    });
+    
+    //提交搜索
+    $('#J-itmsearch-form').submit(function(){
+      <notempty name="users">
+      if($('#manage_users').size() == 0){
+        $('<input value="" name="users" id="manage_users" type="hidden">').appendTo('#J-itmsearch-form');
+      }
+      $('#manage_users').val($('#J_usersel_input').val());
+      </notempty>
+      val = $(this).serialize();
+      userSel.search(val);
+      return false;
+    });
+    
+    //选择、取消选择
+    $('#J_itmtab .J_user').change(function(){
+      var seled = $('#J_usersel_input').val();
+      var val = $(this).val();
+      sel = seled!=='' ? seled.split(',') : [];
+      var pos = $.inArray(val, sel);
+      if($(this).is(':checked') && pos === -1){
+        sel.push(val);
+      }else if(pos > -1){
+        sel.splice(pos, 1);
+        <notempty name="users">
+        $(this).closest('tr').css({textDecoration: 'line-through'}).fadeOut(300, function(){
+          $(this).remove();
+          if($('#J_itmtab tbody tr').size() === 0){
+            userSel.manage();
+          }
+        });
+        </notempty>
+      }
+      if('{:I("get.type", "checkbox")}' === 'radio'){
+        sel = [val];
+      }
+      $('#J_usersel_input').val(sel.join(','));
+      $('.J_user_name').val($('#J_usersel_input').val());
+      userSel.selSum();
+    });
+    
+    //默认选择
+    seled = $('#J_usersel_input').val();
+    seled_arr = seled.split(',');
+    $('#J_itmtab input').each(function(e){
+      if($.inArray($(this).val(), seled_arr) > -1){
+        $(this).prop('checked', true);
+      }
+    });
+    
+  })();
+</script>

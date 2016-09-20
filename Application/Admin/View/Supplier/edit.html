@@ -1,0 +1,78 @@
+<extend name="Public/base" />
+
+<!-- 供应商新增和编辑页面 -->
+<block name="body">
+  <div class="main-title">
+    <h2>{$data['id']?'编辑':'新增'}供应商信息</h2>
+  </div>
+
+  <form action="{:U('update')}" enctype="application/x-www-form-urlencoded" method="POST" class="form-horizontal">
+    <if condition="!IS_SUPPLIER and ACTION_NAME eq 'add' ">
+      <div class="form-item cf">
+        <label class="item-label">供应商</label>
+        <select name="supplier_id">
+          <option value="">请选择供应商</option>
+          <!--<option value="0">自营</option>-->
+          <volist name="lists_supplier" id="vo">
+            <option value="{$vo.uid}">{$vo.uid|get_nickname}</option>
+          </volist>
+        </select>
+      </div>
+    </if>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">供应商名称</label>
+      <div class="controls">
+        <input id="auth-title" type="text" name="name" class="text input-large" value="{$data.name}"/>
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">免运费限额</label>
+      <div class="controls">
+        <input id="auth-title" type="text" name="free_amount" class="text input-large" value="{$data.free_amount|default=39}"/>
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">联系人</label>
+      <div class="controls">
+        <input id="auth-title" type="text" name="link_name" class="text input-large" value="{$data.link_name}"/>
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">联系方式</label>
+      <div class="controls">
+        <input id="auth-title" type="text" name="link_mobile" class="text input-large" value="{$data.link_mobile}"/>
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">新订单短信通知手机号</label>
+      <div class="controls">
+        <input id="auth-title" type="text" name="notice_mobile" class="text input-large" value="{$data.notice_mobile}"/>
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">发票内容<span class="check-tips">（根据自己的情况设置发票内容，如果为空则不开发票）</span></label>
+      <div class="controls">
+        <label class="textarea input-large">
+           <textarea name="invoice_content">{$data.invoice_content}</textarea>
+        </label>
+      </div>
+    </div>
+    <div class="form-item">
+      <input type="hidden" name="id" value="{$data.id}" />
+      <if condition="$data['supplier_id']">
+        <input type="hidden" name="supplier_id" value="{$data.supplier_id}" />
+      </if>
+      <button type="submit" class="btn submit-btn ajax-post" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+  </form>
+<block>
+
+<block name="script">
+  <script type="text/javascript" charset="utf-8">
+    $(function(){
+      //导航高亮
+      highlight_subnav('{:U('index')}');
+    });
+  </script>
+</block>

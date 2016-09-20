@@ -1,0 +1,21 @@
+<form action="{:U('', array('tpl_id' => $data['tpl_id']))}" method="POST" class="J_sms_form">
+<input type="hidden" value="{$data.tpl_id}" name="tpl_id"/>
+<p class="boxpage-tips">
+  1、#code# 表示可变参数code<br/>
+  2、必须以带【】的签名开始或结尾 如：您的验证码是#code#【极铺网络】<br/>
+</p>
+<div class="boxpage-div">
+  <div class="boxpage-line">
+    <label class="fl mini">内容：</label>
+    <div class="fl textarea input-large">
+      <textarea name="tpl_content">{$data.tpl_content}</textarea>
+    </div>
+  </div>
+  <div class="boxpage-line boxpage-menu mini">
+    <button class="btn ajax-post" data-target-form="rechange-add-form">确定保存</button>
+  </div>
+</div>
+</form>
+<script>
+  ajaxpost.init('.J_sms_form');
+</script>

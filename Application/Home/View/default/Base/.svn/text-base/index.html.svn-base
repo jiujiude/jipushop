@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta property="qc:admins" content="350710055662105307063757" />
+  <meta property="wb:webmaster" content="fc0bc666c7ffa4c5" />
+  <include file="Public/head"/>
+</head>
+<body class="index">
+  <!-- 头部 -->
+  <include file="Public/header"/>
+  <!-- /头部 -->
+  <!-- 主体 -->
+  <include file="Public/bodyIndex"/>
+  <!-- /主体 -->
+  <!-- 底部 -->
+  <include file="Public/footer"/>
+  <!-- /底部 -->
+</body>
+</html>

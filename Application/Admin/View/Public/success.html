@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>跳转提示 - JipuShop管理平台</title>
+    <link rel="stylesheet" type="text/css" href="__CSS__/base.css" media="all">
+    <style type="text/css">
+      html,body{
+        background: #F2F2F2;
+      }
+      dl.message{
+        width: 600px;
+        height: 230px;
+        border: 1px solid #c3c3c3;
+        background: #fafafa;
+        margin:13% auto;
+        position: relative;
+        box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.1);
+        border-radius: 3px;
+      }
+      dl.message dt{
+        position: absolute;
+        font-size: 64px;
+        color: #249845;
+        left: 30px;
+        top: 30px;
+      }
+      dl.message dd.mes{
+        width: 450px;
+        height: 170px;
+        padding: 10px;
+        position: absolute;
+        top: 20px;
+        left: 120px;
+      }
+      dl.message dd.home{
+        position: absolute;
+        right: 6px;
+        top: 2px;
+        font-size: 16px;
+      }
+      dl.message dd.home a{
+        color: #878686;
+        text-decoration: none;
+      }
+      dl.message dd h1{
+        border-bottom: 1px solid #ededed;
+        padding-bottom: 8px;
+        color: #249845;
+        font-size: 28px;
+      }
+      dl.message dd p.jump{
+        padding-top:10px;
+        font-size:14px;
+      }
+      dl.message dd p.jump strong{
+        color: #249845;
+      }
+      dl.message dd div.menu{
+        position: absolute;
+        bottom:5px;
+      }
+      .btn{
+        display: inline-block;
+        margin-right: 10px;
+        font-size: 16px;
+        line-height: 18px;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        border: 0 none;
+        background-color: #61b675;
+        padding: 10px 20px;
+        color: #fff;
+        font-weight: bold;
+        border-color: transparent;
+        text-decoration:none;
+        border-radius: 3px;
+        font-weight: normal;
+      }
+      .btn:hover{
+        background-color: #419a56;
+        color: #FFFFFF;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <dl class="message">
+        <dt class="icon icon-success"></dt>
+        <dd class="mes">
+          <h1><?php echo($message); ?></h1>
+          <p class="jump">
+            <strong id="wait"><?php echo($waitSecond); ?></strong> 秒后页面将自动跳转...
+          </p>
+          <div class="menu">
+            <a id="href" class="btn" href="<?php echo($jumpUrl); ?>">立即跳转<i class="icon icon-arrow-right"></i></a> 
+            <button class="btn" type="button" onclick="stop()"> 停止跳转</button> 
+          </div>
+        </dd>
+        <dd class="home">
+          <a href="{:U('/Index')}" class="icon icon-home"></a>
+        </dd>
+      </dl>
+    </div>
+    <script type="text/javascript">
+      (function(){
+        var wait = document.getElementById('wait'), href = document.getElementById('href').href;
+        var interval = setInterval(function(){
+          var time = --wait.innerHTML;
+          if(time <= 0){
+            location.href = href;
+            clearInterval(interval);
+          }
+          ;
+        }, 1000);
+        window.stop = function(){
+          console.log(111);
+          clearInterval(interval);
+        };
+      })();
+    </script>
+  </body>
+</html>

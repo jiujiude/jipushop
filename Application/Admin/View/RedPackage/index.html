@@ -1,0 +1,82 @@
+<extend name="Public/base" />
+
+<block name="body">
+  <!-- 标题栏 -->
+  <div class="main-title">
+    <h2>红包管理({$_total})</h2>
+  </div>
+  
+  <div class="cf">
+    <div class="fl">
+      <a id="add-group" class="btn" href="{:U('add')}">发红包</a>
+      <a url="{:U('setStatus', array('status' => 1))}" class="btn ajax-post" target-form="ids" >启 用</a>
+      <button class="btn ajax-post confirm" target-form="ids" url="{:U('setStatus', array('status' => 0))}">禁 用</a>
+    </div>
+  </div>
+  <!-- 数据列表 -->
+  <div class="data-table table-striped">
+    <table class="">
+      <thead>
+        <tr>
+          <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+          <th>编号</th>
+          <th>活动名称</th>
+          <th>发送人</th>
+          <th>红包个数</th>
+          <th>总金额</th>
+          <th>祝福语</th>
+          <th>截止时间</th>
+          <th>状态</th>
+          <th width="180" class="text-center">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+      <notempty name="lists">
+        <volist name="lists" id="vo">
+          <tr class="status_trclass_{$vo.status}">
+            <td><input class="ids" type="checkbox" name="ids[]" value="{$vo.id}" /></td>
+            <td>{$vo.id}</td>
+            <td><a href="{:U('detail?id='.$vo['id'])}">{$vo.name}</a></td>
+            <td>{$vo.uid|get_nickname}</td>
+            <td>{$vo.number}</td>
+            <td><span class="text-danger">{$vo.amount}</span>元</td>
+            <td>{$vo.info}</td>
+            <td>{$vo.expire_time}</td>
+            <td>
+          <if condition="$vo['status'] eq  1 AND $vo['number'] eq $vo['send_number']">
+            <span class="text-danger">已领完</span>
+            <elseif condition="$vo['status'] eq  1 AND $vo['number'] gt $vo['send_number']"/>
+            <span class="text-success">领取中</span>
+            <else/>
+            {$vo.status_text}
+          </if>
+            </td>
+            <td class="text-center">
+              <a href="javascript:;" onclick="UI.load('{:U('qrcode?id='.$vo['id'].'&code='.$vo['code'])}', '扫码分享');">[分享红包]</a>
+              <eq name="vo.status" value="1">
+                <a href="{:U('setStatus?status=0&ids='.$vo['id'])}" class="ajax-get">[禁用]</a>
+              <else/>
+                <a href="{:U('setStatus?status=1&ids='.$vo['id'])}" class="ajax-get">[启用]</a>
+              </eq>
+              <a href="{:U('setStatus?status=-1&ids='.$vo['id'])}" class="confirm ajax-get">[删除]</a>
+            </td>
+          </tr>
+        </volist>
+        <else/>
+        <td colspan="12" class="text-center"> aOh! 没有红包! </td>
+      </notempty>
+      </tbody>
+    </table>
+  </div>
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript" charset="utf-8">
+    //导航高亮
+    highlight_subnav('{:U("index")}');
+    Core.setValue('type', '{:I("get.type", '')}');
+  </script>
+</block>

@@ -1,0 +1,51 @@
+<extend name="Base/common" />
+
+<block name="body">
+  <div class="user-bind">
+    <div class="userform">
+      <form action="{:U('User/register')}" id="Z_bind_form" method="post">
+        <input type="hidden" name="oauth_type" value="{$type}">
+        <input type="hidden" name="type_uid" value="{$oauth.type_uid}">
+        <input type="hidden" name="oauth_token" value="{$oauth.oauth_token}">
+        <input type="hidden" name="oauth_token_secret" value="{$oauth.oauth_token_secret}">
+        <input type="hidden" name="avatar" value="{$user.avatar}">
+        <input type="hidden" name="oauth_signature" value="{$user.signature}" >
+        <div class="control-group">
+          <input type="tel" name="username" id="Z_input_username" class="first Z_mobile" maxlength="11" placeholder="手机" ajaxurl="/User/checkUsername.html" errormsg="手机号格式不正确" nullmsg="手机不能为空" datatype="e" value="">
+        </div>
+        <if condition="C('REGISTER_MOBILE_VALID') eq 1">
+          <div id="Z_bind_verify" class="control-group hide">
+            <input type="text" name="verify" id="verify" maxlength="4" placeholder="图形验证码">
+            <img class="verifyimg J_reload_verify" style="width: 86px; height: 30px; position: absolute; right: 10px; top:8px;" title="点击更换" src="{:U('verify')}">
+          </div>
+        <div id="Z_bind_randcode" class="control-group hide">
+          <input type="tel" name="randcode" class="Z_mobile_randcode" maxlength="6" placeholder="短信验证码">
+          <a href="javascript:;" class="btn btn-primary btn-randcode Z_mobile_randcode_button">获取验证码</a>
+        </div>
+        </if>
+        <div id="Z_bind_password" class="control-group hide">
+          <input type="password" name="password" id="Z_input_password" class="" placeholder="请输入登录密码" errormsg="密码为6-20位" nullmsg="请填写密码" datatype="*6-20" >
+        </div>
+        <div id="Z_bind_repassword" class="control-group hide">
+          <input type="password" name="repassword" id="Z_input_repassword" class="" placeholder="请再次输入密码" errormsg="密码为6-20位" nullmsg="请填写密码" datatype="*6-20">
+        </div>
+        <div class="control-action">
+          <!--a href="javascript:user.wechatCallback();" id="Z_bind_submit" class="btn btn-block btn-positive">创建账号</a-->
+          <a href="javascript:;" id="Z_bind_submit" class="btn btn-block btn-positive">创建账号</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use('user', function(user){
+      user.getRandCode('register');
+      user.wechatbind();
+      //user.mobileBind();
+      //user.getRandCode('setMobile');
+      // user.send_mobilecode('J_mobile','mobile_bind');
+    });
+  </script>
+</block>

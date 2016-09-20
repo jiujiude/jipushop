@@ -1,0 +1,91 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>新增运费模板</h2>
+  </div>
+  
+  <form action="{:U('update')}" method="post" class="form-horizontal">
+    <if condition="!IS_SUPPLIER">
+      <div class="form-item cf">
+        <label class="item-label">供应商</label>
+        <select name="supplier_id">
+          <option value="0">自营</option>
+          <volist name="lists_supplier" id="vo">
+            <option value="{$vo.uid}">{$vo.uid|get_supplier_text}</option>
+          </volist>
+        </select>
+      </div>
+    </if>
+    <div class="form-item">
+      <label class="item-label">运费模板名称</label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="name" value="{$data.name}">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">快递公司名称<span class="check-tips">（将显示在订单页面）</span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="company" value="{$data.company}">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">发货时间</label>
+      <div class="controls">
+        <select name="send_date" id="">
+          <volist name=":C('DELIVERY_SEND_DATE')" id="vo">
+            <option value="{$key}" <eq name="key" value="$data['send_date']">selected="selected"</eq>>{$vo}</option>
+          </volist>
+        </select>
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">计价方式</label>
+      <div class="controls">
+      <label class="checkbox" for="J_pricetype_1"><input type="radio" name="price_type" id="J_pricetype_1" class="radio J_express_pricetype" value="1"  data-type="quantity">按件数</label>
+        <label class="checkbox" for="J_pricetype_2"><input type="radio" name="price_type" id="J_pricetype_2" class="radio J_express_pricetype" value="2" data-type="weight">按重量</label>
+        <div class="delivery-type">
+          <div id="J_express_quantity" class="item J_express_item">
+            <div class="default">
+              运费：
+              <input type="text" name="express_start" data-field="start" class="text input-mini" autocomplete="off" maxlength="6"> <span class="J_express_unit">{$data['express_unit'] ? $data['express_unit'] : '件'}</span>内，
+              <input type="text" data-field="postage" name="express_postage" class="text input-mini" autocomplete="off" maxlength="6"> 元，
+              每增加
+              <input type="text" name="express_plus" data-field="plus" class="text input-mini" autocomplete="off" maxlength="6"> <span class="J_express_unit">{$data['express_unit'] ? $data['express_unit'] : '件'}</span>，
+              增加运费
+              <input type="text" name="express_postageplus" data-field="postageplus" class="text input-mini " autocomplete="off" maxlength="6"> 元
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">排序<span class="check-tips">（请设置为数字，数字越小越靠前）</span></label>
+      <div class="controls">
+        <input type="text" class="text input-mini" name="sort" value="{$data.sort|default=0}">
+      </div>
+    </div>
+    <div class="form-item">
+      <input type="hidden" name="id" value="{$data.id}">
+      <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+  </form>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    /*导航高亮*/
+    highlight_subnav('{:U("index")}');
+    Core.setValue('price_type', '{$data.price_type|default = 1}');
+    Core.setValue('express_start', '{$data.express_start|default = 1}');
+    Core.setValue('express_postage', '{$data.express_postage|default = 8}');
+    Core.setValue('express_plus', '{$data.express_plus|default = 1}');
+    Core.setValue('express_postageplus', '{$data.express_postageplus|default = 12}');
+    Core.setValue('supplier_id', '{$data.supplier_id|default = 0}');
+    (function(){
+      delivery.init();
+    })();
+  </script>
+</block>

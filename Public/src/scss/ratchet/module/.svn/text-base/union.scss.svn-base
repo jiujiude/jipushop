@@ -1,0 +1,93 @@
+.union-info {
+  padding: 15px;
+  
+  ul {
+    li {
+      text-align: center;
+      border-right: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+      padding: 20px;
+      
+      &:last-child {
+        border-right: none;
+      }
+      
+      h4 {
+        line-height: 30px;
+        margin-bottom: 15px;
+        font-size: 14px;
+        font-weight: normal;
+      }
+      
+      > p {
+        font-size: 18px;
+        font-weight: bold;
+      }
+      
+      > a.qrcode-link {
+        display: block;
+      }
+    }
+  }
+}
+
+.union-chart {
+  
+  > .chart-title-pos {
+    padding: 15px 15px 0;
+    line-height: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+  
+  > .chart-body {
+    margin: 0;
+    width: 100%;
+    height: 240px;
+    
+    > .waiting{
+      padding: 30px 15px;
+      color: #AAA;
+      
+      > img {
+        vertical-align: middle;
+        width: 24px;
+      }
+    }
+  }
+}
+
+.qrcode-showbox {
+  text-align: center;
+  padding: 15px;
+  
+  > img {
+    max-width: 80%;
+  }
+}
+
+.union-msg {
+  margin-top: 54px;
+  text-align: center;
+    
+  > .hd {
+    margin-top: 70px;
+    font-size: 16px;
+    
+    >.icon {
+      display: block;
+      margin-bottom: 15px;
+      color: #d5782c;
+      font-size: 60px;
+    }
+  }
+  
+  > .bd {
+    margin-top: 20px;
+    
+    > .btn {
+      font-size: 14px;
+      padding: 8px 20px;
+    }
+  }
+}

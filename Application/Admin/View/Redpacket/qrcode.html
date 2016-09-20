@@ -1,0 +1,19 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>红包二维码</h2>
+  </div>
+  <!-- 按钮工具栏 -->
+  <div class="cf">
+    <div class="fl">
+      <a class="btn" href="{:U('add')}">再发一个</a>
+      <a class="btn" href="{:U('index')}">查看所有红包</a>
+    </div>
+  </div>
+  <div class="qrcode-view">
+    <img src="{$url}/{$id}/{$id}.png" width="200">
+    <h2>手机扫一扫，立即分享</h2>
+  </div>
+</block>

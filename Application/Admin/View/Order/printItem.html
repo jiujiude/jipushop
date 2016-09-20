@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>打印商品清单</title>
+  <meta property="formhash" content="{:create_form_hash()}">
+  <link href="__ROOT__/Public/favicon.ico" type="image/x-icon" rel="shortcut icon">
+  <link rel="stylesheet" type="text/css" href="__CSS__/base.css?{:date('YmdH')}" media="all">
+  <link rel="stylesheet" type="text/css" href="__CSS__/common.css?{:date('YmdH')}" media="all">
+  <link rel="stylesheet" type="text/css" href="__CSS__/module.css?{:date('YmdH')}">
+  <link rel="stylesheet" type="text/css" href="__CSS__/style.css?{:date('YmdH')}" media="all">
+  <link rel="stylesheet" type="text/css" href="__CSS__/{$Think.config.COLOR_STYLE}.css?{:date('YmdH')}" media="all">
+  <link rel="stylesheet" type="text/css" href="__CSS__/print_item.css?{:date('YmdH')}" media="all">
+  <!--[if lt IE 9]>
+  <script type="text/javascript" src="__JS__/jquery/jquery-1.10.2.min.js"></script>
+  <![endif]--><!--[if gte IE 9]><!-->
+  <script type="text/javascript" src="__JS__/jquery/jquery-2.0.3.min.js"></script>
+  <script type="text/javascript" src="__JS__/jquery/jquery.mousewheel.js"></script>
+  <!--<![endif]-->
+</head>
+<body class="print-item-body">
+    <div class="print-item">
+      <div class="logo">
+        <img src="{:get_cover(C('LOGO'),'path')}" alt=""/>
+      </div>
+      <h2>{:C('WEB_SITE_TITLE')}-{:C('WEB_SITE_SUB_TITLE')}</h2>
+      <div class="qrcode">
+        <img src="{:get_cover(C('WX_QRCODE'),'path')}" alt=""/>
+        <p>微信公众号</p>
+      </div>
+      <div class="hd">
+        <p>
+          订单号：{$info.order_sn}
+          <span class="sep"></span>
+          买家昵称：{$info.uid|get_nickname}
+        </p>
+        <p>
+          收货人姓名：{$info.ship.ship_uname}
+          <span class="sep"></span>
+          收货人手机：{$info.ship.ship_mobile}
+        <notempty name="info.ship.ship_phone">
+          <span class="sep"></span>
+          收货人电话：{$info.ship.ship_phone}
+        </notempty>
+        </p>
+        <p>
+          收货人地址：{$info.ship.ship_area}
+          {$info.ship.ship_address}
+          <notempty name="info.ship.ship_zipcode">
+            <span class="sep"></span>
+            邮编：{$info.ship.ship_zipcode}
+          </notempty>
+        </p>
+      </div>
+      <div class="bd">
+        <table border="1">
+          <tr>
+            <th>商品编号</th>
+            <th>商品名称</th>
+            <th>商品规格</th>
+            <th>商品价格</th>
+            <th>数量</th>
+            <th>小计</th>
+          </tr>
+          <volist name="info.itemList" id="vo">
+            <tr>
+              <td>{$vo.item_code}</td>
+              <td>{$vo.name}<if condition="$vo[price] eq 0"><span class="text-danger">（赠品）</span></if></td>
+              <td>{$vo.spec|default='无'}</td>
+              <td>
+              &yen;{$vo.price}
+              <gt name="vo.fugou_dis_price" value="0">
+              <br /><span class="text-danger">老客户优惠价</span>
+              </gt>
+              </td>
+              <td>{$vo.quantity}</td>
+              <td>&yen;{:$vo['sub_total'] > 0 ? $vo['sub_total'] : $vo['subtotal']}
+                <if condition="$vo['memo']">
+                  <br /><span class="text-cancel">{$vo.memo}</span>
+                </if>
+              </td>
+            </tr>
+          </volist>
+        </table>
+      </div>
+      <footer>
+        家门口的进口食品免税店。亲!收到本店产品，如满意或有其他意见请给我们评价，我们珍惜每一位客户给我们的建议。
+        感谢您在本商城购物，期待您再次光临。用心甄选，健康安心。
+      </footer>
+      <p class="print-menu text-center">
+        <a href="javascript:;" class="btn btn-xlarge btn-default J_print" onclick="printTo()">打印商品清单</a>
+      </p>
+    </div>
+  <script>
+    var resetWindow = function(){
+      $('.J_print').show();
+      $('.print-item').eq(1).remove();
+    };
+    var printTo = function(){
+      $('.J_print').hide();
+      $('.print-item').eq(0).clone().prependTo('body');
+      window.print();
+      resetWindow();
+    };
+  </script>
+</body>
+</html>

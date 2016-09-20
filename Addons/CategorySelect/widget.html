@@ -1,0 +1,142 @@
+<block name="body">
+  <select name="cid_1" id="cid_1"><option>加载中...</option></select> 
+	<select name="cid_2" id="cid_2" style="display:none;"></select>
+	<select name="cid_3" id="cid_3" style="display:none;"></select>
+	<input name="category" id="category" type="hidden" value="" />
+</block>
+<block name="script">
+<script type="text/javascript">
+$(function(){
+	// 根据所选分类动态加载分类所对应的属性和规格配置
+	var item_extend = function(){
+		this.cid_1 = '{$param.cid_1}';
+		this.cid_2 = '{$param.cid_2}';
+		this.cid_3 = '{$param.cid_3}';
+	}
+
+	// 获取属性
+	item_extend.prototype.getProperty = function(){
+		var url = '{:U("Admin/ItemProperty/getProp?item_id=".$param["item_id"])}?cid_1=' + this.cid_1 + '&cid_2=' + this.cid_2 + '&cid_3=' + this.cid_3;
+		$.get(url, function(data){
+			if(data != null){
+				$('#sku_prp').empty();
+				$('#sku_prp').append(data);
+			}else{
+				$('#sku_prp').append('<div style="height:100px;line-height:100px;text-indent:20px;color:#f00;">您所选择的分类未绑定属性</div>');
+			}
+		});
+	};
+
+	// 获取规格
+	item_extend.prototype.getSpecification = function(){
+		var url = '{:U("Admin/ItemProperty/getProp?item_id=".$param["item_id"])}?type=specification&cid_1=' + this.cid_1 + '&cid_2=' + this.cid_2 + '&cid_3=' + this.cid_3;
+		$.get(url, function(data){
+			if(data != null){
+				$('#sku_spec').empty();
+				$('#sku_spec').append(data);
+			}else{
+				$('#sku_spec').append('<div style="height:100px;line-height:100px;text-indent:20px;color:#f00;">您所选择的分类未绑定规格</div>');
+			}
+		});
+	}
+
+	// 实例化属性和规格
+	var property = new item_extend();
+	var specification = new item_extend();
+
+	// 生成三级分了联动菜单
+	var category = {
+		getCid_1: function(){
+			$.getJSON('{:addons_url("CategorySelect://CategorySelect/getParent")}', function(data){
+				if(data) {
+          $('#cid_1').html('');
+					$.each(data, function(i, item){
+						$('<option></option>').val(item['id']).text(item['name']).appendTo($('#cid_1'));
+					});
+					$("#cid_1 option[value='{$param.cid_1}']").attr('selected', true);
+					$("#category").val($('#cid_1 option:selected').text());
+					category.getCid_2();
+				}
+			});
+		},
+		getCid_2: function(){
+      if($('#cid_1').val()){
+        property.cid_1 = $('#cid_1').val();
+        specification.cid_1 = $('#cid_1').val();
+        $.getJSON('{:addons_url("CategorySelect://CategorySelect/getChild")}', {pid:$("#cid_1").val()}, function(data){
+          if(data.length > 0) {
+            $("#cid_2").show();
+            $.each(data, function(i, item){
+              $("<option></option>").val(item['id']).text(item['name']).appendTo($("#cid_2"));
+            });
+            $("#cid_2 option[value='{$param.cid_2}']").attr('selected', true);
+            $("#category").val($('#cid_1 option:selected').text() + "/" + $('#cid_2 option:selected').text());
+            category.getCid_3();
+          }else{
+            property.cid_2 = '';
+            specification.cid_2 = '';
+          }
+          property.getProperty();
+          specification.getSpecification();
+        });
+      }
+		},
+		getCid_3: function(){
+      if($('#cid_2').val()){
+        property.cid_2 = $('#cid_2').val();
+        specification.cid_2 = $('#cid_2').val();
+        $.getJSON('{:addons_url("CategorySelect://CategorySelect/getChild")}', {pid:$("#cid_2").val()}, function(data){
+          if(data.length > 0) {
+            $("#cid_3").show();
+            $.each(data, function(i, item){
+              $("<option></option>").val(item['id']).text(item['name']).appendTo($("#cid_3"));
+            });
+            $("#cid_3 option[value='{$param.cid_3}']").attr('selected', true);
+            $("#category").val($('#cid_1 option:selected').text() + "/" + $('#cid_2 option:selected').text() + "/" + $('#cid_3 option:selected').text());
+
+            property.cid_3 = $('#cid_3').val();
+            specification.cid_3 = $('#cid_3').val();
+          }else{
+            property.cid_3 = '';
+            specification.cid_3 = '';
+          }
+          property.getProperty();
+          specification.getSpecification();
+        });
+      }
+    }
+	}
+
+	// 初始化分类三级联动菜单
+	category.getCid_1();
+
+	// 一级分类“change”事件绑定
+	$("#cid_1").change(function(){
+		$("#cid_2").hide();
+		$("#cid_2").empty();
+		$("#cid_3").hide();
+		$("#cid_3").empty();
+		$("#category").val($('#cid_1 option:selected').text());
+		category.getCid_2();
+	});
+
+	// 二级分类“change”事件绑定
+	$("#cid_2").change(function(){
+		$("#cid_3").hide();
+		$("#cid_3").empty();
+		$("#category").val($('#cid_1 option:selected').text() + "/" + $('#cid_2 option:selected').text());
+		category.getCid_3();
+	});
+
+	// 三级分类“change”事件绑定
+	$("#cid_3").change(function(){
+		$("#category").val($('#cid_1 option:selected').text() + "/" + $('#cid_2 option:selected').text() + "/" + $('#cid_3 option:selected').text());
+		property.cid_3 = $('#cid_3').val();
+		specification.cid_3 = $('#cid_3').val();
+		property.getProperty();
+		specification.getSpecification();
+	});
+	
+});
+</script>
+</block>

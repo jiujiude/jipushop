@@ -1,0 +1,129 @@
+<extend name="Base/common" />
+<block name="body">
+<link href="__CSS__/marketing.css" rel="stylesheet">
+<style type="text/css">
+.countdown > span{
+     margin-right: 0px
+}
+.Join_join{
+     background: #ffffff;
+    padding-bottom: 40px;
+
+}
+body{
+    background: #f3f3f3
+}
+#main-container{min-height: auto !important}
+</style>
+    <div class="row">
+        <div class="their-view">
+            <div class="their-view-l">
+            <a href="{:U('/join/detail' ,array('id' => $data['gid']))}">
+                <img src="{:get_image_thumb(get_cover($data['thumb'],'path'), 120, 120)}" />
+
+            </a>
+            </div>
+            <div class="their-view-c">
+                <h3><a href="{:U('/join/detail' ,array('id' => $data['gid']))}">{$data.item_name}</a></h3>
+                <notempty name='data.weight'>
+                <label>重量：{$data.weight}kg</label>
+                </notempty>
+                <span>单买：￥{$data.price}　　{$data.join_num}人团</span>
+            </div>
+            <div class="their-view-r">
+            <if condition='$data.hdstatus eq 1'>
+            <label>活动已结束</label>
+            <else />
+                <label>￥{$data.hdprice}</label>
+                <span class=" countdown item seckill-box text-center J_seckill_time">
+                    秒杀活动已结束
+                  </span>
+                <a href="javascript:;" class="J_join_buy">参团<span>（差<php>echo $data['join_num']-$nums ;</php>人成团）</span></a>
+            </if>
+            </div>
+        </div>
+<input type="hidden" id="J_item_id" name="item_id" value="{$data.item_id}">
+<input type="hidden" id="J_item_price" name="price" value="{$data.hdprice}">
+<input type="hidden" id="J_item_joinid" name="join_id" value="{$data.join_id}">
+<input type="hidden" id="J_item_stock" value="{$data.stock}" />
+<input type="hidden" id="J_item_spec" name="specifiction" value="{$data.spec}">
+<input type="hidden" id="J_item_code" name="item_code" value="{$data.item_code}">
+<input type="hidden" id="J_item_quantity" value="1">
+        <div class="their-head">
+            <div class="their-head-l">
+                <img src="{$data.reg_uid|getAvatar}" />
+                <span>团长</span>
+            </div>
+            <div class="their-head-r">
+                <img src="/Public/Home/default/images/sheir-img.png" />
+                <a href="javascript:;">
+                    {$data.reg_uid|get_nickname} <span>{$data.ship_area}</span>
+                    <label>{$data.hdstime|time_format}开团</label>
+                </a>
+                <p>{:C('JOIN_MESSAGE')}</p>
+            </div>
+        </div>
+
+
+        <!-- 相关推荐 -->
+     
+
+    </div>
+    </div>
+    </div>
+</div>
+    </div>
+       <div class="container index" >
+        <div class="row" id="J_load_items">
+        <div class="col-xs-12">
+        <div class="item-title">
+          <h3>
+            <span>
+            <a class="clearfix" href="#">
+            更多平团
+              <!-- <small class="pull-right more">更多 &gt;</small> -->
+           </a>
+            </span>
+          </h3>
+        </div> 
+        <!-- 分类商品列表 -->
+        <notempty name="goods">
+          <div class="row item-list" id="J_item_list">
+            <volist name="goods" id="vl">
+              <!-- 分类置顶商品，仅限一个 -->
+              <div class="item col-xs-3 ">
+                <div class="thumbnail">
+                  <a href="{:U('Join/detail', array('id' => $vl['item_id']))}" target="_blank"><img src="__IMG__/img-pai-bg.png" data-url="{:get_image_thumb($vl['thumb'], 300, 300)}" class="pic" alt="{$vl.goods_name}"></a>
+                  <div class="caption">
+                    <h5 class="thumbnail-label">
+                    <a href="{:U('Join/detail', array('id' => $vl['item_id']))}" target="_blank">{:get_short($vl['goods_name'],23)}</a>
+                    </h5>
+                    <div class="thumbnail-info">
+                      <h3 class="text-danger show"><em class="yen">&yen;</em> {$vl.join_price}</h3>
+                  <a href="{:U('Join/detail', array('id' => $vl['item_id']))}" class="btn btn-sm btn-default" target="_blank"><!--i class="icon icon-cart-fill"></i> 0人购买-->立即开团</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </volist>
+          </div>
+          <else /> 
+          <h4 class="text-center">暂无更多活动</h4>
+        </notempty>
+      </div>
+      </div>
+      </div>
+  
+</block>
+  
+<block name="script">
+    <script type="text/javascript">
+        var spc_data_info = null;
+        seajs.use('join', function(join){
+            join.init(spc_data_info);
+            join.listsBind({:json_encode($timeout)});
+        });
+        
+
+    </script>
+</block>

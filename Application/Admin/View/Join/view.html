@@ -1,0 +1,113 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>团购人员列表</h2>
+  </div>    
+
+  <!-- 订单信息 -->
+  <div class="order-box">
+    <p>
+      <strong>团购状态：</strong>
+      <span class='text-danger'>
+        <switch name='main.status'>
+        <case value='0'>待开团</case>
+        <case value='1'>开团成功</case>
+        <case value='2'>拼单失败已退款</case>
+        </switch>
+      </span>
+      <span class="sep"></span>
+      <strong>团购发起时间：</strong>{$main.stime|time_format}
+    </p>
+    <p>
+      <strong>团购发起人：</strong>{$main.reg_uid|get_nickname}
+      <span class="sep"></span>
+      <strong>团购商品：</strong>{$main.item_id|get_item_name}
+    </p>
+    <p>
+      <strong>团购人数要求：</strong>{$main.num}人
+      
+    </p>
+  </div>
+
+  <div class="order-item-table">
+    <div class="sub-title">
+      <h3>人员明细</h3>
+    </div>
+    <table class="dynamic-table">
+      <thead>
+        <tr>
+          <th width="130">用户</th>
+          <th>商品规格</th>
+          <th>时间</th>
+          
+          <th width="100">商品价格</th>
+          <th width="100">备注</th>
+          <th width="100">小计</th>
+        </tr>
+      </thead>
+      <tbody>
+        <volist name="data" id="vo">
+        <tr>
+          <td>
+          <a href="{:U('User/view?id='.$vo['uid'])}">
+          {$vo.uid|get_nickname}
+          </a>
+          </td>
+          <td class="aleft">
+            <volist name='vo.spec' id='voo'>
+                {$voo.key}:{$voo.val}<br />
+            </volist>
+          </td>
+          <td>
+          <notempty name='vo.ctime'>
+          拼团下单时间：{$vo.ctime|time_format}<br />
+          </notempty>
+          <notempty name='vo.paytime'>
+          拼团支付时间：{$vo.paytime|time_format}
+          </notempty>
+          </td>
+          <td>
+            物流：{$vo.delivery_fee}<br />
+            数量：{$vo.total_quantity}<br />
+            总价：{$vo.total_price}
+          </td>
+          <td>{$vo.memo}</td>
+          <td>
+          <switch name='vo.status'>
+            <case value='-1'>支付失败</case>
+            <case value='0'>待支付</case>
+            <case value='1'>支付成功</case>
+          </switch>
+          </td>
+        </tr>
+        </volist>
+      </tbody>
+    </table> 
+  </div>
+
+  <!-- 结算合计 -->
+  <div class="cf order-detail-total clearfix mb-20">
+    <dl class="total-list">
+      <dt>团购人数：</dt><dd><b style="margin-right:0;"> {$count}</b>人</dd>
+    </dl>
+  </div>
+  <div>
+    <eq name="info['o_status']" value="200">
+        <a href="{:U('Ship/add?order_id='.$info['id'])}" class="btn submit-btn">发 货
+        <notempty name='info.delivery_type'>
+          （{$info.delivery_type}）
+        </notempty>
+        </a>
+    </eq>
+    <a href="javascript:history.go(-1)" class="btn btn-return">返 回</a>
+   <!--  <a href="{:U('Order/printItem?id='.$info['id'])}" target="_blank" class="btn btn-block fr btn-default btn-xlarge">打印商品清单</a> -->
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //导航高亮
+    highlight_subnav("{:U('orderList')}");
+  </script>
+</block>

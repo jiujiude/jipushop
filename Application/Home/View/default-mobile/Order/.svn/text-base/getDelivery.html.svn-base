@@ -1,0 +1,11 @@
+<div class="content-padded delivery-log">
+  <p>快递公司：{$data.delivery_name}</p>
+  <p>快递单号：{$data.delivery_sn}</p>
+  <div class="Z_delivery_log"></div>
+</div>
+
+<script>
+  seajs.use('delivery', function(delivery){
+    delivery.getDeliveryInfo('{$data.delivery_name}', '{$data.delivery_sn}');
+  });
+</script>

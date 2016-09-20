@@ -1,0 +1,73 @@
+<extend name="Public/base" />
+
+<block name="body">
+  <!-- 标题栏 -->
+  <div class="main-title">
+    <h2>微信粉丝列表({$_total})</h2>
+  </div>
+  <div class="cf">
+    <div class="fl">
+      <a class="btn J_get_wechat_user" href="{:U('getUser')}">同步粉丝<span class="badge">{$data.surplus}</span></a>
+      <!--<a class="btn" href="{:U('WechatUser/removeDuplicate')}" >粉丝去重</a>-->
+      <span class="text-danger">
+        <notempty name="data.msg">
+          {$data.msg}
+        <else/>
+          同步粉丝会花费较长时间，占用服务器和数据库资源，请尽量选择在访问量低的时段操作。
+        </notempty>
+      </span>
+    </div>
+  </div>
+    <!-- 数据列表 -->
+  <div class="data-table table-striped">
+    <table class="">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>头像</th>
+          <th>昵称</th>
+          <th>openid</th>
+          <th>性别</th>
+          <th>语言</th>
+          <th>省份</th>
+          <th>城市</th>
+          <th>关注时间</th>
+          <th width="90">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <notempty name="list">
+          <volist name="list" id="vo">
+            <tr>
+              <td>{$vo.id}</td>
+              <td><img src="{$vo.headimgurl}" width="48" height="48" alt=""></td>
+              <td>{$vo.nickname}</td>
+              <td>{$vo.openid}</td>
+              <td>{$vo.sex_text}</td>
+              <td>{$vo.language}</td>
+              <td>{$vo.province}</td>
+              <td>{$vo.city}</td>
+              <td>{$vo.subscribe_time|time_format}</td>
+              <td>
+                <a href="{:U('setStatus?status=-1&ids='.$vo['id'])}" class="confirm ajax-get">[删除]</a>
+              </td>
+            </tr>
+          </volist>
+        <else/>
+          <td colspan="9" class="text-center"> aOh! 暂时还没有微信粉丝! </td>
+        </notempty>
+      </tbody>
+    </table>
+  </div>
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script src="__JS__/lib/module.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    //导航高亮
+    highlight_subnav('{:U('index')}');
+  </script>
+</block>

@@ -1,0 +1,128 @@
+/**
+ * 优惠券模块
+ */
+
+.coupon {
+  margin-top: 20px;
+  padding: 0 40px 20px 40px;
+  border-top: 5px solid #eee;
+  background-color: #fcfcfc;
+
+  > .act {
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+
+    > .btn {
+      padding-left: 60px;
+      padding-right: 60px;
+    }
+  }
+
+  > .list {
+    margin-top: 20px;
+
+    .item {
+      position: relative;
+      display: block;
+      margin-bottom: 20px;
+      text-decoration: none;
+      background-color: #ff8d8c;
+      color: #a44;
+      cursor: pointer;
+
+      &:before,
+      &:after {
+        position: absolute;
+        top: 0;
+        width: 10px;
+        height: 100%;
+        background: url(../images/coupon-bg.png) -5px 0 repeat-y;
+        background-size: 10px auto;
+        content: '';
+      }
+
+      &:after {
+        right: 0;
+        background-position: 5px 0;
+      }
+
+      &.has-get {
+        @include opacity(0.75);
+      }
+
+      &.item-bg-0 {
+        background-color: #df7171;
+        color: #a00;
+      }
+
+      &.item-bg-1 {
+        background-color: #ffcc5f;
+        color: #a67c01
+      }
+
+      &.item-bg-2 {
+        background-color: #5ebbe1;
+        color: #3b6a7d;
+      }
+
+      &.item-bg-3 {
+        background-color: #9ec848;
+        color: #4f7900
+      }
+
+      > .bd {
+        padding: 11px 20px;
+        height: 150px;
+
+        > .info {
+          padding: 10px 0;
+          font-size: 32px;
+          color: #fff;
+          text-shadow: 0 1px 1px #333;
+        }
+
+        > .time {
+          font-size: 12px;
+        }
+      }
+
+      > .fd {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 55px 10px;
+        width: 80px;
+        height: 150px;
+        background-color: rgba(255,255,255,.5);
+        z-index: 1000;
+        text-align: center;
+
+        > em {
+          float: left;
+          width: 40px;
+          line-height: 20px;
+          text-align: center;
+        }
+
+        > .icon {
+          float: right;
+          line-height: 40px;
+          @include transition(.2s linear);
+        }
+      }
+
+
+      &:hover {
+        @include opacity(0.95);
+
+        > .fd {
+
+          > .icon {
+            @include translate(5px, 0);
+          }
+        }
+      }
+    }
+  }
+}

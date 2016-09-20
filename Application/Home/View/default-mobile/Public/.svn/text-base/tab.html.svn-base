@@ -1,0 +1,28 @@
+<div class="bar bar-tab">
+  <a href="{:U('/')}" class="tab-item <if condition="(CONTROLLER_NAME eq Index) AND (ACTION_NAME eq index)">active</if>">
+    <span class="icon <if condition="(CONTROLLER_NAME eq Index) AND (ACTION_NAME eq index)">icon-home-fill<else/>icon-home</if>"></span>
+    <span class="tab-label">首页</span>
+  </a>
+  <a href="{:U('Item/category')}" class="tab-item <if condition="(CONTROLLER_NAME eq Item) AND (ACTION_NAME eq category)">active</if>">
+    <span class="icon <if condition="(CONTROLLER_NAME eq Item) AND (ACTION_NAME eq category)">icon-category-fill<else/>icon-category</if>"></span>
+    <span class="tab-label">分类</span>
+  </a>
+  <a href="{:U('Cart/index')}" class="tab-item <if condition="(CONTROLLER_NAME eq Cart) AND (ACTION_NAME eq index)">active</if>">
+    <span class="icon <if condition="(CONTROLLER_NAME eq Cart) AND (ACTION_NAME eq index)">icon-cart-fill<else/>icon-cart</if>">
+      <i class="cart-num hide" id="Z_global_cart_quantity"><eq name="user_count.cart_count" value="">0<else />{$user_count['cart_count']}</eq></i>
+    </span>
+    <span class="tab-label">购物车</span>
+  </a>
+  <a href="{:U('Member/index')}" class="tab-item <if condition="(CONTROLLER_NAME eq Member) AND (ACTION_NAME eq index)">active</if>">
+    <span class="icon <if condition="(CONTROLLER_NAME eq Member) AND (ACTION_NAME eq index)">icon-my-fill<else/>icon-my</if>">
+      <i class="dot hide" id="Z_global_message"></i>
+    </span>
+    <span class="tab-label">我的</span>
+  </a>
+</div>
+<script>
+  //旨在解决【返回按钮】引起的购物车数量不正确的问题
+  seajs.use('cart', function(cart){
+    cart.getCartCount();
+  });
+</script>

@@ -1,0 +1,5 @@
+<nav class="nav-tabs-wb" style="font-size: 16px;height: 44px;line-height: 41px;">
+<a href="javascript:history.go(-1);" ><i class="icon icon-arrow-left" style="left:10px"></i></a>
+  <a <if condition="(CONTROLLER_NAME eq 'Withdraw' AND ACTION_NAME eq 'add')">class="active"</if> href="{:U('Withdraw/add')}">申请提现</a>
+  <a <if condition="(CONTROLLER_NAME eq 'Withdraw' AND ACTION_NAME eq 'index')">class=" active"</if> href="{:U('Withdraw/index')}">提现记录</a>
+</nav>

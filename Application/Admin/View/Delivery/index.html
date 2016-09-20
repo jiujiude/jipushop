@@ -1,0 +1,22 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>发货管理</h2>
+  </div>
+
+  <div class="cf">
+    <div class="fl">
+      <a class="btn" href="{:U('Delivery/add')}">发 货</a>
+    </div>
+  </div>
+
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //导航高亮
+    highlight_subnav("{:U('Delivery/index')}");
+  </script>
+</block>

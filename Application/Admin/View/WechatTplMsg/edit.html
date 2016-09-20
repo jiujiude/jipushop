@@ -1,0 +1,71 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>{$tpl_data.title}</h2>
+  </div>
+  <form action="{:U('update')}" method="post" class="form-horizontal">
+    <div class="form-item">
+      <label class="item-label">模板ID<span class="check-tips">（查看方法：微信公众平台&gt;模板消息&gt;我的模板）</span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="tpl_id" value="{$data.tpl_id|default=''}">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">模版状态<span class="check-tips"></span></label>
+      <div class="controls">
+        <label class="inline radio">
+          <input type="radio" name="status" value="1"> 正常
+        </label>
+        <label class="inline radio">
+          <input type="radio" name="status" value="0"> 已禁用
+        </label>
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">消息类型<span class="check-tips"></span></label>
+      <div class="controls">
+        <label class="textarea input-large textarea-show">{:I('get.type')}</label>
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">调用标识<span class="check-tips">（开发人员使用）</span></label>
+      <div class="controls">
+        <label class="textarea input-large textarea-show">{:I('get.type')}.{:I('get.tpl_key')}</label>
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">详细内容</label>
+      <div class="controls">
+        <label class="textarea input-large textarea-show">
+          {$tpl_data.content|nl2br}
+        </label>
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">内容示例</label>
+      <div class="controls">
+        <label class="textarea input-large textarea-show">
+          {$tpl_data.demo|nl2br}
+        </label>
+      </div>
+    </div>
+    <div class="form-item">
+      <input type="hidden" name="id" value="{$data.id|default=''}">
+      <input type="hidden" name="type" value="{:I('get.type')}">
+      <input type="hidden" name="tpl_key" value="{:I('get.tpl_key')}">
+      <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);
+                return false;">返 回</button>
+    </div>
+  </form>
+</block>
+
+<block name="script"> 
+  <script type="text/javascript">
+    //设置值
+    Core.setValue('status', '{$data.status|default = 0}');
+    //导航高亮
+    highlight_subnav("{:U('index')}");
+  </script> 
+</block>

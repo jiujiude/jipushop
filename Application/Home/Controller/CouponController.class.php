@@ -1,0 +1,165 @@
+<?php
+/**
+ * 前台优惠券控制器
+ * @version 2014100714
+ * @author Max.Yu <max@jipu.com>
+ */
+
+namespace Home\Controller;
+
+class CouponController extends HomeController {
+
+  /**
+   * 优惠券首页
+   * @author Max.Yu <max@jipu.com>
+   */
+  public function index(){
+    //记录当前页URL地址Cookie
+    Cookie('__forward__', $_SERVER['REQUEST_URI']);
+
+    //获取可用优惠券
+    $map = array(
+      'expire_time' => array('gt', NOW_TIME - 86400),
+      'is_show'     => 1,
+    );
+    $field = 'id, number, name, amount, norm, expire_time';
+    $lists = D('Coupon')->lists($map, $field);
+
+    //获取当前用户未领取的优惠券
+    $coupon_ids = get_sub_by_key($lists, 'id');
+    $map_coupon_user['uid'] = UID;
+    $coupon_user = D('CouponUser')->lists($map_coupon_user, 'coupon_id');
+    $coupon_user_ids = get_sub_by_key($coupon_user, 'coupon_id');
+    $coupon_get_ids = $coupon_user ? array_diff($coupon_ids, $coupon_user_ids) : $coupon_ids;
+    if($coupon_get_ids){
+      $coupon_getall_ids = implode(',', $coupon_get_ids);
+    }
+
+    //生成随机背景
+    $coupon_bg_arr = array('red', 'yellow', 'blue');
+    $coupon_bg = $coupon_bg_arr[array_rand($coupon_bg_arr, 1)];
+    //分享
+    $share = array(
+      'title' => '点击领取100元优惠券',
+      'desc' => '家门口进口食品免税店，先领券再购买，更优惠！',
+      'img_url' => SITE_URL.__IMG__.'/quan.png',
+      'link' => SITE_URL.U('Coupon/index', array('sdp_secret' => SHOP_SECRET))
+    );
+    $this->meta_share = $share;
+    $this->assign('lists', $lists);
+    $this->assign('coupon_getall_ids', $coupon_getall_ids);
+    $this->assign('coupon_bg', $coupon_bg);
+    $this->meta_title = '优惠券';
+    $this->display();
+  }
+
+  /**
+   * 激活优惠券
+   * @author Max.Yu <max@jipu.com>
+   */
+  public function activateCoupon(){
+    //激活码输入校验
+    $map['coupon_num'] = I('post.number');
+    if(empty($map['coupon_num'])){
+      $this->error('请输入激活码。');
+    }
+
+    //获取优惠券数据，验证优惠券有效性，激活优惠券
+    $couponNum = M('CouponNum')->where($map)->find();
+    if($couponNum){
+      if(!$couponNum['is_get']){
+        $coupon=M('Coupon')->find($couponNum['cn_coupon_id']);
+        if($coupon['expire_time'] <= NOW_TIME - 86400 ){
+          $this->error('您输入的激活码已过期。');
+        }
+        $items=explode(',',I('post.items'));
+        $coupon['items']=explode(',',$coupon['items']);
+        if(count($coupon['items'])>0 && count(array_intersect($items,$coupon['items']))==0)$this->error('您输入的券码不能用于订单中的商品。');
+        //激活优惠券
+        $data['uid'] = UID;
+        $data['coupon_id'] = $couponNum['cn_coupon_id'];
+        $activate = D('CouponUser')->update($data);
+        if($activate){
+          $result = array(
+              'status' => 1,
+              'msg' => '优惠券激活成功。',
+              'data' => array(
+                  'id' => $coupon['id'],
+                  'number' => $coupon['number'],
+                  'name' => $coupon['name'],
+                  'amount' => $coupon['amount'],
+                  'norm' => $coupon['norm'],
+                  'expire_time' => time_format($coupon['expire_time'],'Y-m-d'),
+              ),
+          );
+          $this->ajaxReturn($result);
+        }else{
+          $this->error('优惠券激活失败。');
+        }
+      }else{
+          $this->error('您输入的激活码已经被领取。');
+      }
+    }else{
+      $this->error('您输入的激活码不存在。');
+    }
+  }
+
+  /**
+   * 验证用户选择的优惠券
+   * @author Max.Yu <max@jipu.com>
+   */
+  public function checkSelectedCoupon() {
+    $map['number'] = I('post.number');
+    if(empty($map['number'])){
+      $result = array(
+        'status' => 0,
+        'msg' => '请选择优惠券。',
+      );
+    }
+
+    //获取优惠券数据，验证优惠券有效性
+    $coupon = M('Coupon')->where($map)->find();
+    if($coupon){
+      $where = array(
+        'uid' => UID,
+        'coupon_id' => $coupon['id'],
+      );
+      $coupon_user = M('CouponUser')->where($where)->find();
+
+      //判断该用户是否已经激活过该优惠券
+      if($coupon_user){
+        if($coupon_user['status']==1){
+          $result = array(
+            'status' => 0,
+            'msg' => '优惠券已经被使用，不可重复使用。',
+          );
+        }else{
+          //判断是否过期
+          if($coupon['expire_time'] <= NOW_TIME - 86400 ){
+            $result = array(
+              'status' => 0,
+              'msg' => '优惠券已过期。',
+            );
+          }else{
+            $result = array(
+            'status' => 1,
+            'data' => $coupon,
+            'msg' => '优惠券验证成功。',
+            );
+          }
+        }
+      }else{
+        $result = array(
+          'status' => 0,
+          'msg' => '优惠券无效。',
+        );
+      }
+    }else{
+      $result = array(
+        'status' => -1,
+        'msg' => '抱歉，您选择的优惠券不存在。',
+      );
+    }
+    $this->ajaxReturn($result);
+  }
+}

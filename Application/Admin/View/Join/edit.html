@@ -1,0 +1,55 @@
+<extend name="Public/base" />
+
+<block name="body">
+  <div class="main-title">
+    <h2>{$data['id']?'编辑':'新增'}拼团活动</h2>
+  </div>
+
+  <form action="{:U('update')}" enctype="application/x-www-form-urlencoded" method="POST" class="form-horizontal">
+    <div class="form-item">
+      <label for="auth-title" class="item-label">拼团活动名称</label>
+      <div class="controls">
+        <input id="auth-title" type="text" name="name" class="text input-large" value="{$data.name}"/>
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">活动商品</label>
+      <div class="controls">
+        {:hook('itemSel', array('name' => 'item_ids', 'items' => $data['item_ids'],'show' => 1,'active'=>'join'))}
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">活动时间</label>
+      <div class="controls">
+        <input type="text" name="stime" class="text date_select" value="{:time_format($data['stime'], 'Y-m-d H:i:s')}" placeholder="开始时间"/>
+          至
+        <input type="text" name="etime" class="text date_select" value="{:$data['etime'] ? time_format($data['etime'], 'Y-m-d H:i:s') : null}" placeholder="结束时间"/>
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">拼团限时<span class="check-tips">（单位为分钟，为空则不限时）</span></label>
+      <div class="controls">
+        <input type="text" name="limit" class="text" value="{$data.limit}" placeholder="拼团限时"/>
+      </div>
+    </div>
+    <div class="form-item">
+      <input type="hidden" name="id" value="{$data.id}" />
+      <button type="submit" class="btn submit-btn ajax-post" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+  </form>
+<block>
+
+<block name="script">
+  <script language="javascript" type="text/javascript" src="__PUBLIC__/Admin/js/My97Date/WdatePicker.js"></script>
+  <script type="text/javascript" charset="utf-8">
+    $(function(){
+      //导航高亮
+      highlight_subnav('{:U('index')}');
+      //时间选择
+      $('.date_select').focus(function(){
+        WdatePicker({skin: 'twoer', dateFmt: 'yyyy-MM-dd HH:mm:ss'});
+      });
+    });
+  </script>
+</block>

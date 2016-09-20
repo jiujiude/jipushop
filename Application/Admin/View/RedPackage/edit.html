@@ -1,0 +1,75 @@
+<extend name="Public/base" />
+
+
+<block name="body">
+	<div class="main-title">
+		<h2>发红包</h2>
+	</div>
+
+  <form action="{:U('update')}" method="POST" class="form-horizontal">
+    <div class="form-item">
+      <label for="auth-title" class="item-label">活动名称<span class="check-tips">（仅作后台列表展示使用）</span></label>
+      <div class="controls">
+        <input type="text" name="name" class="text" value="" placeholder=""/>
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">红包个数<span class="check-tips">（每人最多可领取1个）</span></label>
+      <div class="controls">
+        <input type="text" name="number" class="text input-2x" value="" placeholder=""/> 个
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">总金额<span class="check-tips">（单个红包金额随机，最低 0.01 元）</span></label>
+      <div class="controls">
+        <input type="text" name="amount" class="text input-2x" value="" placeholder=""/> 元
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">领取截止时间<span class="check-tips">（默认48小时内有效）</span></label>
+      <div class="controls">
+        <input type="text" name="expire_time" class="text date_select" value="{$data.expire_time}" placeholder="截止时间"/>
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">祝福语</label>
+      <div class="controls">
+        <label class="textarea input-6x">
+          <textarea name="info" style="height: 40px">{$data.info}</textarea>
+        </label>
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">分享标题<span class="check-tips">（微信分享标题）</span></label>
+      <div class="controls">
+        <input type="text" name="share_title" class="text" value="" placeholder=""/>
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">分享描述<span class="check-tips">（微信分享描述）</span></label>
+      <div class="controls">
+        <label class="textarea input-6x">
+          <textarea name="share_desc" style="height: 60px">{$data.share_desc}</textarea>
+        </label>
+      </div>
+    </div>
+    <div class="form-item">
+      <button type="submit" class="btn submit-btn ajax-post" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+  </form>
+<block>
+
+<block name="script">
+  <script language="javascript" type="text/javascript" src="__PUBLIC__/Admin/js/My97Date/WdatePicker.js"></script>
+  <script type="text/javascript" charset="utf-8">
+    $(function(){
+      //导航高亮
+      highlight_subnav('{:U("index")}');
+      //时间选择
+      $('.date_select').focus(function(){
+        WdatePicker({skin: 'twoer', dateFmt: 'yyyy-MM-dd HH:mm:ss'});
+      });
+    });
+  </script>
+</block>

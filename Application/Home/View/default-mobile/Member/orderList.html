@@ -1,0 +1,108 @@
+ <div class="order">
+      <div class="order-detail" style="margin:-11px 0 0 0;">
+        <volist name="lists" id="vo">
+          <ul class="table-view base" style="margin:10px 0 0 0;color:#333;">
+            <li class="table-view-cell" style="color:#333;height:44px;line-height:25px;">
+              <span class="th" >订单编号： {$vo['order_sn']}</span>
+              <if condition="in_array($vo['o_status'], array(0,200,201,300,301,302))">
+              <em class="pull-right text-danger" >{:get_order_status_text_list($vo['o_status'])}</em>
+              <else/>
+              <em class="pull-right" >{:get_order_status_text_list($vo['o_status'])}</em>
+              </if>
+            </li>
+          </ul>
+          <ul class="table-view package" onclick="location.href='{:U('Order/detail', array('order_sn' => $vo['order_sn']))}';" style="margin-top:-1px;">
+            <volist name="vo.OrderItem" id="vl">
+               <li class="table-view-cell" data-href="{:U('Item/detail', array('id' => $vl['item_id']))}">
+                <span class="thumb"><img src="__ROOT__{:get_image_thumb($vl['cover_path'], 50, 50)}" alt="{$vl.name}" ></span>
+                <span class="name">{$vl.name}<if condition="$vl[price] eq 0"><span class="text-danger">（赠品）</span></if></span>
+                <span class="spec">{:custom_unserialize($vl['spec'], 1, '，')}</span>
+                <span class="price">
+                  {$vl.price}元 
+                  <gt name="vl.quantity" value="0">
+                    &times; {$vl.quantity}
+                  </gt>
+                  <gt name="vl.fugou_dis_price" value="0">
+                  <span class="text-danger">（老客户立减）</span>
+                  </gt>
+                  <notempty name="vl.memo">
+                    <span class="text-danger">（{$vl.memo}）</span>
+                  </notempty>
+                  
+                </span>
+               
+              </li>
+              
+            </volist>
+          </ul>
+           <ul class="table-view base" >
+            <li class="table-view-cell" style=" margin-top:-1px;height:44px;line-height:25px;">
+              <em class="pull-right" >
+                 <span style="font-size:12px;margin-right:10px;">共{$vo['total_quantity']}件商品</span>
+                <span class="price" style="font-size:12px;">合计：<small class="yen text-danger " style="font-size:16px;">&yen; </small><em style="font-size:16px;" class="text-danger ">{:sprintf('%.2f', $vo['total_amount']+$vo['finance_amount'])}</em></span>
+              </em>
+              
+            </li>
+
+          <if condition="in_array($vo['o_status'], array(201,300,301,202,－1,303,404,405))OR ($vo['o_status'] eq 202 AND ($vo['complete_time'] gt time()-7*24*3600))">
+
+            <li class="table-view-cell" style="height:50px;">
+              <if condition="I('type') neq 'recycle' AND !in_array($vo['o_status'], array(0, 302))">
+                  <!--物流-->
+                  <if condition="in_array($vo['o_status'], array(201,202))">
+                    <a href="javascript:$.ui.load('{:U('Order/getDelivery?order_id='.$vo['id'])}', '物流配送信息');" class="btn" style="color: #333; border: 1px solid #333;display:none;">查看物流</a>
+                  </if>
+                  <switch name="vo.o_status">
+                    <case value="201">
+                      <a href="javascript:$.ui.load('{:U('Order/getDelivery?order_id='.$vo['id'])}', '物流配送信息');" class="btn" style="color: #333; border: 1px solid #333;margin-right:100px">查看物流</a>
+                      <a href="javascript:order.confirm({$vo['id']});" class="btn btn-positive btn-act"  >确认收货</a>
+                    </case>
+                    <case value="202">
+                      <a href="javascript:$.ui.load('{:U('Order/getDelivery?order_id='.$vo['id'])}', '物流配送信息');" class="btn" style="color: #333; border: 1px solid #333;margin-right:100px">查看物流</a>
+                    </case>
+                    <case value="300">
+                      <a href="javascript:$.ui.load('{:U('Order/getDelivery?order_id='.$vo['id'])}', '物流配送信息');" class="btn" style="color: #333; border: 1px solid #333;margin-right:100px">查看物流</a>
+                      <a href="javascript:order.unrefund({$vo['id']});" class="btn btn-act"  style="color: #333; border: 1px solid #333;">撤销退款申请</a>
+                    </case>
+                    <case value="301">
+                      <a href="javascript:$.ui.load('{:U('Order/getDelivery?order_id='.$vo['id'])}', '物流配送信息');" class="btn" style="color: #333; border: 1px solid #333; margin-right:100px">查看物流</a>
+                      <a href="{:U('Order/reShip',array('order_id' => $vo['id']))}" class="btn btn-positive btn-act"  >立即退货</a>
+                    </case>
+                  </switch>
+                  <!--退货退款-->
+                  <if condition="in_array($vo['o_status'], array(200,2011)) OR ($vo['o_status'] eq 202 AND ($vo['complete_time'] gt time()-7*24*3600))">
+                    <a href="javascript:order.refund({$vo['id']});" class="btn " style="display:none;color: #333; border: 1px solid #333;">申请退货/退款</a>
+                  </if>
+                  <!--删除订单-->
+                  <if condition="in_array($vo['o_status'], array(202, -1, 303, 404,405))">
+                     <a href="javascript:order.setStatus({$vo['id']}, 'recycle');" class="btn" data-id="{$vo.id}" title="删除订单" style="color: #333; border: 1px solid #333;">删除订单</a>
+                  </if>
+                </if>
+              </li>
+            </if>
+            <!--已删除|还原或清空-->
+            <if condition="I('type') eq 'recycle'">
+                  <li class="table-view-cell" style="height:50px;">
+                      <span  id="Z_order_{$vo['id']}">
+                        <a href="javascript:order.setStatus({$vo['id']}, 'restore');" class="btn" data-id="{$vo.id}" title="还原订单" style="color: #333; border: 1px solid #333;">还原订单</a>
+                        <a href="javascript:order.setStatus({$vo['id']}, 'delete');" class="btn" data-id="{$vo.id}" title="删除订单" style="color: #333; border: 1px solid #333;">删除订单</a>
+                      </span>
+                  </li>
+              <else/>
+                  <if condition="$vo.o_status eq 0">
+                      <!-- 众筹订单跳转至众筹页面 -->
+                        <eq name="vo.order_type.name" value="crowdfunding">
+                            <li class="table-view-cell" style="height:50px;">
+                                <a href="{:U('Crowdfunding/doing', array('id' => $vo['order_type']['data']['id'], 'oid' => $vo['id']))}" class="btn btn-positive btn-act" id="Z_order_{$vo['id']}"><eq name="vo.order_type.data.has_finish" value="1">众筹完成<else/>正在众筹…</eq></a>
+                            </li>
+                        <else/>
+                            <li class="table-view-cell" style="height:50px;">
+                                <a href="{:U('Order/preview', array('order_id' => $vo['id']))}" class="btn btn-positive btn-act" id="Z_order_{$vo['id']}">立即支付</a>
+                            </li>
+                        </eq>
+                   </if>
+                </if>
+          </ul>
+        </volist>
+      </div>
+</div>

@@ -1,0 +1,23 @@
+<extend name="Base/common"/>
+
+<block name="body">
+  <div class="sdp">
+    <div class="lists">
+      <ul class="table-view" id="Z_load_itemlist">
+        <notempty name="lists">
+          <include file="recordList"/>
+        <else/>
+          <p class="list-empty">还没有分销记录哦</p>
+        </notempty>
+      </ul>
+    </div>
+  </div>
+</block>
+<block name="script">
+  <script>
+    seajs.use(['common'], function(common){
+      var url = window.location.href;
+      common.loadmore(url);
+    });
+  </script>
+</block>

@@ -1,0 +1,17 @@
+<input type="text" class="text input-mid time" name="{$time['name']}" <notempty name="time['time']"> value="{$time['time']|time_format='Y-m-d'}" </notempty>>
+<link href="__JS__/datetimepicker/css/datetimepicker.css" rel="stylesheet" type="text/css">
+  <php>if(C('COLOR_STYLE')=='blue_color') echo '<link href="__JS__/datetimepicker/css/datetimepicker_blue.css" rel="stylesheet" type="text/css">';</php>
+  <link href="__JS__/datetimepicker/css/dropdown.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="__JS__/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+  <script type="text/javascript" src="__JS__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+  <script type="text/javascript">
+    //日期选择
+    $(function(){
+      $('.time').datetimepicker({
+        format: 'yyyy-mm-dd',
+        language: "zh-CN",
+        minView: 2,
+        autoclose: true
+      });
+    });
+  </script>

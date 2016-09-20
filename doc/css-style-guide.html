@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>CSS编码规范</title>
+		<style>
+			/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+sup {
+   vertical-align: super;
+   font-size: smaller;
+}
+
+sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+
+/* Generic styles */
+body {
+	background: #f5f5f5;
+  color: #444;
+  font-family: 'Microsoft Yahei','Book Antiqua',Palatino,FreeSerif,serif;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6,
+code, pre,
+ul, ol,
+p,
+hr {
+  margin: 1.5em 0 0.5em 0;
+}
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.5em;
+}
+
+ul, ol,
+p,
+hr {
+	line-height: 2em;
+}
+
+code, pre {
+  line-height: 1.5em;
+}
+
+*:first-child {
+	margin-top: 0;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+	font-weight: bold;
+}
+
+h1 {
+	font-size: 3.5em;
+}
+
+h2 {
+	font-size: 2.5em;
+}
+
+h3 {
+	font-size: 2em;
+}
+
+h4 {
+	font-size: 1.5em
+}
+
+h5 {
+	font-size: 1.2em;
+}
+
+h6 {
+	font-size: 1em;
+}
+
+/* Lists */
+ul, ol {
+	padding-left: 2em;
+}
+
+ul {
+	list-style-type: disc;	
+}
+
+ol {
+	list-style-type: decimal;
+}
+
+/* Code and pre */
+code, pre {
+	font-family: "Bitstream Vera Sans Mono", "Courier", monospace;
+}
+code {
+	background: none repeat scroll 0 0 #F8F8FF;
+  border: 1px solid #DEDEDE;
+  border-radius: 3px 	;
+  padding: 0 0.2em;
+}
+pre {
+	border-left: 5px solid #eee;
+	margin-left: 2em;	
+	padding-left: 1em;
+}
+pre > code {
+	background: transparent;
+	border: none;
+	padding: 0;
+  word-wrap: break-word;
+}
+
+/* Links */
+a {
+  color: #e91e63;
+}
+
+a:visited {
+  color: #666;
+}
+
+/* Inlines */
+strong {
+	font-weight: bold;
+}
+
+em {
+	font-style: italic;
+}
+
+/* Container */
+.container {
+	background: #FFF;
+	padding: 30px 50px;
+	margin: 0 auto;
+	width: 700px;
+}
+
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h2 id="css-">CSS编码规范</h2>
+<h3 id="-">命名规范</h3>
+<p>1.尽量使用英文命名原则，严格禁止拼音、数字。参照文章末尾的常用命名规则；<br>2.尽量不加缩写，除非已约定的缩写方式，如：nav；<br>3.id和class全部小写，采用该版块的英文单词或组合命名，以中杠“-”分割，如：nav-tabs(导航标签/nav+tabs)；</p>
+<h3 id="-">书写规范</h3>
+<p>1.必须使用2个空格进行代码缩进，建议设置编辑器Tab为2个空格的宽度；<br>2.属性与“{}”之间，属性名和值之间必须有空格，属性必须换行，“{}”必须换行显示(即使只有一个属性)，如：  </p>
+<pre><code>.nav-tabs {
+  border-bottom: 1px solid #ddd;
+}
+</code></pre><p>3.属性值后面必须加分号“;”，即使只有一个；<br>4.使用CSS缩写属性，如：padding,margin,font等属性，使用缩写形式。</p>
+<pre><code>.list-box {
+  padding: 10px 5px;
+  font: 180%/0.6 serif;
+}
+</code></pre><p>5.RGB颜色值有字母的必须采用小写，可缩写的尽量使用缩写，如：#ffcccc缩写为#fcc；<br>6.针对特殊浏览器的属性，应写在标准属性之前，左侧对齐，如：</p>
+<pre><code>-webkit-border-radius: 3px;
+-moz-border-radius: 3px;
+border-radius: 3px;
+</code></pre><p>7.按照元素模型由外及内，由整体到细节的书写顺序，属性值大致分为以下五组：
+位置：position,top,right,bottom,left,float
+盒模型属性：display,margin,padding,width,height
+边框与背景：border,background
+段落与文本：line-height,text-indent,font,color,text-decoration,text-align…
+其他属性：overflow,cursor,visibility,…</p>
+<p>标准的元素属性值顺序如：</p>
+<pre><code>.nav-tabs {
+  position: absolute;
+  top: 40%;
+  left: 15px;
+  float: left;
+  display: inline-block;
+  margin-top: 20px;
+  padding: 5px;
+  width: 40px;
+  height: 40px;
+  border: 3px solid #fff;
+  -webkit-border-radius: 23px;
+  -moz-border-radius: 23px;
+  border-radius: 23px;
+  background: #222;
+  line-height: 30px;
+  font-size: 60px;
+  font-weight: 100;
+  color: #fff;
+  text-align: center;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
+</code></pre><p>8.class和id连写必须换行，如：</p>
+<pre><code>.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary.disabled {
+  color: #fff;
+}
+</code></pre><p>9.请勿使用冗余低效的CSS写法，如：</p>
+<pre><code>ul li a span {
+
+}
+</code></pre><p>10.0后面不跟单位，去掉小数点前的0</p>
+<pre><code>margin: 0px auto; //踩
+margin: 0 auto //赞
+
+opacity: 0.8 //踩
+opacity: .8  //赞
+</code></pre><p>11.url()中不使用引号  </p>
+<h3 id="-">注释规范</h3>
+<h4 id="-">文件头部注释</h4>
+<p>文件头部注释主要用来阐述此文件的名称，版本，作者。按照以下形式书写：</p>
+<pre><code>/*!
+ * order.css
+ * Version 2015042614
+ * Max.Yu &lt;max@winhu.com&gt;
+ */
+</code></pre><p>其中版本号的格式为：yyyyMMDDHH</p>
+<h4 id="-">行内注释</h4>
+<p>行内注释主要说明本段代码所在的模块，如：</p>
+<pre><code>/*订单模块*/
+</code></pre><h3 id="-">常用命名推荐</h3>
+<p>头：header<br>内容：content/container<br>尾：footer<br>导航：nav<br>侧栏：sidebar<br>栏目：column<br>页面外围控制整体布局宽度：wrapper<br>左右中：left right center<br>登录条：loginbar<br>标志：logo<br>广告：banner<br>页面主体：main<br>热点：hot<br>新闻：news<br>下载：download<br>子导航：subnav<br>菜单：menu<br>子菜单：submenu<br>搜索：search<br>友情链接：friendlink<br>页脚：footer<br>版权：copyright<br>滚动：scroll<br>内容：content<br>标签：tags<br>列表：list / item-list<br>列表条目：item<br>提示信息：msg<br>小技巧：tips<br>栏目标题：title<br>加入：joinus<br>指南：guide<br>服务：service<br>注册：regsiter<br>状态：status<br>投票：vote<br>合作伙伴：partner  </p>
+
+		</div>
+
+		<script></script>
+	</body>
+</html>

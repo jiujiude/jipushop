@@ -1,0 +1,37 @@
+<div id="main-container" class="container user-container">
+  <div class="row">
+    <div class="col-xs-2">
+      <div class="user-nav">
+        <h3>个人中心</h3>
+        <ul class="list">
+          <li <if condition="(CONTROLLER_NAME eq 'Member') And (ACTION_NAME eq 'index' OR ACTION_NAME eq 'message')">class="active"</if>><a href="{:U('Member/index')}">个人中心</a></li>
+          <li <if condition="(CONTROLLER_NAME eq 'Join' AND ACTION_NAME eq 'joinOrder')">class="active"</if>><a href="{:U('Join/joinOrder')}">拼团</a></li>
+          <li <if condition="(CONTROLLER_NAME eq 'Member' AND ACTION_NAME eq 'order') OR (CONTROLLER_NAME eq 'Order' AND ACTION_NAME eq 'detail')">class="active"</if>><a href="{:U('Member/order')}">我的订单</a></li>
+          <li <if condition="(ACTION_NAME eq 'finance') OR (ACTION_NAME eq 'recharge') OR (ACTION_NAME eq 'financelog') OR (CONTROLLER_NAME eq 'UserAccount') OR (CONTROLLER_NAME eq 'Withdraw')">class="active"</if>><a href="{:U('Member/finance')}">现金账户</a></li>
+          <li <eq name="ACTION_NAME" value="coupon">class="active"</eq>><a href="{:U('Member/coupon')}">我的优惠券</a></li>
+          <li <eq name="ACTION_NAME" value="card">class="active"</eq>><a href="{:U('Member/myCard')}">我的礼品卡</a></li>
+          <li <eq name="ACTION_NAME" value="score">class="active"</eq>><a href="{:U('Member/score')}">我的积分</a></li>
+          <li <eq name="ACTION_NAME" value="receiver">class="active"</eq>><a href="{:U('Member/receiver')}">收货地址</a></li>
+          <li <eq name="ACTION_NAME" value="fav">class="active"</eq>><a href="{:U('Member/fav')}">我的收藏</a></li>
+          <li <eq name="ACTION_NAME" value="invite">class="active"</eq>><a href="{:U('Member/invite')}">我的邀请</a></li>
+          <li <if condition="((CONTROLLER_NAME eq 'Member') AND (ACTION_NAME eq 'sdp')) OR (CONTROLLER_NAME eq 'Sdp') OR (CONTROLLER_NAME eq 'Shop')">class="active"</if>><a href="{:U('Member/sdp')}">我的店铺</a></li>
+          
+          <li <if condition="(CONTROLLER_NAME eq 'Member') AND (ACTION_NAME eq 'union') OR (CONTROLLER_NAME eq 'Union')">class="active"</if>><a href="{:U('Member/union')}">推广联盟</a></li>
+          
+          
+          <!--<li <if condition="CONTROLLER_NAME eq 'UserAccount'">class="active"</if>><a href="{:U('UserAccount/index')}">提现账户</a></li>-->
+          <li <eq name="ACTION_NAME" value="editProfile">class="active"</eq>><a href="{:U('Member/editProfile')}">个人资料</a></li>
+        </ul>
+        <h3>账户安全</h3>
+        <ul class="list">
+          <li <eq name="ACTION_NAME" value="mobileBind">class="active"</eq>><a href="{:U('Member/mobileBind')}">手机绑定</a></li>
+          <li <eq name="ACTION_NAME" value="changepwd">class="active"</eq>><a href="{:U('Member/changepwd')}">登录密码</a></li>
+          <!-- <li <eq name="ACTION_NAME" value="paymentpwd">class="active"</eq>><a href="{:U('Member/paymentpwd')}">支付密码</a></li> -->
+        </ul>
+      </div>
+    </div>
+    <div class="col-xs-10">
+      <block name="body"></block>
+    </div>
+  </div>
+</div>

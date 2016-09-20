@@ -1,0 +1,27 @@
+<extend name="Base/common"/>
+
+<!-- 文章详情 -->
+<block name="body">
+  <div class="article-detail">
+    <div class="hd text-center">
+      <h3>{$data.title}</h3>
+      <p class="info">
+        <span><a href="/">{$data.uid|get_nickname}</a></span>
+        <span>{$data.create_time|time_format='Y-m-d'}</span>
+        
+<!--        <span>共查看 {$data.view} 次</span>-->
+      </p>
+    </div>
+    <div class="bd">
+      {$data.content}
+    </div>
+  </div>
+</block>
+<block name="footer"></block>
+<block name="script">
+  <script type="text/javascript">
+    seajs.use(['wechat'], function(wechat){
+      wechat.init();
+    });
+  </script>
+</block>

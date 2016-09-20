@@ -1,0 +1,158 @@
+<extend name="Base/common"/>
+
+<block name="body">
+<style>
+    body{background: #ebebeb;}
+    .content{background-color: #ebebeb;}
+    .user-info{background: #1b1b20;padding-top:0;}
+    .user-info .avatar {border-radius: 50%;margin: 10px 0 5px;border: 2px solid #ddd;}
+    .user-third>ul {margin-top: 0px;}
+    .order-br-one{display: block;padding-bottom: 5px;}
+    .user-info .order-bar {margin-top: 10px;padding: 10px 0;font-size: 12px;background-color: rgba(255,255,255,1);}
+    .user-info .order-bar>li {text-align: center;border-right: 1px solid #eee;padding: 15px 0 13px;}
+    .user-info .order-bar>li>a {color: #333;}
+    .badge-red {
+      display: inline-block;
+      padding: 2px 6px 2px;
+      font-size: 12px;
+      line-height: 1;
+      color: #fff;
+      background-color: red;
+      border-radius: 100px;
+      margin-left:2px;
+    }
+     .badge-gray {
+      display: inline-block;
+      padding: 2px 6px 2px;
+      font-size: 12px;
+      line-height: 1;
+      color: #666666;
+      background-color: rgba(0,0,0,.08);
+      border-radius: 100px;
+      margin-left:2px;
+    }
+</style>
+<div class="user-info" style="padding-top:20px;margin-top:-5px;">
+  <div class="user-third" >
+    <ul class="flex-box">
+      <li>
+       <img onclick="location.href='{:U('Member/editProfile', array('type' => 'payment'))}'" src="<notempty name="member.avatar">{$member['avatar']}<else/>__IMG__/avatar-default.png</notempty>" class="avatar" width="80" height="80">
+        <p ><a href="{:U('Member/editProfile', array('type' => 'payment'))}" style="font-size: 16px;font-weight: 400;color: #FFF;">{:get_nickname()}</a>
+        </p>
+        <if condition='($union_status lt 1) or ($union_status gt 1)'>
+          <p style="font-size: 16px;font-weight: 400;color: #FFF;">
+              <em style="display:block;">可用现金：{$member.finance}元</em>
+              <em style="font-size: 12px;font-weight: 400;color: #FFF;">（消费抵用）</em>
+          </p>
+        </if>
+      </li>
+    </ul>
+  </div>
+    <div class="table-view-cell" style="background: #fff;margin-top:10px;border-top: 1px solid #eee;border-bottom: 1px solid #eee;margin-bottom: -21px;padding: 13px 65px 13px 10px;">
+        <a href="{:U('Member/order')}" class="navigate-right" > 
+          <span class="media-object pull-left icon icon-form" style="margin-right:5px;color:#1b1b20"></span>
+          <p class="media-body" style="font-size:16px;color: #1b1b20;margin-top:2px" >我的订单</p>
+          <span class="badge" style="color: #1b1b20"><eq name="user_count.order_count" value="">0<else />{$user_count.order_count}</eq></span>
+        </a>
+      </div>
+  <ul class="flex-box order-bar" style=" background: #fff; padding: 10px 0 0;border-bottom: 1px solid #eee;border-top: 1px solid #eee;">
+
+   
+      <li><a href="{:U('Member/order', array('type' => 'payment'))}" style="color: #1b1b20"><span  class="order-br-one icon icon-wallet" ></span>待付款<if condition="$order_num.payment gt 0"><span class="badge-red" >{$order_num.payment}</span></if></a></li>
+
+
+      <li><a href="{:U('Member/order', array('type' => 'unship'))}" style="color: #1b1b20"><span  class="order-br-one icon icon-icon015"></span>待发货<if condition="$order_num.unship gt 0" ><span class="badge-red" >{$order_num.unship}</span></if></a>
+
+      </li>
+      <li><a href="{:U('Member/order', array('type' => 'unreceive'))}" style="color: #1b1b20"><span class="order-br-one icon  icon-gongyingshang1"></span>待收货<if condition="$order_num.unreceive gt 0" ><span class="badge-red" >{$order_num.unreceive}</span></if></a></li>
+
+
+      <li><a href="{:U('Member/order', array('type' => 'success'))}" style="color: #1b1b20"><span class="order-br-one icon icon-chudianzijian"></span>已完成</a></li>
+      <li style="color: #333;display:none;"><a href="{:U('Member/order', array('type' => 'recycle'))}" style="color: #1b1b20"><span class="order-br icon icon-remove"></span>回收站</a></li>
+    </ul>
+    <a href="{:U('Member/message')}" class="message" style="color: #333;display:none;">
+      <i class="icon icon-message"></i>
+      <gt name="message_unread" value="0"><s></s></gt>
+    </a>
+     <a href="{:U('User/logout')}" class="message" style="top:15px;right:15px" >
+      <span style="border:1px solid #eee;padding: 5px; font-size:12px;color:#FFF;border-radius:6px;">退出账号</span>
+    </a>
+</div>
+  <div class="user-info" style="background: #ebebeb;">
+      <div class="table-view-cell" style="background: #fff;margin-top:10px;border-top: 1px solid #eee;border-bottom: 1px solid #eee;margin-bottom: -21px;padding: 13px 65px 13px 10px;">
+            <div  class="navigate" > 
+              <span class="media-object pull-left icon icon-youpan" style="margin-right:5px;color:#1b1b20"></span>
+              <p class="media-body" style="font-size:16px;color: #1b1b20;margin-top:2px" >常用功能</p>
+             </span>
+            </div>
+      </div>
+      <ul class="flex-box order-bar" style=" background: #fff; padding: 10px 0 0;border-bottom: 1px solid #eee;border-top: 1px solid #eee;">
+          <li><a href="{:U('Member/coupon', array('type' => 'payment'))}" style="color: #1b1b20"><span  class="order-br-one icon icon-youhuiquan01" ></span>我的优惠劵<if condition="$user_count.coupon_count gt 0" ><span class="badge-gray" style="display:none;">{$user_count.coupon_count}</span></if></a></li>
+
+          <li><a href="{:U('Member/score')}" style="color: #1b1b20"><span  class="order-br-one icon icon-favor"></span>我的积分<span  class="badge-gray" >{$member.score}</span></a></li>
+          <li><a href="{:U('Member/receiver', array('type' => 'unreceive'))}" style="color: #1b1b20"><span class="order-br-one icon  icon-location"></span>收货地址</a></li>
+      </ul>
+       <ul class="flex-box order-bar" style=" background: #fff; margin-top:0px;padding: 0px 0 0;border-bottom: 1px solid #eee;">
+          <li><a href="{:U('Member/editProfile', array('type' => 'payment'))}" style="color: #1b1b20"><span  class="order-br-one icon icon-edit" ></span>我的资料</a></li>
+          <li><a href="{:U('User/forgetpwd', array('type' => 'unship'))}" style="color: #1b1b20"><span  class="order-br-one icon icon-lock"></span>修改密码</a></li>
+          <li><a href="{:U('Member/mobileBind', array('type' => 'unreceive'))}" style="color: #1b1b20"><span class="order-br-one icon  icon-mobile"></span>绑定手机</a></li>
+      </ul>
+</div>
+<if condition='$union_status eq 1'>
+    <div class="user-info" style="background: #ebebeb; ">
+          <div class="table-view-cell" style="background: #fff;margin-top:10px;border-top: 1px solid #eee;border-bottom: 1px solid #eee;margin-bottom: -21px;padding: 13px 65px 13px 10px;">
+                <div  class="navigate" > 
+                  <span class="media-object pull-left icon icon-sdp" style="margin-right:5px;color:#1b1b20"></span>
+                  <p class="media-body" style="font-size:16px;color: #1b1b20;margin-top:2px" >代理联盟</p>
+                 </span>
+                </div>
+          </div>
+          <ul class="flex-box order-bar" style=" background: #fff; padding: 10px 0 0;border-bottom: 1px solid #eee;border-top: 1px solid #eee;">
+
+              <li><a href="{:U('Member/union')}" style="color: #1b1b20"><span  class="order-br-one icon icon-link"></span>我的关注</a></li>
+              <li><a href="{:U('unionerlist' ,array('type'=>1))}" style="color: #1b1b20"><span  class="order-br-one icon icon-card"></span>我的客户</a></li>
+              <li><a href="{:U('Finance/index')}" style="color: #1b1b20"><span  class="order-br-one icon icon-recharge" ></span>我的账户</a></li>
+
+          </ul>
+    </div>
+    <div class="user-info" style="background: #ebebeb; margin-bottom: 20px;">
+          <div class="table-view-cell" style="background: #fff;margin-top:10px;border-top: 1px solid #eee;border-bottom: 1px solid #eee;padding: 13px 65px 13px 10px;">
+               
+                  <span class="media-object pull-left icon icon-wechat" style="margin-right:5px;color:#1b1b20"></span>
+                  <p class="media-body" style="font-size:16px;color: #1b1b20;margin-top:2px" >客服微信</p>
+                  <span class="badge" style="color: #999;background: #FFF;font-size: 14px;">ccys06</span>
+              
+          </div>
+    </div>
+<else/>
+    <div class="user-info" style="background: #ebebeb; margin-bottom: 20px;">
+          <div class="table-view-cell" style="background: #fff;margin-top:10px;border-top: 1px solid #eee;border-bottom: 1px solid #eee;padding: 13px 65px 13px 10px;">
+                <a href="{:U('Member/union')}" class="navigate-right" > 
+                  <span class="media-object pull-left icon icon-wangshangbangong" style="margin-right:5px;color:#1b1b20"></span>
+                  <p class="media-body" style="font-size:16px;color: #1b1b20;margin-top:2px" >商务合作</p>
+                  <span class="badge" style="color: #fff;background: #F53101;font-size: 8px;padding:4px;">诚邀</span>
+                </a>
+          </div>
+          <div class="table-view-cell" style="background: #fff;border-bottom: 1px solid #eee;padding: 13px 65px 13px 10px;">
+                  <span class="media-object pull-left icon icon-wechat" style="margin-right:5px;color:#1b1b20"></span>
+                  <p class="media-body" style="font-size:16px;color: #1b1b20;margin-top:2px" >客服微信</p>
+                  <span class="badge" style="color: #999;background: #FFF;font-size: 14px;">ccys06</span>
+          </div>
+    </div>
+</if>
+
+</block>
+<block name="script">
+  <script>
+    seajs.use('wechat', function(wechat){
+      var mobile_no = "{:session('user_auth.mobile')}";
+      if(!$.is_mobile_number(mobile_no)){
+        $.ui.confirm('您尚未绑定手机号码，去绑定？',function(){
+          window.location.href = '{:U("Member/mobileBind")}';
+        });
+      }
+      
+      wechat.init();
+    });
+  </script>
+</block>

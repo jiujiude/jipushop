@@ -1,0 +1,47 @@
+<extend name="Base/common"/>
+
+<block name="body">
+  <div class="activity" <neq name="data.backcolor" value="">style="background:{$data['backcolor']}"</neq>>
+    <notempty name="data.src">
+      <div class="banner">
+        <img src="__ROOT__{:get_image_thumb($data['src'], 720, 257)}" alt="{$data['name']}">
+      </div>
+    </notempty>
+    <notempty name="data.items_list">
+      <div class="item-list item-list-grid">
+        <volist name="data.items_list" id="vo">
+          <php>
+            $param = array('id' => $vo['id']);
+            if($data['secret']){
+              $param['sdp_secret'] = $data['secret'];
+            }
+            $item_path = U('Item/detail', $param);
+          </php>
+          <div class="item">
+            <div class="inner">
+              <a href="{$item_path}"><img src="__IMG__/img-pai-bg.png" data-url="{:get_image_thumb($vo['cover_path'], 400, 400)}" class="lazy" alt="{$vo.name}"></a>
+              <div class="info">
+                <a href="{$item_path}" class="name">{$vo.name}</a>
+                <p class="price">
+                  <span class="text-danger"><em class="yen">&yen;</em>{$vo.price}</span>
+                  <del><em class="yen">&yen;</em>{$vo.mprice}</del>
+                  <if condition="C('IS_SHOW_BUYNUM')"><em class="buynum">{$vo.buynum|default=0}人已购买</em></if>
+                </p>
+              </div>
+            </div>
+            
+          </div>
+        </volist>
+      </div>
+    <else/>
+      <p class="list-empty">暂无商品</p>
+    </notempty>
+    <notempty name="data.content">
+      <div class="info">
+        {$data.content}
+      </div>
+    </notempty>
+  </div>
+</block>
+<block name="script">
+</block>

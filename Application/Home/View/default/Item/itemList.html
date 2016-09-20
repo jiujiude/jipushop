@@ -1,0 +1,47 @@
+<notempty name="lists">
+<div class="category-lists">
+  <volist name="lists" id="vo">
+    <php>
+      $param = array('id' => $vo['id']);
+      if($data['secret']){
+        $param['sdp_secret'] = $data['secret'];
+      }
+      $item_path = U('Item/detail', $param);
+    </php>
+    <div class="item">
+      <div class="thumbnail">
+        <a href="{$item_path}" target="_blank"><img src="__IMG__/img-pai-bg.png" data-url="{:get_image_thumb($vo[cover_path], 400, 400)}" class="pic" alt="{$vo.name}"></a>
+        <div class="caption">
+          <h5 class="thumbnail-label"><a href="{$item_path}"  title="{$vo.name}" alt="{$vo.name}" target="_blank">{$vo['name']}<!--{:get_short($vo['name'], 13)}--></a></h5>
+          <div class="thumbnail-info">
+            <H3 class="text-danger"><em class="yen">&yen;</em> {$vo.price}</H3>
+            <if condition="C('IS_SHOW_BUYNUM')"><a href="{$item_path}" class="btn btn-sm btn-default">立即购<!--i class="icon icon-cart-fill"></i> {$vo.buynum}人购买--></a></if>
+          </div>
+        </div>
+      </div>
+    </div>
+  </volist>
+</div>
+  <script>
+  seajs.use(['jquery','jquery.imglazyload'],function($,lz){
+	var path=$('.category-lists .item')
+	var reloadWindow=function(){
+		if($(window).width()>1600){
+		  path.removeClass('col-xs-3');
+		  path.addClass('col-xs-2');
+		}else{
+		  path.removeClass('col-xs-2');
+		  path.addClass('col-xs-3');
+		}
+	}
+	$(window).resize( function(){
+		reloadWindow();
+	});
+	reloadWindow()
+	$.imgLazyLoad({ diff: 100 })
+  })
+  </script>
+</notempty>
+<script>
+  C.has_more = '{$_hasmore}';
+</script>

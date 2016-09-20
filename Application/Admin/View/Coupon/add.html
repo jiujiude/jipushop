@@ -1,0 +1,90 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>新增优惠券</h2>
+  </div>
+  
+  <form action="{:U('update')}" method="post" class="form-horizontal">
+    <div class="form-item">
+      <label class="item-label">优惠券编号</label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="number" value="{$coupon['number']}" readonly="true">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">优惠券名称<span class="check-tips">（例如：中秋大礼包）</span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="name" value="">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">优惠券面值</label>
+      <div class="controls">
+        <select name="amount" id="">
+          <option value="0">请选择面值</option>
+          <volist name=":C('COUPON_AMOUNT')" id="vo">
+            <option value="{$key}">{$vo}</option>
+          </volist>
+        </select>
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">适用商品<span class="check-tips">（指定此券可以在哪些商品上使用，最多100个商品）</span></label>
+      <div class="controls">
+        {:hook('itemSel', array('name' => 'items' ,'value' => '','empty_tip' => '全场通用'))}
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">适用订单限额<span class="check-tips">（优惠券适用的订单限额，默认不限制）</span></label>
+      <div class="controls">
+        <input type="text" class="text input-mid" name="norm" value=""> 元
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">优惠券数量<span class="check-tips">（优惠券数量，默认不限制数量）</span></label>
+      <div class="controls">
+        <input type="text" name="num" class="text input-mid" value=""> 张
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">有效日期<span class="check-tips">（截止所选当日23时59分59秒）</span></label>
+      <div class="controls">
+        <input type="text" class="text input-large time" name="expire_time" value="">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">是否前段显示？</label>
+      <div class="controls">
+        是<input type="radio" name="is_show" value="1">
+        否<input type="radio" name="is_show" value="0">
+      </div>
+    </div>
+    <div class="form-item">
+      <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+  </form>
+</block>
+
+<block name="script">
+  <link href="__JS__/datetimepicker/css/datetimepicker.css" rel="stylesheet" type="text/css">
+  <php>if(C('COLOR_STYLE')=='blue_color') echo '<link href="__JS__/datetimepicker/css/datetimepicker_blue.css" rel="stylesheet" type="text/css">';</php>
+  <link href="__JS__/datetimepicker/css/dropdown.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="__JS__/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+  <script type="text/javascript" src="__JS__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+  <script type="text/javascript">
+    //日期选择
+    $(function(){
+      $('.time').datetimepicker({
+        format: 'yyyy-mm-dd',
+        language: "zh-CN",
+        minView: 2,
+        autoclose: true
+      });
+    });
+    /*导航高亮*/
+    highlight_subnav('{:U("Coupon/index")}');
+  </script>
+</block>

@@ -1,0 +1,148 @@
+//
+// Forms
+// --------------------------------------------------
+
+// Force form elements to inherit font styles
+input,
+textarea,
+button,
+select {
+  font-family: $font-family-default;
+  font-size: $font-size-default;
+}
+
+// Stretch inputs/textareas to full width and add height to maintain a consistent baseline
+select,
+textarea,
+input[type="text"],
+input[type="search"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="tel"],
+input[type="color"] {
+  width: 100%;
+  height: 44px;
+  -webkit-appearance: none;
+  padding: 0 15px;
+  margin-bottom: 10px;
+  line-height: $line-height-default;
+  background-color: #fff;
+  border: $border-default;
+  border-radius: 3px;
+  outline: none;
+}
+
+// Rounded search input
+input[type="search"] {
+  padding: 0 10px;
+  font-size: 16px;
+  border-radius: 20px;
+  // Override content-box in normalize
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+input[type="search"]:focus {
+  text-align: left;
+}
+
+input[type="submit"]:focus,
+input[type="reset"]:focus,
+button:focus {
+  outline: none;
+}
+
+// Allow text area's height to grow larger than a normal input
+textarea {
+  height: auto;
+}
+
+// Style select button to look like part of the Ratchet's style
+select {
+  font-size: 14px;
+  background-color: #f8f8f8;
+}
+
+
+// Input groups (cluster multiple inputs together into a single group)
+// -------------------------------------------------------------------
+
+// Remove spacing, borders, shadows and rounding since it all belongs on the .input-group not the input
+.input-group {
+  background-color: #fff;
+}
+.input-group input,
+.input-group textarea {
+  margin-bottom: 0;
+  background-color: transparent;
+  border-top: 0;
+  border-right: 0;
+  border-left: 0;
+  border-radius: 0;
+  @include box-shadow(none);
+}
+
+// Input groups with labels
+// --------------------------------------------------
+
+// To use labels with input groups, wrap a label and an input in an .input-row
+.input-row {
+  overflow: hidden;
+  height: 44px; // Matches the height of inputs.
+  border-bottom: $border-default;
+}
+
+// Labels get floated left with a set percentage width
+.input-row label {
+  float: left;
+  width: 30%;
+  padding: 12px 15px;
+  font-family: $font-family-default;
+}
+
+.input-row .div-text {
+  padding: 12px 15px 0;
+  font-family: $font-family-default;
+}
+
+// Actual inputs float to right of labels and also have a set percentage
+.input-row input, .input-row div.select {
+  float: right;
+  width: 70%;
+  padding-left: 0;
+  margin-bottom: 0;
+  border: 0;
+}
+.input-row div.select {
+  padding-top: 4px;
+  padding-right: 10px;
+}
+
+.input-more {
+  height: auto;
+
+  select {
+    margin-bottom: 5px;
+  }
+}
+
+.input-row .amount {
+  float: left; 
+  width: 56px;
+  border: 1px solid #ddd;
+  margin: 6px 5px 0 0;
+  padding-left: 5px;
+  padding-right:6px; 
+  color: #00360e;
+  height: 32px;
+  border-left-width: 2px;
+  
+}

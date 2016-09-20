@@ -1,0 +1,25 @@
+<notempty name="data">
+<div class="wap_index_1x4">
+      <div id="small_slider" class="swipeSlide">
+        <notempty name="data.1">
+        <div class="dot">
+          <volist name="data" id="vo" mod="3">
+            <eq name="mod" value="0"><span></eq>
+            <eq name="mod" value="2"></span></eq>
+          </volist>
+         </div>
+        </notempty>
+        <ul class="clearfix">
+          <volist name="data" id="vo" mod="3">
+            <eq name="mod" value="0"><li class="flex-box"></eq>
+            <div>
+                <h3>{$vo.title}</h3>
+                <p>{$vo.remark}</p>
+                <a href="{$vo.link}" title="{$vo.title}"><img src="{$vo['image_src']}"></a>
+            </div>
+            <eq name="mod" value="2"></li></eq>
+          </volist>
+        </ul>
+      </div>
+</div>
+</notempty>

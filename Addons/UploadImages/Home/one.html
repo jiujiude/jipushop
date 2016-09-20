@@ -1,0 +1,84 @@
+<php>$rand_key = time() . mt_rand(10000,99999);</php>
+<input type="file" id="upload_picture_{$rand_key}" class="hide">
+<div class="upload-img-box J-uib-{$rand_key}">
+  <div style="display: none;"></div><!-- 新增一个隐藏层，解决无图片的时候初始化图片拖拽排序插件失败的问题 -->
+  <input type="hidden" name="{$param.name}" value="{$param.path}" class="icon" />
+  <notempty name="param.path">
+    <div class="upload-pre-item J_item_{$rand_key}" id="item_{$vo['id']}_{$rand_key}">
+      <img src="{$param.path}"/>
+      <span class='btn-close delPic' title='删除图片' data-rand='{$rand_key}'></span>
+    </div>
+  </notempty>
+</div>
+<script type="text/javascript">
+  seajs.use('jquery.uploadify', function(uploadify){
+    //限制传单张
+    var uploadify_{$rand_key} = function(){
+      /* 初始化上传插件 */
+      $("#upload_picture_{$rand_key}").uploadify({
+        "height": 90,
+        "swf": "__JS__/plugin/uploadify/uploadify.swf?ver=" + Math.random(),
+        "fileObjName": "download",
+        "buttonText": "",
+        "uploader": "{:U('File/uploadPicture',array('session_id'=>session_id()))}",
+        "width": 90,
+        'removeTimeout': 1,
+        'fileTypeExts': '*.jpg; *.png; *.gif;',
+        "onUploadSuccess": uploadPicture{$rand_key},
+        "simUploadLimit": 1,
+        "multi": false,
+        'onFallback': function(){
+          alert('未检测到兼容版本的Flash');
+        }
+      });
+      if($(".J_item_{$rand_key}").size() > 0){
+        $("#upload_picture_{$rand_key}").hide();
+      }
+    }
+
+    var upload_init_{$rand_key} = function(){
+      if(typeof SWFUpload !== 'undefined'){
+        window.clearInterval(upload_timer{$rand_key});
+        uploadify_{$rand_key}();
+      }
+    }
+    upload_timer{$rand_key} = window.setInterval(upload_init_{$rand_key},1e2);
+    upload_init_{$rand_key}();
+
+    function uploadPicture{$rand_key}(file, data){
+
+      var data = $.parseJSON(data);
+      var src = '';
+      if(data.status){
+        //创建<div class="upload-pre-item">
+        var upload_item = $("<div class='upload-pre-item' id='item_" + data.id + "_{$rand_key}'></div>");
+        //创建img input close-btn
+        $(".J-uib-{$rand_key} input[name='{$param.name}']").val(data.id);
+        src = data.url || '__ROOT__' + data.path;
+        var upload_img = $("<img src=" + src + " data-id=" + data.id + ">");
+        var img_del = $("<span class='btn-close delPic' title='删除图片' data-rand='{$rand_key}'></span>");
+
+        //加入到upload-img-box
+        upload_item.append(upload_img);
+        upload_item.append(img_del);
+        $('.J-uib-{$rand_key}').append(upload_item);
+        
+        $("#upload_picture_{$rand_key}").hide();
+        $('.uploadify-queue').html('');
+      }else{
+        updateAlert(data.info);
+        setTimeout(function(){
+          $('#top-alert').find('button').click();
+          $(that).removeClass('disabled').prop('disabled', false);
+        }, 1500);
+      }
+
+    }
+    $(document).on("click",".delPic",function(){
+      $("#upload_picture_"+ $(this).data('rand')).show();
+      $(".J-uib-"+ $(this).data('rand') +" input[name='{$param.name}']").val('');
+      $(this).parent().remove();
+    });
+  });
+
+</script>

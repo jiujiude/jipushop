@@ -1,0 +1,61 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>新增红包</h2>
+  </div>
+  
+  <form action="{:U('add')}" method="post" class="form-horizontal">
+    <div class="form-item">
+      <label class="item-label">红包类型<span class="check-tips">（群抢红包金额随机，普通红包金额固定）</span></label>
+      <div class="controls">
+        <label for="type_multi">
+          <input type="radio" name="type" class="radio" id="type_multi" value="multi" checked="checked" onclick="redpacket.init()"> 群抢红包
+        </label>
+        <label for="type_single">
+          <input type="radio" name="type" class="radio" id="type_single" value="single" onclick="redpacket.init()"> 普通红包
+        </label>
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">红包数量</label>
+      <div class="controls">
+        <input type="text" class="text input-mid" name="quantity" onkeyup="redpacket.changeAmount()">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label" id="J_redpacket_amount">总金额<span class="check-tips">（每人可领1个，金额随机）</span></label>
+      <div class="controls">
+        <input type="text" class="text input-mid" name="amount" onkeyup="redpacket.changeAmount()">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label" id="J_redpacket_limit_money_title">最大领取金额</label>
+      <div class="controls">
+        <input type="text" class="text input-mid" name="limit_money" placeholder="不填为不限制！">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">祝福语</label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="msg" placeholder="新年快乐，恭喜发财！">
+        <input type="hidden" class="text input-large" name="msg_def" value="新年快乐，恭喜发财！"> 
+      </div>
+    </div>
+    <div class="form-item">
+      <button class="btn ajax-post submit-btn" type="submit" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+  </form>
+</block>
+
+<block name="script">
+  <script>
+    $(function(){
+      redpacket.init();
+      //导航高亮
+      highlight_subnav("{:U('Redpacket/index')}");
+    });
+  </script>
+</block>

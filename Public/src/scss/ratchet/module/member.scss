@@ -1,0 +1,62 @@
+/**********会员模块**********/
+/*收货地址列表*/
+.receiver-list {
+
+  > .item {
+    position: relative;
+    border-bottom: $border-default;
+
+    > .addr-body {
+      display: block;
+      margin-right: 40px;
+      padding: 10px;
+      border-right: $border-default;
+
+      > .name {
+        font-size: 14px;
+        line-height: 24px;
+      }
+    }
+
+    > .addr-act {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 40px;
+      height: 50%;
+
+      > .icon {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        display: inline-block;
+        margin-top: -10px;
+        color: #999;
+      }
+    }
+
+    > .addr-edit {
+
+      &.only-edit {
+        height: 100%;
+      }
+    }
+
+    > .addr-remove {
+      top: 50%;
+    }
+  }
+}
+
+/*邀请链接*/
+.invite,.invite-t,.invite-b{
+  overflow: hidden;
+}
+.invite{
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px dotted #eee;
+}
+.invite-t{
+  margin-bottom: 5px;
+}

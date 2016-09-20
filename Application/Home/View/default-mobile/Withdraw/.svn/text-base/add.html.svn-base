@@ -1,0 +1,41 @@
+<extend name="Base/common"/>
+
+<block name="body">
+  <include file="head" />
+  <form action="{:U('Withdraw/update')}" class="padding-top" method="post">
+    
+    <div class="input-row">
+      <label>提现账户</label>
+      <div class="select">
+      <select name="account_id">
+        <option value="">请选择</option>
+        <volist name="lists" id="vo">
+          <option value="{$vo.id}">
+            <eq name="vo.type" value="alipay">
+              {$vo.type|get_user_account_text}
+            <else />
+              {:C('BANK_LISTS.'.$vo['bankname'])}
+            </eq>
+            {$vo.name} {$vo.account}
+          </option>
+        </volist>
+      </select>
+      </div>
+    </div>
+    <div class="input-row">
+      <label class="text-right">可提现金额</label>
+      <div class="div-text"><span class="text-danger">{$withdraw_finance} </span> 元</div>
+    </div>
+    <div class="input-row">
+      <label class="text-right">提现金额</label>
+      <input type="tel" name="amount" value="" class="amount">
+      <div class="div-text">元</div>
+    </div>
+    <div class="control-action">
+      <button class="btn btn-positive btn-block" <if condition="C('SDP_WITHDRAW_LIMIT') gt $withdraw_finance">disabled</if>>申请提现</button>
+    </div>
+    <p class="content-padded text-info">
+      提现条件：最少{:C('SDP_WITHDRAW_LIMIT')}元，且必须是50的倍数
+    </p>
+  </form>
+</block>

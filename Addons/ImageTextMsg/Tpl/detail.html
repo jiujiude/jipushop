@@ -1,0 +1,13 @@
+<notempty name="itm_list">
+<volist name="itm_list" id="vo">
+  <li>
+    <div class="li_title" data-value="{$vo.key}">{$vo.title}</div>
+    <notempty name="vo.img"><div class="li_img"><img src="{$vo.img}"></div></notempty>
+    <a href="javascript:itm.removeItm('{$vo.key}');" class="icon icon-close" title="移除"></a>
+  </li>
+</volist>
+  <else/>
+  <p class="empty">
+    没有数据
+  </p>
+</notempty>

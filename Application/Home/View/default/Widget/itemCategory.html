@@ -1,0 +1,25 @@
+<notempty name="list">
+  <ul id="J_item_category" class="nav-category-list">
+    <volist name="list" id="vo">
+      <li class="item <eq name="key" value="0">first</eq>">
+        <a href="{:U('Item/search', array('cid' => $vo['id']))}"><i class="icon icon-{$vo.ename}"></i>{$vo.name}<i class="icon icon-arrow-right"></i></a>
+        <notempty name="vo._">
+          <div class="sub-list">
+            <volist name="vo._" id="vl">
+              <a href="{:U('Item/search', array('cid' => $vl['id']))}" class="subname" args="id={$vl['id']}">{$vl.name}<notempty name="vl._"><i class="arrow"></i></notempty></a>
+              <notempty name="vl._">
+                <div class="children" id="children_{$vl.id}">
+                  <ul class="children-list">
+                    <volist name="vl._" id="vt">
+                      <li><a href="{:U('Item/search', array('cid' => $vt['id']))}" ><span class="text">{$vt.name}</span></a></li>
+                    </volist>
+                  </ul>
+                </div>
+              </notempty>
+            </volist>
+          </div> 
+        </notempty>
+      </li>
+    </volist>
+  </ul>
+</notempty>

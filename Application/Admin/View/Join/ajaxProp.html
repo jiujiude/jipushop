@@ -1,0 +1,523 @@
+<notempty name="property_all">
+	<eq name="type" value="specification">
+	<script type="text/javascript" language="javascript" src="__JS__/jquery/jquery.form.js"></script>
+	<script language="JavaScript">
+	// 规格组合对应的价格，数量值数组
+	var spc_data_ = null;
+	<notempty name="spc_data">
+		spc_data_ = $.parseJSON('{$spc_data}');
+	</notempty>
+	var spc_data = new Array();
+
+	if(!$.isEmptyObject(spc_data_)){
+		$.each(spc_data_,function(k,spec){
+			spc_data[spec.spc_code] = new Array();
+			spc_data[spec.spc_code]['quantity'] = spec.quantity;
+			spc_data[spec.spc_code]['first_price'] = spec.first_price;
+			spc_data[spec.spc_code]['join_price'] = spec.join_price;
+		});
+	}
+
+	// 获取对象的长度，需要指定上下文 this
+	$.extend({
+		Object:{
+			count:function(p){
+				p = p || false;
+				return $.map(this, function(o){
+					if(!p) return o;
+					return true;
+				}).length;
+			}
+		}
+	});
+
+
+	// 利用Jquery from 实现ajax上传颜色图片
+
+	//根据用户所选规格生成“规格-价格-数量”组合表格
+	function spec_combi(sp_num, spc_a, spc_b, spc_c, spc_d, spc_e, spc_f , spc_data){		
+		var tbody  = '';
+
+		if($.isEmptyObject(spc_a)) return "";
+
+		//计算已选择的规格属性个数
+		var spc_a_num = $.Object.count.call(spc_a);
+		var spc_b_num = $.Object.count.call(spc_b);
+		var spc_c_num = $.Object.count.call(spc_c);
+		var spc_d_num = $.Object.count.call(spc_d);
+		var spc_e_num = $.Object.count.call(spc_e);
+		var spc_f_num = $.Object.count.call(spc_f);
+
+		var spc_price = '';
+		var spc_quantity = '';
+		var first_price = '0.00';
+		var join_price = '0.00';
+
+		if(sp_num==1){
+			$.each(spc_a,function(k1,v1){
+				if(spc_data){
+					if(spc_data[k1]){
+						spc_price = spc_data[k1]['price'];
+						spc_quantity = spc_data[k1]['quantity'];
+						first_price = spc_data[k1]['first_price'];
+						join_price = spc_data[k1]['join_price'];
+					}
+				}
+				tbody += '<tr>'
+						  + ('<td><span>' + v1 + '</span></td>')
+						  + '<td class="spc_quantity"><input name="spc_quantity['+ k1 + ']" type="text" value="'+ spc_quantity +'" /></td>'
+						  + '<td class="spc_tsc"><input name="first_pri['+ k1 +']" type="text" value="'+first_price+'" /></td>'
+						  + '<td class="spc_tsc"><input name="join_pri['+ k1 + ']" type="text" value="'+join_price+'" /></td>'
+						  //+ '<td class="batch"><i class="sku-batch"></i></td>'
+						  + '</tr>';
+			});
+		}
+
+		if(sp_num==2){
+			$.each(spc_a,function(k1,v1){
+				var i = 0;
+				$.each(spc_b,function(k2,v2){
+					if(spc_data){
+						if(spc_data[k1 + '-' + k2]){
+							spc_price = spc_data[k1 + '-' + k2]['price'];
+							spc_quantity = spc_data[k1 + '-' + k2]['quantity'];
+							first_price = spc_data[k1 + '-' + k2]['first_price'];
+							join_price = spc_data[k1 + '-' + k2]['join_price'];
+						}
+					}
+					tbody += '<tr>'
+						  + ((i==0) ? '<td rowspan=' + spc_b_num + '><span>' + v1 + '</span></td>' : '')
+						  + '<td><span>' + v2 + '</span></td>'
+						  + '<td class="spc_quantity"><input name="spc_quantity['+ k1 + '-' + k2 + ']" type="text" value="'+ spc_quantity +'" /></td>'
+						  + '<td class="spc_tsc"><input name="first_pri['+ k1 + '-' + k2 + ']" type="text" value="'+first_price+'" /></td>'
+						  + '<td class="spc_tsc"><input name="join_pri['+ k1 + '-' + k2 + ']" type="text" value="'+join_price+'" /></td>'
+						 // + '<td class="batch"><i class="sku-batch sku-batch-enable"></i></td>'
+						  + '</tr>';
+					++i;
+				});
+			});
+		}
+
+		if(sp_num==3){
+			$.each(spc_a,function(k1,v1){
+				var i = 0;
+				$.each(spc_b,function(k2,v2){
+					var j = 0;
+					$.each(spc_c,function(k3,v3){
+						if(spc_data){
+							if(spc_data[k1 + '-' + k2 + '-' + k3]){
+								spc_price = spc_data[k1 + '-' + k2 + '-' + k3]['price'];
+								spc_quantity = spc_data[k1 + '-' + k2 + '-' + k3]['quantity'];
+								first_price = spc_data[k1 + '-' + k2 + '-' + k3]['first_price'];
+								join_price = spc_data[k1 + '-' + k2 + '-' + k3]['join_price'];
+							}
+						}
+						tbody += '<tr>'
+							  + ((i==0) ? '<td rowspan=' + (spc_b_num * spc_c_num) + '><span>' + v1 + '</span></td>' : '')
+							  + ((j==0) ? '<td rowspan=' + spc_c_num + '><span>' + v2 + '</span></td>' : '')
+							  + '<td><span>' + v3 + '</span></td>'
+							  + '<td class="spc_quantity"><input name="spc_quantity['+ k1 + '-' + k2 + '-' + k3 + ']" type="text" value="'+ spc_quantity +'" /></td>'
+							  + '<td class="spc_tsc"><input name="first_pri['+ k1 + '-' + k2 + '-' + k3 + ']" type="text" value="'+first_price+'" /></td>'
+							  + '<td class="spc_tsc"><input name="join_pri['+ k1 + '-' + k2 + '-' + k3 + ']" type="text" value="'+join_price+'" /></td>'
+							  //+ '<td class="batch"><i class="sku-batch sku-batch-enable"></i></td>'
+							  + '</tr>';
+						++i;
+						++j;
+					});
+				});
+			});
+		}
+
+		if(sp_num==4){
+			$.each(spc_a,function(k1,v1){
+				var i = 0;
+				$.each(spc_b,function(k2,v2){
+					var j = 0;
+					$.each(spc_c,function(k3,v3){
+						var k = 0;
+						$.each(spc_d,function(k4,v4){
+							if(spc_data){
+								if(spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4]){
+									spc_price = spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4]['price'];
+									spc_quantity = spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4]['quantity'];
+									first_price = spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4]['first_price'];
+									join_price = spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4]['join_price'];
+								}
+							}
+							tbody += '<tr>'
+								  + ((i==0) ? '<td rowspan=' + (spc_b_num * spc_c_num * spc_d_num) + '><span>' + v1 + '</span></td>' : '')
+								  + ((j==0) ? '<td rowspan=' + (spc_c_num * spc_d_num) + '><span>' + v2 + '</span></td>' : '')
+								  + ((k==0) ? '<td rowspan=' + spc_d_num + '><span>' + v3 + '</span></td>' : '')
+								  + '<td><span>' + v4 + '</span></td>'
+								  + '<td class="spc_quantity"><input name="spc_quantity['+ k1 + '-' + k2 + '-' + k3 + '-' + k4 + ']" type="text" value="'+ spc_quantity +'" /></td>'
+								  + '<td class="spc_tsc"><input name="first_pri['+ k1 + '-' + k2 + '-' + k3 + '-' + k4 + ']" type="text" value="'+first_price+'" /></td>'
+								  + '<td class="spc_tsc"><input name="join_pri['+ k1 + '-' + k2 + '-' + k3 + '-' + k4 + ']" type="text" value="'+join_price+'" /></td>'
+								  //+ '<td class="batch"><i class="sku-batch sku-batch-enable"></i></td>'
+								  + '</tr>';
+							++i;
+							++j;
+							++k;
+						});
+					});
+				});
+			});
+		}
+
+		if(sp_num==5){
+			$.each(spc_a,function(k1,v1){
+				var i = 0;
+				$.each(spc_b,function(k2,v2){
+					var j = 0;
+					$.each(spc_c,function(k3,v3){
+						var k = 0;
+						$.each(spc_d,function(k4,v4){
+							var m = 0;
+							$.each(spc_e,function(k5,v5){
+								if(spc_data){
+									if(spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5]){
+										spc_price = spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5]['price'];
+										spc_quantity = spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5]['quantity'];
+										first_price = spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5]['first_price'];
+										join_price = spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5]['join_price'];
+									}
+								}
+								tbody += '<tr>'
+									  + ((i==0) ? '<td rowspan=' + (spc_b_num * spc_c_num * spc_d_num * spc_e_num) + '><span>' + v1 + '</span></td>' : '')
+									  + ((j==0) ? '<td rowspan=' + (spc_c_num * spc_d_num * spc_e_num) + '><span>' + v2 + '</span></td>' : '')
+									  + ((k==0) ? '<td rowspan=' + (spc_d_num * spc_e_num) + '><span>' + v3 + '</span></td>' : '')
+									  + ((m==0) ? '<td rowspan=' + spc_e_num + '><span>' + v4 + '</span></td>' : '')
+									  + '<td><span>' + v5 + '</span></td>'
+									  + '<td class="spc_quantity"><input name="spc_quantity['+ k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 + ']" type="text" value="'+ spc_price +'" /></td>'
+									  + '<td class="spc_tsc"><input name="first_pri['+ k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 + ']" type="text" value="'+first_price+'" /></td>'
+									  + '<td class="spc_tsc"><input name="join_pri['+ k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 +']" type="text" value="'+join_price+'" /></td>'
+									  //+ '<td class="batch"><i class="sku-batch sku-batch-enable"></i></td>'
+									  + '</tr>';
+								++i;
+								++j;
+								++k;
+								++m;
+							});
+						});
+					});
+				});
+			});
+		}
+		
+		
+		if(sp_num==6){
+			$.each(spc_a,function(k1,v1){
+				var i = 0;
+				$.each(spc_b,function(k2,v2){
+					var j = 0;
+					$.each(spc_c,function(k3,v3){
+						var k = 0;
+						$.each(spc_d,function(k4,v4){
+							var m = 0;
+							$.each(spc_e,function(k5,v5){
+								var l = 0;
+								$.each(spc_f,function(k6,v6){
+									if(spc_data){
+										if(spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 + '-' + k6]){
+											spc_price = spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 + '-' + k6]['price'];
+											spc_quantity = spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 + '-' + k6]['quantity'];
+											first_price = spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 + '-' + k6]['first_price'];
+											join_price = spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 + '-' + k6]['join_price'];
+										}
+									}
+									tbody += '<tr>'
+										  + ((i==0) ? '<td rowspan=' + (spc_b_num * spc_c_num * spc_d_num * spc_e_num * spc_f_num) + '><span>' + v1 + '</span></td>' : '')
+										  + ((j==0) ? '<td rowspan=' + (spc_c_num * spc_d_num * spc_e_num * spc_f_num) + '><span>' + v2 + '</span></td>' : '')
+										  + ((k==0) ? '<td rowspan=' + (spc_d_num * spc_e_num * spc_f_num) + '><span>' + v3 + '</span></td>' : '')
+										  + ((m==0) ? '<td rowspan=' + (spc_e_num * spc_f_num) + '><span>' + v4 + '</span></td>' : '')
+										  + ((l==0) ? '<td rowspan=' + spc_f_num + '><span>' + v5 + '</span></td>' : '')
+										  + '<td><span>' + v6 + '</span></td>'
+										  + '<td class="spc_quantity"><input name="spc_quantity['+ k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 + '-' + k6 +']" type="text" value="'+ spc_price +'" /></td>'
+										  + '<td class="spc_tsc"><input name="first_pri['+ k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 + '-' + k6 +']" type="text" value="'+first_price+'" /></td>'
+										  + '<td class="spc_tsc"><input name="join_pri['+ k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 + '-' + k6 +']" type="text" value="'+join_price+'" /></td>'
+										  //+ '<td class="batch"><i class="sku-batch sku-batch-enable"></i></td>'
+										  + '</tr>';
+									++i;
+									++j;
+									++k;
+									++m;
+									++l;
+								});
+							});
+						});
+					});
+				});
+			});
+		}
+
+		//替换数据
+		$('.specification-table tbody').html(tbody);
+		$('.specification-wrapper').show();
+	}
+
+	var sp_num = $('.label-spc').size();	// 当前所选分类绑定的规格属性数量
+
+	$().ready(function(){
+		//根据用户选择的规格生成规格乘积组合
+		$('.spc_checkbox').click(function(){
+			chooseSpec();
+		});
+
+		//根据数据表中输出的规格生成规格乘积组合
+		$('.picture-config-table tbody').empty();
+		$('.picture-config-wrapper').hide();
+		chooseSpec();
+		
+	});
+
+	//根据用户选择的规格生成规格乘积组合，最多支持六组规格
+	function chooseSpec(){
+		var spc_num = 0;	//当前用户已选择的规格项数量
+		
+		$spc_1 = $('.spc_1:checked');
+		$spc_2 = $('.spc_2:checked');
+		$spc_3 = $('.spc_3:checked');
+		$spc_4 = $('.spc_4:checked');
+		$spc_5 = $('.spc_5:checked');
+		$spc_6 = $('.spc_6:checked');
+
+		var spc_a = {};
+		var spc_b = {};
+		var spc_c = {};
+		var spc_d = {};
+		var spc_e = {};
+		var spc_f = {};
+
+		var spc_1={};
+		var spc_2={};
+		var spc_3={};
+		var spc_4={};
+		var spc_5={};
+		var spc_6={};
+
+		var table_head="";
+
+		//计算选择的规格数_S
+		if($spc_1.length){
+			spc_num++;
+			$.each($spc_1,function(k,spec){
+				$code = $(spec).val();
+				$name = $(spec).attr('title');
+				eval("spc_"+spc_num+"[$code]=$name;")
+			});
+			table_head+="<th><span>"+$spc_1.parent().parent().parent().children('label').html()+"</span></th>";
+		}
+
+		if($spc_2.length){
+			spc_num++;
+			$.each($spc_2,function(k,spec){
+				$code = $(spec).val();
+				$name = $(spec).attr('title');
+				eval("spc_"+spc_num+"[$code]=$name;")
+			});
+			table_head+="<th><span>"+$spc_2.parent().parent().parent().children('label').html()+"</span></th>";
+		}
+
+		if($spc_3.length){
+			spc_num++;
+			$.each($spc_3,function(k,spec){
+				$code = $(spec).val();
+				$name = $(spec).attr('title');
+				eval("spc_"+spc_num+"[$code]=$name;")
+			});
+			table_head+="<th><span>"+$spc_3.parent().parent().parent().children('label').html()+"</span></th>";
+		}
+
+		if($spc_4.length){
+			spc_num++;
+			$.each($spc_4,function(k,spec){
+				$code = $(spec).val();
+				$name = $(spec).attr('title');
+				eval("spc_"+spc_num+"[$code]=$name;")
+			});
+			table_head+="<th><span>"+$spc_4.parent().parent().parent().children('label').html()+"</span></th>";
+		}
+
+		if($spc_5.length){
+			spc_num++;
+			$.each($spc_5,function(k,spec){
+				$code = $(spec).val();
+				$name = $(spec).attr('title');
+				eval("spc_"+spc_num+"[$code]=$name;")
+			});
+			table_head+="<th><span>"+$spc_5.parent().parent().parent().children('label').html()+"</span></th>";
+		}
+		
+		if($spc_6.length){
+			spc_num++;
+			$.each($spc_6,function(k,spec){
+				$code = $(spec).val();
+				$name = $(spec).attr('title');
+				eval("spc_"+spc_num+"[$code]=$name;")
+			});
+			table_head+="<th><span>"+$spc_6.parent().parent().parent().children('label').html()+"</span></th>";
+		}
+		if(spc_num > 0){
+			$('.specification-table thead').html(table_head+"<th><span>库存</span></th><th><span>开团价</span></th><th><span>参团价</span></th>");
+			spec_combi(spc_num, spc_1, spc_2, spc_3, spc_4, spc_5, spc_6, spc_data);
+		}else{
+			$('.specification-table tbody').empty();
+			$('.specification-wrapper').hide();
+		}
+	}
+
+	//校验价格，数量文本框输入合法性
+	$(function () {
+		$(".spc_price input").keyup(function () {
+			//如果输入非价格格式数据，则替换为''
+			var reg = /[0-9]+(\.[0-9]+)?/; 
+			if(!reg.test(this.value)){
+				 this.value = '';
+			}
+		})
+
+		$(".spc_quantity input").keyup(function () {
+			//如果输入非数字，则替换为''
+			this.value = this.value.replace(/[^\d]/g, '');
+		})
+	});
+	</script>
+	</eq>
+	<volist name="property_all" id="vo" key="k">
+		<div class="form-item">
+			<eq name="type" value="specification">
+				<label class="item-label label-spc">{$vo.property.cname}</label>
+			<else/>
+				<label class="item-label">{$vo.property.cname}</label>
+			</eq>
+			<switch name="vo.property.formtype">
+
+				<case value="input"><!-- 文本框 -->
+					<div class="controls">
+						<input type="input" id="property-{$vo.property.ename}-{$vo.property.id}" name="property[{$vo.property.id}][{$vo.property.ename}]" class="text input-large" value="{$vo.value}" />
+					</div>
+				</case>
+
+				<case value="textarea"><!-- 文本域 -->
+					<div class="controls">
+						<label class="textarea input-large">
+							<textarea id="property-{$vo.property.ename}-{$vo.property.id}" name="property[{$vo.property.id}][{$vo.property.ename}]">{$vo.value}</textarea>
+						</label>
+					</div>
+				</case>
+
+				<case value="select"><!-- 下拉列表 -->
+					<div class="controls">
+						<select id="property-{$vo.property.ename}-{$vo.property.id}" name="property[{$vo.property.id}][{$vo.property.ename}]">
+						<volist name="vo.option" id="option">
+							<option value="{$option.code}" <eq name="option.code" value="$vo.value">selected</eq>>{$option.option}</option>
+						</volist>
+						</select>
+					</div>
+				</case>
+
+				<case value="radio"><!-- 单选框 -->
+					<volist name="vo.option" id="option">
+					<div class="controls">
+					  <input type="radio" id="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}" name="property[{$vo.property.id}][{$vo.property.ename}][{$option.code}]" value="{$option.code}" <eq name="option.code" value="$vo.value">checked="checked"</eq> />
+					  <label for="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}">{$option.option}</label>
+					 </div>
+				  </volist>
+				</case>
+
+				<case value="checkbox"><!-- 复选框 -->
+					<div class="controls">
+						<volist name="vo.option" id="option">
+						<label class="checkbox sku-item">
+							<eq name="type" value="specification">
+								<input type="checkbox" id="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}" name="property[{$vo.property.id}][{$vo.property.ename}][{$option.code}]" class="spc_checkbox spc_{$k}" value="{$option.code}" title="{$option.option}" <in name="option.code" value="$vo.value">checked="checked"</in> />
+							<else/>
+								<input type="checkbox" id="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}" name="property[{$vo.property.id}][{$vo.property.ename}][{$option.code}]" value="{$option.code}" <in name="option.code" value="$vo.value">checked="checked"</in> />
+							</eq>
+							<label class="label-name" for="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}">{$option.option}</label>
+						</label>
+						</volist>
+					</div>
+				</case>
+
+				<case value="color"><!-- 颜色选择 -->
+					<div class="controls sku-box">
+						<volist name="vo.option" id="option">
+						<label class="checkbox sku-item">
+							<eq name="type" value="specification">
+								<input type="checkbox" id="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}" name="property[{$vo.property.id}][{$vo.property.ename}][{$option.code}]" title="{$option.option}" code="{$option.code}" color="{$option.color}" pic="{$option.pic|get_cover='path'}" prpid="{$vo.property.id}" item_id="{$item_id}" class="spc_checkbox picture_config spc_{$k}" value="{$option.code}" <in name="option.code" value="$vo.value">checked="checked"</in> />
+							<else/>
+								<input type="checkbox" id="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}" name="property[{$vo.property.id}][{$vo.property.ename}][{$option.code}]" value="{$option.code}" <in name="option.code" value="$vo.value">checked="checked"</in> />
+							</eq>
+              <notempty name="option.pic">
+                <img width="14" height="14" class="pre-img" src="__ROOT__{$option.pic|get_cover='path'}" for="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}" />
+              <else/>
+                <label class="color-lump" style="background-color:{$option.color};" for="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}"></label>
+              </notempty>
+							<label class="label-name" for="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}">{$option.option}</label>
+						</label>
+						</volist>
+					</div>
+				</case>
+
+				<case value="image"><!-- 图片选择 -->
+					<div class="controls sku-box">
+						<volist name="vo.option" id="option">
+						<label class="checkbox sku-item">
+							<eq name="type" value="specification">
+								<input type="checkbox" id="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}" name="property[{$vo.property.id}][{$vo.property.ename}][{$option.code}]" title="{$option.option}" prpid="{$vo.property.id}" class="spc_checkbox spc_{$k}" value="{$option.code}" <in name="option.code" value="$vo.value">checked="checked"</in> />
+							<else/>
+								<input type="checkbox" id="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}" name="property[{$vo.property.id}][{$vo.property.ename}][{$option.code}]" value="{$option.code}" <in name="option.code" value="$vo.value">checked="checked"</in> />
+							</eq>
+							<img width="24" height="24" class="pre-img" src="__ROOT__{$option.pic|get_cover='path'}" for="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}" />
+							<label class="label-name" for="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}">{$option.option}</label>
+						</label>
+						</volist>
+					</div>
+				</case>
+
+				<default />
+			</switch>
+		</div>
+	</volist>
+
+	<eq name="type" value="specification">
+		<!-- 规格组合：价格，数量配置表格 -->
+		<div class="specification-wrapper">
+    	<h4>价格与库存配置</h4>
+			<table cellspacing="1" cellpadding="2" border="0" class="specification-table dynamic-table">
+				<thead>
+					<tr>
+						<volist name="property_all" id="vo">
+						<th><span>{$vo.property.cname}</span></th>
+						</volist>
+						<th><span>价格</span></th>
+						<th><span>库存</span></th>
+						<!--<th><span>商品编码</span></th>
+						<th><span>批量操作</span></th>-->
+					</tr>
+				</thead>
+				<tbody>
+					<!-- 这里是规格组合数据 -->
+				</tbody>
+			</table>
+		</div>
+
+		<!-- 颜色图片配置表格 -->
+		<div class="picture-config-wrapper">
+    	<h4>颜色图片配置（图片尺寸：800px * 800px）</h4>
+			<table cellspacing="1" cellpadding="2" border="0" class="picture-config-table dynamic-table">
+				<thead>
+					<tr>
+						<th class="color">颜色分类</th>
+						<th class="pic">颜色图片</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- 这里是颜色图片配置数据 -->
+				</tbody>
+			</table>
+		</div>
+	</eq>
+<else />
+	<p>当前分类尚未绑定规格！</p>
+</notempty>

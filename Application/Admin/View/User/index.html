@@ -1,0 +1,134 @@
+<extend name="Public/base" />
+
+<block name="body">
+  <!-- 标题栏 -->
+  <div class="main-title">
+    <h2>用户列表({$_total})</h2>
+  </div>
+  <div class="cf">
+    <div class="fl">
+      <a class="btn" href="{:U('User/add')}">新 增</a>
+      <button class="btn ajax-post" url="{:U('User/changeStatus',array('method'=>'resumeUser'))}" target-form="ids">启 用</button>
+      <button class="btn ajax-post" url="{:U('User/changeStatus',array('method'=>'forbidUser'))}" target-form="ids">禁 用</button>
+      <button class="btn ajax-post confirm" url="{:U('User/changeStatus',array('method'=>'deleteUser'))}" target-form="ids">删 除</button>
+    </div>
+
+    <!-- 高级搜索 -->
+    <div class="search-form fr cf">
+      <div class="sleft">
+        <input type="text" name="keyword" class="search-input" value="{:I('get.keyword')}" placeholder="ID、用户名、昵称、手机">
+        <a class="sch-btn" href="javascript:;" id="search" url="{:U('index')}"><i class="btn-search"></i></a>
+      </div>
+    </div>
+  </div>
+    <!-- 数据列表 -->
+  <div class="data-table table-striped">
+    <table>
+      <thead>
+        <tr>
+          <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+          <th><a href="{:U('index?_field=uid&_order='.$_order)}" title="按UID排序">UID{$_order_icon.uid}{$_order_icon_show}</a></th>
+          <!-- <th>用户名</th>
+          <th>会员等级</th>-->
+          <th width="40">头像</th>
+          <th>昵称</th>
+          <th>手机</th>
+          <th><a href="{:U('index?_field=finance&_order='.$_order)}" title="按账户余额排序">账户余额{$_order_icon.finance}{$_order_icon_show}</a></th>
+          <th><a href="{:U('index?_field=score&_order='.$_order)}" title="按积分排序">积分{$_order_icon.score}{$_order_icon_show}</a></th>
+          <th>注册时间</th>
+          <!-- <th>登录次数</th>
+          <th><a href="{:U('index?_field=last_login_time&_order='.$_order)}" title="按最后登录时间排序">最后登录时间{$_order_icon.last_login_time}{$_order_icon_show}</a></th>-->
+          <!--<th>最后登录IP</th>-->
+          <th>状态</th>
+          <th width="180">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <notempty name="_list">
+          <volist name="_list" id="vo">
+            <tr class="status_trclass_{$vo.status}">
+              <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}" /></td>
+              <td>{$vo.id}</td>
+              <!-- <td>
+                <a href="{:U('User/view?id='.$vo['id'])}">{$vo.username}</a>
+              </td>
+              <td>
+                <if condition="$vo['group_id']">
+                  <a href="{:U('UserGroup/edit?id='.$vo['group_id'])}">{$vo.group_id|get_group_name}</a>
+                <else />
+                  暂无会员等级
+                </if>
+              </td>-->
+              <td>
+                <notempty name="vo.avatar"><img src="{$vo.avatar}" width="22" height="22" style="border-radius: 11px"></notempty>
+              </td>
+              <td>
+                <a href="{:U('User/view?id='.$vo['id'])}" target="_blank">{$vo.id|get_nickname}</a>               
+              </td>
+              <td><a href="http://www.ip138.com:8080/search.asp?action=mobile&mobile={$vo.mobile}" title="查看手机号码来源" target="_blank">{$vo.mobile}</a></td>
+              <td>
+                <span class="text-danger">{$vo.finance}</span> 元
+                <a href="javascript:;" onclick="UI.load('{:U('User/rechangeAdd?uid='.$vo['id'])}');">[充/扣]</a>
+                <!-- <gt name="vo.finance" value="0"><a href="{:U('User/setValue?key=finance&value=0.00&id='.$vo['id'])}" class="confirm ajax-get">[清零]</a></gt>-->
+              </td>
+              <td>
+                <span class="text-danger">{$vo.score}</span> 积分
+                <a href="javascript:;" onclick="UI.load('{:U('User/scoreAdd?uid='.$vo['id'])}');">[充/扣]</a>
+                <!-- <gt name="vo.score" value="0"><a href="{:U('User/setValue?key=score&value=0&id='.$vo['id'])}" class="confirm ajax-get">[清零]</a></gt>-->
+              </td>
+              <!-- <td>{$vo.login}</td>-->
+              <!-- <td><span>{$vo.last_login_time|time_format}</span></td>-->
+              <!--<td><span><a href="http://www.ip138.com/ips138.asp?ip={:long2ip($vo['last_login_ip'])}&action=2" title="查看IP地理位置" target="_blank">{:long2ip($vo['last_login_ip'])}</a></span></td>-->
+              <td>{$vo.reg_time|time_format}</td>
+             <td>{$vo.status_text}</td>
+             <php>if($vo['id'] != 1){</php>
+              <td>
+                <eq name="vo.status" value="1">
+                  <a href="{:U('User/changeStatus?method=forbidUser&id='.$vo['id'])}" class="ajax-get">[禁用]</a>
+                <else/>
+                  <a href="{:U('User/changeStatus?method=resumeUser&id='.$vo['id'])}" class="ajax-get">[启用]</a>
+                </eq>
+                <a href="javascript:;" onclick="UI.load('{:U('User/edit?uid='.$vo['id'])}');">[修改]</a>
+                <a href="{:U('AuthManager/group?uid='.$vo['id'])}" class="authorize">[授权]</a>
+                <a href="{:U('User/changeStatus?method=deleteUser&id='.$vo['id'])}" class="confirm ajax-get">[删除]</a>
+              </td>
+              <php>}</php>
+            </tr>
+          </volist>
+        <else/>
+          <tr><td colspan="12" class="text-center"> aOh! 暂时还没有内容! </td></tr>
+        </notempty>
+      </tbody>
+    </table>
+  </div>
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //搜索功能
+    $("#search").click(function(){
+      var url = $(this).attr('url');
+        var query  = $('.search-form').find('input').serialize();
+        query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g,'');
+        query = query.replace(/^&/g,'');
+        if(url.indexOf('?')>0){
+          url += '&' + query;
+        }else{
+          url += '?' + query;
+        }
+      window.location.href = url;
+    });
+    //回车搜索
+    $(".search-input").keyup(function(e){
+      if(e.keyCode === 13){
+        $("#search").click();
+        return false;
+      }
+    });
+    //导航高亮
+    highlight_subnav("{:U('User/index')}");
+  </script>
+</block>

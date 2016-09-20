@@ -1,0 +1,25 @@
+<extend name="Base/common"/>
+<block name="header">
+  <header class="bar bar-nav">
+    <h1 class="title">{:C('WEB_SITE_TITLE')}</h1>
+  </header>
+</block>
+
+<block name="body">
+  <div class="content-padded jump-msg">
+    <eq name="res.code" value="200">
+    <p class="hd">
+      <i class="icon icon-success"></i>{$res.msg}
+    </p>
+    <else/>
+    <p class="hd">
+      <i class="icon icon-error"></i>{$res.msg|default='非正常的浏览请求！'}
+    </p>
+    </eq>
+  </div>
+  <eq name="res.no_reg" value="1">
+    <div class="control-action mt-lg">
+      <a href="{:U('Member/index')}" class="btn btn-block">立即处理</a>
+    </div>
+  </eq>
+</block>

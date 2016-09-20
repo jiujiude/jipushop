@@ -1,0 +1,21 @@
+<extend name="Base/index"/>
+
+<block name="body">
+  <!-- 首页幻灯 -->
+  {:hook('advertise', array('where' => 'tid = 1 AND status = 1', 'num' => 8, 'tpl' => 'theme1'))}
+  
+  <!-- 首页横幅广告 -->
+  {:hook('advertise', array('where' => 'tid = 2 AND status = 1', 'num' => 6, 'tpl' => 'pc_index_1x4'))}
+  
+  <div class="container">
+    <!-- 商品列表 -->
+    {:W('Item/indexItemList', array(array('trait'=> 2, 'num'=> 24)))}
+  </div>
+</block>
+
+<block name="script">
+  {:hook('noticeMsg')}
+  <script type="text/javascript">
+    seajs.use('index',function(){});
+  </script>
+</block>

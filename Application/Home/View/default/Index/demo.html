@@ -1,0 +1,25 @@
+<extend name="Base/common"/>
+<block name="body">
+  <div class="clearfix coupon">
+      <button  class="btn btn-positive demo">测试 测试</button>
+    <div id="show-list" class="install-database">
+  </div>
+  </div>
+  <script type="text/javascript">
+    var list = document.getElementById('show-list');
+    function showmsg(msg, classname){
+      var li = document.createElement('p'); 
+      li.innerHTML = msg;
+      classname && li.setAttribute('class', classname);
+      list.appendChild(li);
+      document.scrollTop += 30;
+    }
+  </script>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use('coupon');
+
+  </script>
+</block>

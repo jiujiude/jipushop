@@ -1,0 +1,120 @@
+<extend name="Base/category"/>
+
+<block name="body">
+  <div class="row">
+    <div class="col-xs-12">
+      <notempty name="keyword">
+        <div class="page-header">
+          <h3>共找到（<span class="text-danger">{$_total}</span>）件与“<span class="text-danger">{$keyword}</span>”相关的结果<!-- <small>（23）</small> --></h3>
+        </div>
+      </notempty>
+    <ul class="breadcrumb search">
+        <li><a href="{:U('Index/index')}">首页</a></li>
+        <li><a href="{:U('Item/search')}">全部分类</a></li>
+        <notempty name="category">
+        	<foreach name="category" item="vo">
+            <neq name="vo.cname" value=""><li><a href="{:U('Item/search', array('cid' => $vo['cid']))}" target="_self">{$vo['cname']}</a></li></neq>
+            </foreach>
+        </notempty>
+    </ul>
+      <notempty name="category">
+        <lt name="category.level" value="4">
+          <div class="list-filter cate">
+            <dl class="dl-horizontal">
+              <dt>分类：</dt>
+              <foreach name="category" item="vo">
+              <dd class="abc">
+              	<div class="clearfix">
+                <span class="item {$cate_active[$vo['pid']][0]}"><a href="{:U('Item/search', array('cid' => $vo['pid'], 'label' => $label, 'keyword' => $keyword, '_field' => $_field, '_order' => $_order))}">全部</a></span>
+                <foreach name="vo.item" item="val">
+                  <span class="item {$cate_active[$vo['pid']][$val['id']]}"><a href="{:U('Item/search', array('cid' => $val['id'], 'label' => $label, 'keyword' => $keyword, '_field' => $_field, '_order' => $_order))}">{$val.name}</a></span>
+                </foreach>
+                </div>
+                <span class="more">更多</span>
+              </dd>
+              </foreach>
+            </dl>
+          </div>
+          <script>
+          seajs.use('jquery',function($){
+			  $('.list-filter div').each(function(index, element) {
+              	if($(element).height()>60){
+				 $(element).parent().children('.more').show();
+				 $(element).parent().children('.more').click(function(e) {
+                    if($(element).parent().height()>60){
+						$(element).parent().animate({'height':'50px'});
+					}else{
+						$(element).parent().animate({'height':($(element).height()+15)+'px'});
+					}
+                });
+			  	}
+              });
+		  })
+          </script>
+        </lt>
+      </notempty>
+
+      <!-- 排序 -->
+      <div class="list-filter sort">
+        <dl class="dl-horizontal">
+          <dd>
+            <a href="{:U('Item/search', array('cid' => $cid, 'label' => $label, 'keyword' => $keyword, '_field' => 'is_top', '_order' => 'desc'))}" class="{$order_css['active']['is_top']['desc']}">推荐</a>
+            <a href="{:U('Item/search', array('cid' => $cid, 'label' => $label, 'keyword' => $keyword, '_field' => 'viewnum', '_order' => 'desc'))}" class="{$order_css['active']['viewnum']['desc']}">人气</a>
+            <a href="{:U('Item/search', array('cid' => $cid, 'label' => $label, 'keyword' => $keyword, '_field' => 'create_time', '_order' => 'desc'))}" class="{$order_css['active']['create_time']['desc']}">新品</a>
+            <a href="{:U('Item/search', array('cid' => $cid, 'label' => $label, 'keyword' => $keyword, '_field' => 'buynum', '_order' => 'desc'))}" class="{$order_css['active']['buynum']['desc']}">销量</a>
+            <a href="{:U('Item/search', array('cid' => $cid, 'label' => $label, 'keyword' => $keyword, '_field' => 'price', '_order' => 'desc'))}" class="{$order_css['active']['price']['desc']}">价格从高到低</a>
+            <a href="{:U('Item/search', array('cid' => $cid, 'label' => $label, 'keyword' => $keyword, '_field' => 'price', '_order' => 'asc'))}" class="{$order_css['active']['price']['asc']}">价格从低到高</a>
+          </dd>
+        </dl>
+      </div>
+
+      <!-- 商品列表 -->
+      <notempty name="lists">
+        <div class="row item-list" id="J_load_items">
+          <volist name="lists" id="vo">
+            <div class="{$lists_item_default_style} item">
+              <div class="thumbnail">
+                <a href="{:U('Item/detail', array('id' => $vo['id']))}" target="_blank"><img src="__IMG__/img-pai-bg.png" data-url="{:get_image_thumb($vo[cover_path], 400, 400)}" class="pic" alt="{$vo.name}"></a>
+                <div class="caption">
+                  <h5 class="thumbnail-label"><a href="{:U('Item/detail', array('id' => $vo['id']))}"  title="{$vo.name}" alt="{$vo.name}" target="_blank"><!--{:get_short($vo['name'], 13)}-->{$vo['name']}</a></h5>
+                  <div class="thumbnail-info">
+                    <H3 class="text-danger"><em class="yen">&yen;</em> {$vo.price}</H3>
+                    <if condition="C('IS_SHOW_BUYNUM')"><a href="{:U('Item/detail', array('id' => $vo['id']))}" class="btn btn-sm btn-default" target="_blank"><!--i class="icon icon-cart-fill"></i> {$vo.buynum}人购买-->立即购买</a></if>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </volist>
+        </div>
+	  <script>
+      seajs.use(['jquery','jquery.imglazyload'],function($,lz){
+        var path=$('#J_load_items .item')
+        var reloadWindow=function(){
+            if($(window).width()>1600){
+              path.removeClass('col-xs-3');
+              path.addClass('col-xs-2');
+            }else{
+              path.removeClass('col-xs-2');
+              path.addClass('col-xs-3');
+            }
+        }
+        $(window).resize( function(){
+            reloadWindow();
+        });
+        reloadWindow()
+        $.imgLazyLoad({ diff: 100 })
+      })
+      </script>
+        <div class="page">
+          {$_page}
+        </div>
+      <else/>
+        <p class="list-empty">当前分类下暂无商品！<br><a href="{:U('/')}" class="btn btn-positive">去看看别的&gt;</a></p>
+      </notempty>
+    </div>
+  </div>
+</block>
+
+<block name="script">
+{:hook('noticeMsg')}
+</block>

@@ -1,0 +1,48 @@
+<extend name="Base/member"/>
+
+<block name="breadcrumb">
+  <ul class="breadcrumb">
+    <li><a href="{:U('/')}">首页</a></li>
+    <li class="active">修改密码</li>
+  </ul>
+</block>
+
+<block name="body">
+  <div class="user-box">
+    <h3>修改密码</h3>
+    <div class="alert alert-info J_mobile_bind">
+      <p>互联网账号存在被盗风险，建议您定期更改密码以保护账户安全。</p>
+    </div>
+    <form action="__SELF__" id="J_changepwd" class="col-xs-8 form-horizontal" method="post">
+      <div class="form-group">
+        <label for="inputOld" class="col-xs-3 control-label">原密码：</label>
+        <div class="col-xs-6">
+          <input type="password" name="old" id="inputOld" class="form-control" value="" placeholder="请输入原密码" errormsg="密码为6-20位" nullmsg="请输入原密码" datatype="*6-20">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputPassword" class="col-xs-3 control-label">新密码：</label>
+        <div class="col-xs-6">
+          <input type="password" name="password" id="inputPassword" class="form-control" value="" placeholder="请输入新密码" errormsg="密码为6-20位" nullmsg="请输入新密码" datatype="*6-20">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputRePassword" class="col-xs-3 control-label">确认新密码：</label>
+        <div class="col-xs-6">
+          <input type="password" name="repassword" id="inputRePassword" class="form-control" value="" placeholder="请再次输入新密码" recheck="password" errormsg="您两次输入的密码不一致" nullmsg="请再次输入新密码" datatype="*">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-xs-6 col-xs-offset-3">
+          <button type="submit" class="btn btn-large btn-positive">提 交</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use('user');
+  </script>
+</block>

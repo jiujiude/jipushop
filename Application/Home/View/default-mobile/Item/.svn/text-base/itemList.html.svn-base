@@ -1,0 +1,28 @@
+<notempty name="lists">
+  <volist name="lists" id="vo">
+    <php>
+      $param = array('id' => $vo['id']);
+      if($data['secret']){
+        $param['sdp_secret'] = $data['secret'];
+      }
+      $item_path = U('Item/detail', $param);
+    </php>
+    <div class="item Z_item_list" data-href="{$item_path}">
+      <div class="info-box">
+        <a href="{$item_path}"><img src="__IMG__/img-pai-bg.png" data-url="{:get_image_thumb($vo['cover_path'], 400, 400)}" class="lazy" alt="{$vo.name}"></a>
+        <div class="info">
+          <a href="{$item_path}" class="name">{$vo.name}</a>
+          <p class="price">
+            <span class="text-danger"><em class="yen">&yen;</em>{$vo.price}</span>
+            <a href="{:U('Item/detail', array('id' => $vo['id']))}" class="buy-btn"><span>立即购买</span></a>
+            <!--del><em class="yen">&yen;</em>{$vo.mprice}</del>
+            <if condition="C('IS_SHOW_BUYNUM')"><em class="buynum">{$vo.buynum|default=0}人已购买</em></if>-->
+          </p>
+        </div>
+      </div>
+    </div>
+  </volist>
+</notempty>
+<script>
+  C.has_more = '{$_hasmore}';
+</script>

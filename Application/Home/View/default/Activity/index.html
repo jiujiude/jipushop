@@ -1,0 +1,19 @@
+<extend name="Base/common"/>
+
+<block name="body">
+  <div class="activity">
+    <ul class="list">
+      <notempty name="data.list">
+        <volist name="data.list" id="vo">
+          <li>
+            <a href="{:U('Activity/detail', array('id' => $vo['id']))}" title="{$vo.name}" target="_blank"><img src="__ROOT__{$vo.src}" alt="{$vo.name}"></a>
+          </li>
+        </volist>
+      </notempty>
+    </ul>
+  </div>
+</block>
+
+<block name="script">
+  
+</block>

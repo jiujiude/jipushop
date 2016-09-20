@@ -1,0 +1,44 @@
+<extend name="Base/common"/>
+
+
+<block name="body">
+  <!-- 首页幻灯 -->
+  <!--{//:hook('advertise', array('where' => 'tid = 1 AND status = 1', 'num' => 8, 'tpl' => 'theme2'))}-->
+
+  <!-- 首页横幅广告 -->
+  <!--{//:hook('advertise', array('where' => 'tid = 3 AND status = 1', 'num' => 1, 'tpl' => 'theme2'))}-->
+  
+  <!-- 搜索 -->
+   <!--<form action="{:U('Item/search')}" class="content-padded" method="get">-->
+    <!-- <div class="control-group search">-->
+     <!--  <i class="icon icon-search"></i>-->
+     <!--  <input type="search" name="keyword" placeholder="请输入关键词">-->
+    <!-- </div>-->
+   <!--</form>-->
+  
+  <!-- 首页商品分类 -->
+  <!-- {//:W('ItemCategory/category', array(array('where'=>array('is_display'=>'1'),'limit' =>8)))}-->
+
+  <!-- 首页小图广告 -->
+  <!--{//:hook('advertise', array('where' => 'tid = 2 AND status = 1', 'num' => 6, 'tpl' => 'index_1x4'))}-->
+  
+  <!-- 首页商品列表 -->
+  <!--<style>.item-title{display:none;}</style>-->
+  <!--{//:W('Item/indexItemList', array(array('trait'=> 2, 'num'=> 24)))}-->
+   <div>
+     <img src="../Public/Home/default-mobile/images/index/01.png" width="100%" >
+     <a href="/Item/detail/id/1.html?part=index"><img src="../Public/Home/default-mobile/images/index/02.png" width="100%" style="margin-top: -10px;"></a>
+     <img src="../Public/Home/default-mobile/images/index/03.png" width="100%" style="margin-top: -10px;">
+     <a href="/Article/detail/id/2.html?part=index-1"><img src="../Public/Home/default-mobile/images/index/04.png" width="100%" style="margin-top: -10px;"></a>
+     <img src="../Public/Home/default-mobile/images/index/05.png" width="100%" style="margin-top: -10px;">
+   </div>
+
+</block>
+
+<block name="script">
+  <script>
+    seajs.use(['index', 'wechat'], function(index, wechat){
+      wechat.init();
+    });
+  </script>
+</block>

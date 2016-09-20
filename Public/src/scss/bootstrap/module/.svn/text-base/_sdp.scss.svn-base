@@ -1,0 +1,81 @@
+/**
+ * SDP分销模块
+ */
+
+.sdp {
+
+  /*统计信息*/
+  > .info {
+    margin-top: 20px;
+    padding: 20px 0;
+    background-color: #f9f9f9;
+
+    > ul {
+
+      > li {
+        float: left;
+        width: 50%;
+        min-height: 106px;
+        border-right: 1px solid $border-color;
+        text-align: center;
+
+        &:last-child {
+          border-right: none;
+        }
+
+        > h4 {
+          line-height: 40px;
+          font-size: 24px;
+        }
+      }
+    }
+  }
+
+  /*导航菜单*/
+  > .nav {
+
+    > ul {
+      margin: 10px -5px 10px -5px;
+
+      > li {
+        float: left;
+        padding: 0 5px;
+        width: 25%;
+
+        > a {
+          display: block;
+          padding: 15px;
+          height: 100px;
+          background-color: #f9f9f9;
+          color: #777;
+          text-align: center;
+
+          &:hover {
+            background-color: #eee;
+          }
+
+          > .icon {
+            display: block;
+            font-size: 36px;
+
+            &.icon-shop {
+              color: #ff4e00;
+            }
+
+            &.icon-items {
+              color: #2abc69;
+            }
+
+            &.icon-form {
+              color: #bd3258;
+            }
+
+            &.icon-stat {
+              color: #a47ac2;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+<volist name="lists" id="vo">
+  <div class="col-xs-12">
+    <div class="bd clearfix">
+      <div class="col-xs-2">
+        <eq name="vo.type" value="alipay">
+        {$vo.type|get_user_account_text}
+        <else />
+          {:C('BANK_LISTS.'.$vo['bankname'])}
+        </eq>
+      </div>
+      <div class="col-xs-2">{$vo.name}</div>
+      <div class="col-xs-2"><span class="text-danger">+{$vo.amount} 元</span></div>
+      <div class="col-xs-2">{$vo.status|get_withdraw_text}</div>
+      <div class="col-xs-3">{$vo.create_time|time_format}</div>
+      <div class="col-xs-1">
+        <a href="{:U('detail', array('id' => $vo['id']))}">详情&gt;</a>
+      </div>
+    </div>
+  </div>
+</volist>

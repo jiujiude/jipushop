@@ -1,0 +1,33 @@
+<notempty name="lists">
+  <volist name="lists" id="vo">
+    <div class="col-xs-3 item J_item_list">
+      <div class="thumbnail thumbnail-fav shopItemList">
+        <a href="{:U('Item/detail', array('id' => $vo['id']))}" target="_blank"><img src="{:get_image_thumb($vo['cover_path'], 220, 220)}" class="pic"></a>
+        <if condition="in_array($vo['id'], $shop_data['items'])">
+          <a href="javascript:;" class="shop_item_btn J_item_remove" data-itemid="{$vo.id}"></a>
+        <else/>
+          <a href="javascript:;" class="shop_item_btn J_item_add" data-itemid="{$vo.id}"></a>
+        </if>
+        <div class="caption">
+          <h5 class="thumbnail-label">
+            <a href="{:U('Item/detail', array('id' => $vo['id']))}">{$vo.name}</a>
+          </h5>
+          <p class="thumbnail-info">
+             <span class="text-danger">
+              <em class="yen">返</em><b class="sdp-price">
+              <if condition="$vo.sdp_type eq 0">
+                {$vo.sdp} 元
+                <elseif condition="$vo.sdp_type eq 1"/>
+                {$vo.sdp}%
+              </if></b>
+            </span>
+            <span class="text-danger"><em class="yen">&yen;</em> {$vo.price}</span>
+          </p>
+          <p class="thumbnail-menu">
+            <a href="{:U('Item/detail', array('id' => $vo['id']))}" class="btn btn-mini">购物车</a> 
+          </p>
+        </div>
+      </div>
+    </div>
+  </volist>
+</notempty>

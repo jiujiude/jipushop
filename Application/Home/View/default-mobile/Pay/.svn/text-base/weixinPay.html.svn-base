@@ -1,0 +1,34 @@
+<extend name="Base/common"/>
+<block name="style">
+  <style>
+    html,body{
+      overflow: hidden;
+      height:100% !important;
+    }
+    .wechat_tabbg,.wechat_tab_p{
+      background: url("__IMG__/wechat_tab.png?2015") no-repeat center 20px;
+      height: 80px;
+      background-size: 165px 300px;
+    }
+    .wechat_tab_p{
+      height: 250px;
+      position:absolute;
+      bottom: 12%;
+      width:100%;
+      background-position:center bottom;
+    }
+  </style>
+</block>
+<block name="header">
+</block>
+<block name="body">
+  <div class="wechat_tabbg"></div>
+  <div class="wechat_tab_p"></div>
+  <script>
+    //var wh = $(window).height();
+    //$('.content').css({height: wh});  
+  </script>
+  {:hook('weixinPay', array('order_id' => $order_id, 'order_type' => $order_type, 'order_type' => $order_type))}
+</block>
+<block name="footer">
+</block>

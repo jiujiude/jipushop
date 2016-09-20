@@ -1,0 +1,49 @@
+<extend name="Base/page"/>
+<block name="body">
+  <div class="row page-wrap">
+    <div class="login-form clearfix">
+      <legend>
+        找回密码
+      </legend>
+      <form class="col-xs-8 form-horizontal" action="{:U('User/resetpwd')}" method="post">
+        <fieldset>
+          <div class="form-group">
+            <label for="mobile" class="col-xs-3 control-label">手机号</label>
+            <div class="col-xs-5">
+              <input type="text" name="mobile" id="mobile" class="form-control J_mobile" placeholder="请输入注册手机" value="{$mobile}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="verify" class="col-xs-3 control-label">图形验证码</label>
+            <div class="col-xs-8">
+              <input type="text" name="verify" id="verify" class="form-control text-inline randcode J_mobile_randcode" placeholder="请输入验证码" maxlength="4" errormsg="请输入4位验证码" nullmsg="请输入验证码" datatype="*4-4">
+              <img style="margin-left: 10px;" class="verifyimg J_reload_verify" title="点击更换" src="{:U('verify')}">
+              <!--a href="javascript:;" class="J_reload_verify">看不清？换一个。</a-->
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-xs-3 control-label" for="randcode">短信验证码</label>
+            <div class="col-xs-8">
+              <input name="randcode" type="text" class="form-control randcode J_mobile_randcode" placeholder="请填写手机验证码" maxlength="6" errormsg="手机校验码为6位数字" nullmsg="请填写手机验证码">
+              <a class="btn btn-primary J_mobile_randcode_button" style="margin-left: 10px;">发送验证码</a>
+            </div>
+          </div>
+          <div class="control-group Validform_checktip text-warning"></div>
+          <div class="form-group">
+            <div class="col-xs-5 col-xs-offset-3">
+              <button class="btn btn-block btn-positive">下一步</button>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</block>
+<block name="script">
+  <script type="text/javascript">
+    seajs.use('user', function(user){
+      user.getRandCode('forgetpwd');
+      $('.J_mobile_randcode').focus();
+    });
+  </script>
+</block>

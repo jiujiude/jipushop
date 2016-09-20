@@ -1,0 +1,73 @@
+<extend name="Base/member"/>
+
+<block name="header">
+  <div class="container breadcrumbs">
+    <a href="/index.php">首页</a><span class="sep">/</span><span>账户消费记录</span></div>
+</block>
+
+<block name="body">
+  <div class="xm-line-box uc-box">
+    <!-- 加载手机绑定和支付密码提示信息 -->
+    <include file="membertips" />
+      
+    <div class="box-hd">
+      <h3 class="title">账户消费记录</h3>
+      <div class="more">
+        <div class="uc-order-list-type">
+          <a href="{:U('Member/finance')}">全部订单</a>
+          <span class="sep">|</span>
+          <a class="active" href="{:U('Member/financelog')}">账户消费记录</a>
+        </div>
+      </div>
+    </div>
+    <div class="box-bd">
+      <div class="uc-finance">
+        <div class="info">
+          <span>可用余额：<em class="text-danger money">&yen;{$member.finance}</em></span>
+          <span>账户状态：<em class="text-danger">有效</em></span>
+          <a href="{:U('Member/recharge')}" class="btn btn-positive recharge">账户充值</a>
+        </div>
+      </div>
+      
+      <h4 class="title">现金账户消费明细</h4>
+      <notempty name="lists">
+        <div class="uc-coupon-box">
+          <dl>
+            <dt>
+              <span class="col-2">订单编号</span>
+              <span class="col-1">支付方式</span>
+              <span class="col-1">消费金额</span>
+              <span class="col-2">消费时间</span>
+              <span class="col-2">订单状态</span>
+            </dt>
+            <volist name="lists" id="vo">
+              <dd class="item">
+                <div class="item-row">
+                  <div class="col-2"><a href="{:U('Member/orderDetail', array('id' => $vo['Order']['id']))}" class="text-danger">{$vo.Order.order_sn}</a></div>
+                  <div class="col-1">
+                    <switch name="vo.Order.payment_type">
+                      <case value="alipay">支付宝</case>
+                      <case value="bankpay">网银支付</case>
+                    </switch>
+                  </div>
+                  <div class="col-1">{$vo.amount}元</div>
+                  <div class="col-2">{$vo.create_time|time_format}</div>
+                  <div class="col-2">
+                    <switch name="vo.Order.o_status">
+                      <case value="0">未支付</case>
+                      <default/>已付款
+                    </switch>
+                  </div>
+                </div>
+              </dd>
+            </volist>
+          </dl>    
+        </div>
+      <else/>
+        <p class="list-empty">您暂时没有消费记录。</p>
+      </notempty>
+    </div>
+  </div>
+</block>
+<block name="script">
+</block>

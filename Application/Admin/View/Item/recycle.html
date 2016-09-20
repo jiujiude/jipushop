@@ -1,0 +1,50 @@
+<extend name="Public/base"/>
+
+<block name="body">
+	<!-- 标题栏 -->
+	<div class="main-title">
+		<h2>回收站({:count($list)})</h2>
+	</div>
+
+	<!-- 按钮工具栏 -->
+	<div class="tools auth-botton">
+		<button url="{:U('Item/permit')}" class="btn ajax-post" target-form="ids">还 原</button>
+    <button url="{:U('Item/clear')}" class="btn ajax-post" target-form="ids">清 空</button>
+	</div>
+
+	<!-- 数据表格 -->
+	<div class="data-table">
+		<table>
+			<!-- 表头 -->
+			<thead>
+				<tr>
+					<th class="row-selected row-selected"><input class="check-all" type="checkbox"></th>
+					<th>商品编号</th>
+					<th>商品名称</th>
+					<th>分类</th>
+					<th width="80">操作</th>
+				</tr>
+			</thead>
+
+			<!-- 列表 -->
+			<tbody>
+				<volist name="list" id="vo">
+					<tr>
+						<td><input class="ids" type="checkbox" value="{$vo['id']}" name="ids[]"></td>
+						<td><a href="{:U('/Item/detail?id='.$vo['id'])}" target="_blank">{$vo.number}</a></td>
+						<td><a href="{:U('/Item/detail?id='.$vo['id'])}" target="_blank">{$vo.name}</a></td>
+						<td>{$vo.category}</td>
+						<td>
+							<a href="{:U('permit?ids='.$vo['id'])}" class="ajax-get">[还原]</a>
+							<a href="{:U('clear?ids='.$vo['id'])}" class="confirm ajax-get">[删除]</a>
+						</td>
+					</tr>
+				</volist>
+			</tbody>
+		</table>
+	</div>
+	<!-- 分页 -->
+	<div class="page">
+		{$_page}
+	</div>
+</block>

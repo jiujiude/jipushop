@@ -1,0 +1,26 @@
+<extend name="Base/member"/>
+
+<block name="body">
+  <div class="user-box shop"> 
+    <div class="page-header">
+      <h3>
+        添加分销商品
+        <small><a href="{:U('Shop/item', array('uid' => UID))}" class="pull-right btn btn-link">查看已选商品&gt;</a></small>
+      </h3>
+    </div>
+
+    <!-- 选择分销商品 -->
+    <div class="row item-list" id="J_item_list">
+      <include file="itemList"/>
+    </div>
+    <div class="page">{$_page}</div>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use(['shop'], function(shop){
+      shop.changeItem();
+    });
+  </script>
+</block>

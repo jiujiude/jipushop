@@ -1,0 +1,17 @@
+<div class="form-box form-horizontal clearfix" id="J_reshop_form">
+  <div class="form-group">
+    <label class="col-xs-3 control-label">快递公司名称：</label>
+    <div class="col-xs-8">
+      <div class="form-info">{$data.company_name}</div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label">快递单号：</label>
+    <div class="col-xs-8">
+      <div class="form-info">
+        {$data.ship_number} <br/><br/>
+        <a href="https://www.baidu.com/s?wd={$data.company_name}%20{$data.ship_number}" target="_blank" class="text-danger">[追踪物流信息]</a>
+      </div>
+    </div>
+  </div>
+</div>

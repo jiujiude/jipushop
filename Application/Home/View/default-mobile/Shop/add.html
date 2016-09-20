@@ -1,0 +1,83 @@
+<extend name="Base/common"/>
+<block name="header">
+{:hook('mobileTopNav',array('title'=>$meta_title))}
+</block>
+
+<block name="body">
+  <if condition="empty($shop)">
+    <p class="text-warning">提交您的资质信息，{:C('WEB_SITE_TITLE')}会与您联系哦！</p>
+  <elseif condition="$shop['status'] == 0"/>
+    <div class="content-padded jump-msg">
+      <p class="hd">
+        <br />
+        您的分销申请提交成功，等待审核！<br />审核过程中{:C('WEB_SITE_TITLE')}会与您电话联系！
+      </p>
+      <br />
+      <p class="mt detail text-center">
+        <a href="{:U('')}" class="btn btn-block btn-positive">去购物</a>
+        <a href="{:U('Member/index')}" class="btn btn-block">返回个人中心</a>
+      </p>
+    </div>
+  <elseif condition="$shop['status'] == -1"/>
+    <p class="alert alert-danger">抱歉提交的资质，不符合我们对分销代理的要求，你可以修改资料重新申请！</p>
+  </if>
+  
+  <if condition="empty($shop) OR $shop['status'] eq -1">
+    <form action="__SELF__" method="POST" class="input-group manage">
+      <div class="input-row">
+        <label>姓名</label>
+        <input type="text" name="audit_data[name]" value="{$audit_data.name}" placeholder="请输入您的姓名">
+      </div>
+      <div class="input-row">
+        <label>手机</label>
+        <input type="text" name="audit_data[mobile]" value="{$audit_data.mobile}" placeholder="请输入您的手机">
+      </div>
+      <div class="input-row">
+        <label>邮箱</label>
+        <input type="text" name="audit_data[email]" value="{$audit_data.email}" placeholder="请输入您的E-mail地址">
+      </div>
+      <div class="input-row">
+        <label>身份证号</label>
+        <input type="text" name="audit_data[person_id]" value="{$audit_data.person_id}" placeholder="请输入您的身份证号">
+      </div>
+      <div class="input-row input-more">
+        <label>地区</label>
+        <div class="select" id="J_area">
+          
+        </div>
+      </div>
+      <div class="input-row">
+        <label>申请理由</label>
+        <input type="text" name="audit_data[intro]" value="{$audit_data.intro}" placeholder="请输入申请理由（至少10个字）">
+      </div>
+      <div class="content-padded">
+        {$shop['status']==-1?'<input type="hidden" value="0" name="status">':''}
+        <button type="submit" class="btn btn-block btn-positive">{$shop['status']==-1 ? '重新申请': '申请开店'}</button>
+      </div>
+    </form>
+  </if>
+</block>
+<block name="script">
+  <script>
+    C.WECHAT_CONFIG = {:get_jsapi_config('chooseImage,uploadImage')};
+    seajs.use(['wechat', 'zepto.loadtype'], function(wechat, loadtype){
+      $('.Z_upload_shopavatar').on('tap', function(){
+        wechat.chooseImage(function(source_path, server_id){
+          $('.Z_upload_add').remove();
+          $('.Z_upload_shopavatar').html('<img src="'+ source_path +'" alt="">');
+          $('input[name="avatar_serverid"]').val(server_id);
+        });
+      });
+      
+      $('#J_area').Loadtype({
+        type: 'area',  //【商品分类】itemCategory | 【地区】area
+        name1: 'audit_data[prov]',
+        name2: 'audit_data[city]',
+        name3: 'audit_data[area]',
+        value1: '{$audit_data.prov}',
+        value2: '{$audit_data.city}',
+        value3: '{$audit_data.area}'
+      });
+    });
+  </script>
+</block>

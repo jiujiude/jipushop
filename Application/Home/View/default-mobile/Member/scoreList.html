@@ -1,0 +1,15 @@
+<notempty name="lists">
+  <volist name="lists" id="vo">
+    <li class="table-view-cell padded-sm">
+      <eq name="vo.type" value="in">积分奖励：<em class="text-success">&plus;{$vo.amount}</em></eq>
+      <eq name="vo.type" value="out">积分消费：<em class="text-danger">&minus;{$vo.amount}</em></eq>
+      <em class="pull-right">{$vo.create_time|time_format}</em>
+      <p class="text-info">
+        积分备注：{$vo.memo}
+      </p>
+    </li>
+  </volist>
+</notempty>
+<script>
+  C.has_more =  '{$_hasmore}';
+</script>

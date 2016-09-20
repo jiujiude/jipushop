@@ -1,0 +1,63 @@
+<notempty name="data">
+<style>
+.pc_index_1x4{background:#FFF; text-align:center; padding:50px 0px 50px 0px; height:376px;}
+.pc_index_1x4 .container{overflow: hidden; position: relative; padding: 0px;}
+/*.pc_index_1x4 ul{border-left:solid 1px #EEE;}*/
+.pc_index_1x4 ul li{border-right:solid 1px #EEE;}
+.pc_index_1x4 ul li:last-child{border-right:none;}
+.pc_index_1x4 ul li img{max-width:185px; height:148px;}
+.pc_index_1x4 ul li h3{font-size:24px; color:#000000;}
+.pc_index_1x4 ul li p{border-top:dashed 1px #EEE; padding-top:15px; margin:15px auto; max-width:185px; color:#666;}
+.pc_index_1x4 ul li span a{color:#2D8701;}
+.pc_index_1x4 .icon {    font-size: 20px;    line-height: 60px;    border-radius: 30px;    display: block;    width: 40px;    height: 40px;    background: rgba(0,0,0,0.3);    position: absolute;    color: #FFF;    top: 50%;    z-index: 100;    margin-top: -20px;    line-height: 40px;    text-align: center;}
+.pc_index_1x4 .icon.icon-arrow-left{left: 0px;}
+.pc_index_1x4 .icon.icon-arrow-right{right: 0px;}
+.pc_index_1x4 .container .lr_btn{display: none;}
+.pc_index_1x4 .zhaiping:hover .lr_btn{display: block;}
+.pc_index_1x4 .zhaiping{ height:276px;}
+.pc_index_1x4 .zhaiping ul{ position: absolute; z-index: 1;}
+</style>
+<div class="pc_index_1x4">
+    <div class="container">
+        <ul class="item" style="display:none;">
+          <volist name="data" id="vo">
+            <li class="col-xs-2">
+                <a href="{$vo.link}" title="{$vo.title}" target="_blank"><img src="{$vo.image_src}" /></a>
+                <h3>{$vo.title}</h3>
+                <p>{$vo.remark}</p>
+                <span><a href="{$vo.link}" title="{$vo.title}" target="_blank">去看看 ></a></span>
+            </li>
+          </volist>
+        </ul>
+        <div class="lr_btn"><span class="icon icon-arrow-left"></span><span class="icon icon-arrow-right"></span></div>
+    </div>
+</div>
+<script>
+seajs.use('jquery',function($){
+	if($(window).width()>1600){
+		//$('.pc_index_1x4 li').addClass('col-xs-2');
+	}else{
+        var w=$('.container').width();
+        var li4=$('.pc_index_1x4 ul li').eq(3);
+        li4.css({'border-right':'none'});
+        var st;
+        $('.pc_index_1x4 ul').css({'width':w*1.5+4});
+        $('.pc_index_1x4 .container').addClass('zhaiping');
+        $('.pc_index_1x4 .icon-arrow-left').click(function(){
+            li4.css({'border-right':'none'})
+            $('.pc_index_1x4 ul').animate({'left':'0'},300);
+            clearTimeout(st);
+            st=setTimeout("$('.pc_index_1x4 .icon-arrow-right').click()",8000);
+        });
+        $('.pc_index_1x4 .icon-arrow-right').click(function(){
+            li4.css({'border-right':'solid 1px #EEE'})
+            $('.pc_index_1x4 ul').animate({'left':-w/2},300)
+            clearTimeout(st);
+            st=setTimeout("$('.pc_index_1x4 .icon-arrow-left').click()",8000);
+        });
+        st=setTimeout("$('.pc_index_1x4 .icon-arrow-right').click()",8000);
+	}
+	$('.pc_index_1x4 ul').show();
+})
+</script>
+</notempty>

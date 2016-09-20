@@ -1,0 +1,88 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="form-fl">
+    <!-- 标题栏 -->
+    <div class="main-title">
+      <h2>消息回复({:count($list)})</h2>
+    </div>
+  
+    <!-- 按钮工具栏 -->
+    <div class="tb-unit-bar">
+      <div class="btn-group">
+        <a class="btn" href="{:U('WechatMsg/add')}">新 增</a> 
+      </div>       
+      <button url="{:U('WechatMsg/del')}" class="btn ajax-post confirm" target-form="ids">删 除</button>
+      
+    </div>
+
+    <!-- 数据表格 -->
+    <div class="data-table">
+      <table>
+        <!-- 表头 -->
+        <thead>
+          <tr>
+            <th class="row-selected row-selected">
+              <input class="check-all" type="checkbox">
+            </th>
+            <th>消息类型</th>
+            <th>标题</th>
+            <th>响应事件</th>
+            <th>关键词</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+
+        <!-- 列表 -->
+        <tbody class="category">
+          <notempty name="lists.data">
+            <volist name="lists.data" id="vo">
+              <tr>
+                <td><input class="ids" type="checkbox" value="{$vo['id']}" name="ids[]"></td>
+                <td>{$vo.type_text}</td>
+                <td>{$vo.title}</td>
+                <td>{$vo.event_text}</td>
+                <td>{$vo.keyword}</td>
+                <td>
+                  <a href="{:U('edit?id='.$vo['id'])}">[编辑]</a>
+              <if condition="$vo['event'] neq 'subscribe'"><a href="{:U('del?ids='.$vo['id'])}" class="confirm ajax-get">[删除]</a></if>
+                </td>
+              </tr>
+            </volist>
+          <else />
+            <td colspan="6" class="text-center"> aOh! 暂时没有消息!  <a href="{:U('add')}">立即添加&gt;</a></td>
+          </notempty>
+        </tbody>
+      </table>
+    </div>
+    <!-- 分页 -->
+    <div class="page">
+      {$_page}
+    </div>
+  </div>
+  
+  <div class="form-fr">
+    <div class="wechat">
+      <div class="tool-bar">{:C('WECHAT_NAME')}</div>
+      <div class="side-bar J_menulist">
+        <ul>
+          <volist name="lists.tree" id="vo">
+            <li class="item-{$lists.num}">
+            <a href="{$vo.url}" target="_blank"><notempty name='vo.sub'><i class="icon"></i></notempty>{$vo.title}</a>
+              <notempty name='vo.sub'>
+                <div class="sub_button">
+                  <ul>
+                    <volist name="vo.sub" id="vl">
+                      <li><a href="{$vl.url}" target="_blank">{$vl.title}</a></li>
+                    </volist>
+                  </ul>
+                  <span class="arrow-bottom"></span>
+                </div>
+              </notempty>
+            </li>
+          </volist>
+        </ul>
+      </div>
+    </div>
+  </div> 
+</block>

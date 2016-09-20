@@ -1,0 +1,228 @@
+<extend name="Base/common"/>
+
+<block name="body">
+<style>
+.sean:hover{
+  box-shadow: 2px 2px 10px #888888;
+ background:rgb(245,246,247);
+    -webkit-transition: all .3s ease-out;
+    -moz-transition: all .3s ease-out;
+    -ms-transition: all .3s ease-out;
+    -o-transition: all .3s ease-out;
+    transition: all .3s ease-out;
+}
+</style>
+  <form action="{:U('add')}" id="J_checkout_form" method="post">
+    <div class="row">
+      <div class="col-xs-12">
+        <!-- 收货地址 -->
+        <div class="page-header">
+          <h3>收货地址</h3>
+        </div>
+        <div class="row" id="J_address_list">
+          <volist name="receiver" id="vo">
+            <php>$selected = ($vo['is_default'] == 1 || count($receiver) == 1) ? 1 : 0;</php>
+            <div class="col-xs-3 address-item <eq name="selected" value="1">selected</eq> J_address_item" data-id="{$vo.id}" data-name="{$vo.name}" data-mobile="{$vo.mobile}" data-province="{$vo.province}" data-district="{$vo.district}" data-city="{$vo.city}" data-area="{$vo.area}" data-address="{$vo.address}" data-zipcode="{$vo.zipcode}" data-is_default="{$vo.is_default}">
+              <dl>
+                <dt><strong class="itemConsignee">{$vo.name}</strong></dt>
+                <dd>
+                  <p class="itemRegion"><eq name="vo.is_default" value="1"><em class="text-danger">[默认]</em></eq>{$vo.area}{$vo.address}({$vo.zipcode})</p>
+                  <p class="tel itemTel">{$vo.mobile}</p>
+                  <span class="edit-btn btn btn-xs btn-positive J_edit_address">修改</span>
+                </dd>
+                <dd style="display:none">
+                  <input type="radio" name="receiver_id" class="J_receiver_id" value="{$vo.id}" <eq name="selected" value="1">checked="checked"</eq>>
+                </dd>
+              </dl>
+            </div>
+          </volist>
+          <div class="col-xs-3 address-item use-new-addr J_address_item J_add_address" id="useNewAddr" data-state="off">
+            <dl>
+              <span class="icon icon-add"></span>使用新地址
+            </dl>
+          </div>
+        </div>
+        <div class="address-edit-box" id="J_address_edit_box">
+          <div class="bd">
+            <input type="hidden" name="id" id="J_address_id" value="">
+            <div class="item">
+              <input type="text" name="name" id="J_input_name" class="input" placeholder="收货人姓名" maxlength="15" value="">
+              <p class="tip-msg tipMsg" style="display: none;"></p>
+            </div>
+            <div class="item">
+              <input type="text" name="mobile" id="J_input_mobile" class="input" placeholder="手机号码" maxlength="11" value="">
+              <p class="tip-msg tipMsg" style="display: none;"></p>
+            </div>
+            <div class="item item-area" id="J_address_area">加载中...</div>
+            <div class="item">
+              <textarea name="address" class="input-area" id="J_input_address" placeholder="路名或街道地址，门牌号"></textarea>
+              <p class="tip-msg tipMsg" style="display: none;"></p>
+            </div>
+            <div class="item">
+              <input type="text" name="zipcode" id="J_input_zipcode" class="input" placeholder="邮政编码" maxlength="6" value="">
+              <p class="tip-msg tipMsg" style="display: none;"></p>
+            </div>
+            <div class="item set-default">
+              <label for="J_is_default"><input type="checkbox" name="is_default" id="J_is_default" value="1">设为默认收货地址</label>
+              <p class="tip-msg tipMsg" style="display: none;"></p>
+            </div>
+          </div>
+          <div class="ft clearfix">
+            <button type="button" class="btn btn-sm" id="J_edit_address_cancel">重新选择地址</button>
+            <a href="javascript:;" class="btn btn-sm btn-positive" id="J_edit_address_ok">确认收货地址</a>
+          </div>
+        </div>
+       
+
+        <!-- 商品清单 -->
+        <div class="page-header">
+          <h3>商品清单</h3>
+        </div>
+        <div class="cart-list order-item-list">
+          <dl>
+            <dt class="clearfix">
+              <div class="row">
+                <span class="col-xs-7">商品信息</span>
+                <span class="col-xs-1">单价</span>
+                <span class="col-xs-2">数量</span>
+                <span class="col-xs-2">小计</span>
+              </div>
+            </dt>
+            <volist name="data.items" id="supp" >
+            <div class="supplier-box">
+              <dd class="supplier-dd">
+                <div class="row">
+                  <span class="col-xs-3">
+                    <span class="check active"></span>
+                    <gt name="supp.supplier_id" value="0">{$supp.supplier_name} <else /> <span class="is-self">自营</span></gt>
+                  </span>
+                  <span class="col-xs-6 send-items J_send_supp_{$supp.supplier_id}"></span>
+                  <!-- <span class="col-xs-3 delivery-select">
+                    配送方式：
+                    <select name="delivery_id[{$supp['supplier_id']}]" class="J_delivery_id">
+                      <notempty name="order_count[supplier][$supp['supplier_id']][delivery]">
+                        <volist name="order_count['supplier'][$supp['supplier_id']][delivery]" id="d_li">
+                          <option value="{$d_li.id}" data-price="{$d_li.price}">{$d_li.company}（运费{$d_li.price}元）</option>
+                        </volist>
+                      <else />
+                        <option value="0" data-price="0">快递免邮</option>
+                      </notempty>
+                    </select>
+                  </span> -->
+                </div>
+              </dd>
+              <volist name="supp.item" id="vo">
+                <dd class="item">
+                  <div class="row">
+                    <div class="col-xs-7">
+                      <div class="pic">
+                        <a href="{:U('Item/detail', array('id' => $vo['item_id']))}" target="_blank"><img src="{:get_image_thumb($vo['cover_path'], 100, 100)}" alt="{$vo.name}"></a>
+                      </div>
+                      <div class="info">
+                        <div class="name"><a href="{:U('Item/detail', array('id' => $vo['item_id']))}" target="_blank">{$vo.name}</a></div>
+                        <if condition="$vo['stock'] lt $vo['quantity']"><em class="text-danger">此商品所购买数量大于库存</em></if>
+                        <notempty name="vo.spec">
+                          <div class="spec">
+                            <volist name="vo.spec" id="vl">
+                              <span class="mr-sm">{$vl.key}：{$vl.val}</span>
+                            </volist>
+                          </div>
+                        </notempty>
+                      </div>
+                    </div>
+                    <div class="col-xs-1">
+                      <div class="box price">
+                          <span class="text-danger">
+                          <em class="yen">&yen;</em> {$vo.price}
+                          </span>
+                      </div>
+                    </div>
+                    <div class="col-xs-2">
+                      <div class="box">&nbsp;&nbsp;x {$vo.quantity}</div>
+                    </div>
+                    <div class="col-xs-2">
+                      <div class="box price">
+                        <strong class="text-danger"><em class="yen">&yen;</em> {$vo['subAmount']}</strong>
+                      </div>
+                    </div>
+                  </div>
+                </dd>
+
+              </volist>
+        
+        <div class="row sean" style="margin: auto 0;">
+          <div class="col-xs-9 form-inline  delivery-select" data-state="off">
+              <div class="form-group" style="margin: 5px auto;">
+              <label for='wuliu'style=" margin-left: 10px;">
+              配送：
+              </label>
+              <select name="delivery_id[{$supp['supplier_id']}]" class="form-control input-sm  J_delivery_id" id='wuliu' style="width:200px">
+               <notempty name="order_count[supplier][$supp['supplier_id']][delivery]">
+                  <volist name="order_count['supplier'][$supp['supplier_id']][delivery]" id="d_li">
+                    <option value="{$d_li.id}" data-price="{$d_li.price}">{$d_li.company}（运费{$d_li.price}元）</option>
+                  </volist>
+                <else />
+                  <option value="0" data-price="0">快递免邮</option>
+              </notempty>
+              </select>
+              </div>
+            </div>
+          <div class="col-xs-9 form-inline" >
+              <div class="form-group" style="margin: 5px auto;width: 100%;">
+              <label for='mess'style=" margin-left: 10px;">
+              留言：
+              </label>
+            <textarea style="width: 60%;" class="form-control " id='mess' rows="1" name="memo"></textarea>
+              </div>
+            </div>
+        </div>
+            </div>
+            </volist>
+          </dl>
+        </div>
+
+        <div class="order-count clearfix">
+          <!-- order-price -->
+          <div class="order-price">
+            <ul>
+              <li>商品数量：<span>{$order_count.total_quantity} 件</span></li>
+              <li>商品总价：<span>{$order_count.total_price} 元</span></li>
+              <li>运费：<span id="J_delivery_fee">0.00 元</span></li>
+            </ul>
+            <p class="total">
+              应付总额：<span class="text-danger"><strong id="J_total_price">0</strong>元</span>
+            </p>
+          </div>
+        </div>
+        <notempty name='join_id'>
+          <input type="hidden"  name="join_id" value="{$join_id}">
+        </notempty>
+        <input type="hidden" id="J_is_use_finance" name="is_use_finance">
+        <input type="hidden" id="J_use_score_number" name="use_score">
+        <input type="hidden" id="J_use_score_amount" name="score_amount">
+        <input type="hidden" id="J_coupon_id" name="coupon_id">
+        <input type="hidden" id="J_card_id" name="card_id">
+        <input type="hidden" name="buynow" id="buynow" value="1">
+        <input type="hidden" name="item_ids" id="J_item_ids" value="{$item_ids}">
+        <div class="order-confirm">
+          <div id="submitAddress"></div>
+          <a href="javascript:;" class="pull-right btn btn-positive" id="J_order_submit">立即下单</a>
+        </div>
+      </div>
+      <div class="address-edit-backdrop" id="J_editAddrBackdrop"></div>
+    </div>
+  </form>
+</block>
+
+<block name="script">
+   {:hook('noticeMsg')}
+  <script>
+    seajs.use(['order', 'receiver'], function(order, receiver){
+      var total_price = '{$order_count.total_price}';
+      //满减规则
+      C.manjianRule = {$order_count.manjian|json_encode};
+      order.init(total_price);
+      receiver.init();
+    });
+  </script>
+</block>

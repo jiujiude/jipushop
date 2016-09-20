@@ -1,0 +1,68 @@
+<extend name="Base/common"/>
+
+<block name="body">
+  
+  <div class="text-warning">
+    推广二维码，下单就赚钱！ <div class="pull-right">每单返 <span class="text-danger">{:C('UNION_ORDER_CASHBACK')}</span>元</div>
+  </div>
+  <include file="Union/head" />
+  
+  <!-- 统计概况 -->
+  <div class="union-info">
+    <ul class="flex-box">
+      <li>
+        <h4>本月订单数</h4>
+        <p>{$data.this_month|default=0}</p>
+      </li>
+      <li>
+        <h4>上月订单数</h4>
+        <p>{$data.last_month|default=0}</p>
+      </li>
+    </ul>
+    <ul class="flex-box">
+      <li>
+        <h4>总订单数</h4>
+        <p>{$data.total|default=0}</p>
+      </li>
+      <li>
+        <a href="#qrCode" class="qrcode-link">
+          <h4>推广二维码</h4>
+          <img src="__IMG__/qrcode-demo.png" width="24">
+        </a>
+      </li>
+    </ul>
+  </div>
+  
+  <!-- 图表 -->
+  <div class="union-chart">
+    <div class="chart-title-pos">关注趋势</div>
+    <div class="chart-body" id="Z_charts">
+      <div class="waiting"><img src="__IMG__/loading.gif"> 正在加载图表插件...</div>
+    </div>
+  </div>
+  
+  <!-- 二维码 -->
+  <div id="qrCode" class="modal">
+    <header class="bar bar-nav">
+      <a class="icon icon-close pull-right" href="#qrCode"></a>
+      <h1 class="title">推广二维码</h1>
+    </header>
+    <div class="content">
+      <div class="text-warning">
+        推广二维码，扫码关注就能赚钱哦！
+      </div>
+      <p class="qrcode-showbox">
+        <img src="__ROOT__/Uploads/QRcode/WechatQrcode/{:md5($data_union['qrcode_url'])}.png">
+      </p>
+    </div>
+  </div>
+    
+</block>
+<block name="script">
+  <script>
+    seajs.use(['shop','union'], function(shop, union){
+     shop.statChart('Z_charts', {labels: {:json_encode($data['labels'])}, datas: {:json_encode($data['datas'])}});
+     union.open();
+  });
+  </script>
+</block>

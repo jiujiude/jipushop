@@ -1,0 +1,51 @@
+<extend name="Base/member"/>
+
+<block name="body">
+  <div class="user-box shop">
+    <include file="Sdp/topbar" />
+    <if condition="empty($data['name']) OR empty($data['logo'])">
+      <p class="alert alert-success">
+        <i class="icon icon-info"></i> 您的分销资质已通过审核，赶紧完善您的店铺信息吧！
+      </p>
+    </if>
+    <form action="__SELF__" id="J_shop_manage" class="col-xs-8 form-horizontal manage" method="POST">
+      <div class="form-group">
+        <label for="inputName" class="col-xs-3 control-label">店铺名称：</label>
+        <div class="col-xs-8">
+          <input type="text" name="name" id="inputName" class="form-control" value="{$data.name}" placeholder="请输入店铺名称" nullmsg="请输入店铺名称" datatype="*6-20">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputIntro" class="col-xs-3 control-label">店铺简介：</label>
+        <div class="col-xs-8">
+          <textarea name="intro" class="form-control" id="inputIntro" placeholder="请输入店铺简介" nullmsg="请输入店铺简介" datatype="*6-20">{$data.intro}</textarea>
+        </div>
+      </div>
+      <div class="form-group avatar">
+        <label for="inputIntro" class="col-xs-3 control-label">店铺头像：</label>
+        <div class="col-xs-8">
+          <span class="btn-upload" id="J_upload_add">
+            {:hook('uploadImages', array('name' => 'logo_id', 'tpl' => 'Home/one','path' => $data['logo']))}
+          </span>
+          <span class="tips">请上传200*200像素的正方形图片</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-xs-6 col-xs-offset-3">
+          <input type="hidden" name="id" value="{$data.id}">
+          <button type="submit" class="btn btn-large btn-positive">确定保存</button>
+          <a href="{:U('Member/sdp')}" class="btn btn-large">取 消</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</block>
+<block name="script">
+  <script>
+    seajs.use('', function(){
+      $('J_upload_add').on('click', function(){
+        $('#avatar').click();
+      });
+    });
+  </script>
+</block>

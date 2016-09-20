@@ -1,0 +1,125 @@
+<extend name="Public/base" />
+
+<block name="body">
+	<!-- 标题栏 -->
+	<div class="main-title">
+		<h2>店铺列表({$_total})</h2>
+	</div>
+	<div class="cf">
+    <div class="fl">
+      <a class="btn" href="{:U('index')}">刷 新 <span style="font-size:12px;font-weight:normal">(清空搜索条件)</span></a>
+    </div>
+
+    <!-- 高级搜索 -->
+    <form id="J_search_form" action="{:U('index')}" method="GET">
+      <div class="search-form fr cf">
+        <div class="sleft">
+          <span class="fl line-h">&nbsp; 分销统计</span>
+          <input type="text" name="start_time" class="search-input w-100 date_select" value="{:I('get.start_time')}" placeholder="开始日期"/>
+          <span class="fl line-h">至</span>
+          <input type="text" name="end_time" class="search-input w-100 date_select" value="{:I('get.end_time')}" placeholder="结束日期"/>
+        </div>
+        <div class="sleft">
+          <select name="status">
+            <option value="2">全部店铺</option>
+            <option value="1" {$status==1?' selected':''}>已审核</option>
+            <option value="0" {$status==0?' selected':''}>待审核</option>
+            <option value="-1" {$status==-1?' selected':''}>已拒绝</option>
+          </select>
+        </div>
+        <div class="sleft">
+          <input type="text" name="keywords" class="search-input" value="{:I('keywords')}" placeholder="请输入关键词">
+          <a class="sch-btn" href="javascript:;" id="J_search" url="{:U('index')}"><i class="btn-search"></i></a>
+        </div>
+      </div>
+    </form>
+  </div>
+
+	<!-- 数据列表 -->
+	<div class="data-table table-striped">
+		<table>
+			<thead>
+				<tr class="status_trclass_lr">
+					<th>ID</th>
+					<th>绑定用户</th>
+					<th>店铺名称</th>
+        <if condition="$time_search">
+          <th class="text-center">统计收入</th>
+          <th class="text-center">统计订单数</th>
+          <else/>
+					<th class="text-center"><a href="{:U('index?_field=total_revenue&_order='.$_order)}" title="按累计收入排序">累计收入{$_order_icon.total_revenue}{$_order_icon_show}</a></th>
+        </if>
+          <th>管理员姓名</th>
+          <th>管理员电话</th>
+          <th>开店时间</th>
+					<th>状态</th>
+          <th width="150">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<notempty name="lists">
+				<volist name="lists" id="vo">
+          <php>$vo['audit_data'] = unserialize($vo['audit_data']);</php>
+				<tr>
+					<td>{$vo.id}</td>
+					<td><a href="{:U('User/view', array('id' => $vo['uid']))}"><if condition="get_nickname($vo['uid']) neq ''">{$vo.uid|get_nickname}<else/>{$vo.uid|get_username}</if></a></td>
+          <td><a href="{:U('Shop/detail?id='.$vo['id'])}">{$vo.name|default='-'}</a></td>
+          <if condition="$time_search">
+            <php>$url = U('Order/index?o_status=-3', array('is_sdp' => 1, 'sdp_uid' => $vo['uid'], 'start_time' => I('get.start_time'), 'end_time' => I('get.end_time'), 'time_type' => 'payment_time'));</php>
+            <th><a href="{$url}" class="text-danger">{$vo.stat_amount}</a></th>
+            <th>{$vo.stat_order_count}</th>
+          <else/>
+            <th>
+              <gt name="vo.total_revenue" value="0">
+              <a href="{:U('Order/index?sdp_uid='.$vo['uid'].'&time_type=payment_time&o_status=-3')}" class="text-danger">{$vo.total_revenue}</a>
+              </gt>
+            </th>
+          </if>
+        
+          <td>{$vo.audit_data.name}</td>
+          <td>{$vo.audit_data.mobile}</td>
+					<td>{$vo.create_time|time_format}</td>
+					<td>
+            <switch name="vo.status">
+              <case value="1">
+                <span class="text-success">正常</span>
+              </case>
+              <case value="0">
+                <span class="text-danger">待审核</span>
+              </case>
+              <case value="-1">
+                <span class="text-cancel">拒绝审核</span>
+              </case>
+            </switch>
+          </td>
+          <td>
+            <a href="{:U('Shop/detail?id='.$vo['id'])}">店铺详情</a>
+            <a href="{:U('Withdraw/index?uid='.$vo['uid'])}">提现记录</a> 
+          </td>
+				</tr>
+				</volist>
+				<else/>
+				<td colspan="12" class="text-center"> aOh! 暂时还没有内容! </td>
+				</notempty>
+			</tbody>
+		</table>
+	</div>
+	<!-- 分页 -->
+  <div class="page">
+      {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script src="__PUBLIC__/Admin/js/My97Date/WdatePicker.js"></script>
+  <script>
+    $(function(){
+      //导航高亮
+      highlight_subnav('{:U("index")}');
+      //时间选择
+      $('.date_select').focus(function(){
+        WdatePicker({skin: 'twoer', dateFmt: 'yyyy-MM-dd', maxDate: '%y-%M-%d'});
+      });
+    });
+  </script>
+</block>

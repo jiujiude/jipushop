@@ -1,0 +1,10 @@
+<h3 class="title">提现管理</h3>
+<p class="text-space">
+  <span>可提现余额：<em class="text-danger money">&yen;{$withdraw_finance|default=0.00}</em> (可提现推广联盟和分销订单赚取的钱)</span>
+  <a href="{:U('Member/finance')}" class="btn btn-sm btn-positive pull-right">&lt;&lt; 返回现金账户</a>
+</p>
+<ul class="nav nav-tabs">
+  <li class="<if condition="(CONTROLLER_NAME eq 'UserAccount' AND ACTION_NAME eq 'index')"> active</if>"><a href="{:U('UserAccount/index')}">提现账户</a></li>
+  <li class="<if condition="(CONTROLLER_NAME eq 'Withdraw' AND ACTION_NAME eq 'add')"> active</if>"><a href="{:U('Withdraw/add')}">申请提现</a></li>
+  <li class="<if condition="(CONTROLLER_NAME eq 'Withdraw' AND ACTION_NAME eq 'index')"> active</if>"><a href="{:U('Withdraw/index')}">提现记录</a></li>
+</ul>

@@ -1,0 +1,57 @@
+<extend name="Public/base" />
+
+
+<block name="body">
+  <div class="main-title">
+    <h2>{$data['id']?'编辑':'新增'}桌面商家信息</h2>
+  </div>
+
+  <form action="{:U('update')}" enctype="application/x-www-form-urlencoded" method="POST" class="form-horizontal">
+    <div class="form-item">
+      <label for="auth-title" class="item-label">请选择绑定用户</label>
+      <div class="controls">
+        {:hook('userSel', array('name' => 'uid' ,'value' => $data['uid'],'empty_tip' => ' ', 'type' => 'radio'))}
+      </div>
+    </div>
+    <!-- <div class="form-item">
+      <label for="auth-title" class="item-label">推广类型</label>
+      <div class="controls">
+        <label class="radio"><input type="radio" value="1" name="type">桌面商家</label>
+        <label class="radio"><input type="radio" value="2" name="type">普通推广</label>
+      </div>
+    </div> -->
+    <!-- <div class="form-item">
+      <label for="auth-title" class="item-label">桌面商家名称</label>
+      <div class="controls">
+        <input id="auth-title" type="text" name="name" class="text input-large" value="{$data.name}"/>
+      </div>
+    </div> -->
+    <div class="form-item">
+      <label for="auth-title" class="item-label">联系人</label>
+      <div class="controls">
+        <input id="auth-title" type="text" name="link_name" class="text input-large" value="{$data.link_name}"/>
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">联系方式</label>
+      <div class="controls">
+        <input id="auth-title" type="text" name="link_mobile" class="text input-large" value="{$data.link_mobile}"/>
+      </div>
+    </div>
+    <div class="form-item">
+      <input type="hidden" name="id" value="{$data.id}" />
+      <button type="submit" class="btn submit-btn ajax-post" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+  </form>
+<block>
+
+<block name="script">
+  <script type="text/javascript" charset="utf-8">
+    $(function(){
+      //导航高亮
+      highlight_subnav('{:U('index')}');
+      Core.setValue('type', '{$data.type|default=1}');
+    });
+  </script>
+</block>

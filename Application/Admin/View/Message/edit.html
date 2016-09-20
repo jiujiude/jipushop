@@ -1,0 +1,61 @@
+<extend name="Public/base" />
+
+<block name="body">
+  <div class="main-title">
+    <h2>发送系统消息</h2>
+  </div>
+  <form action="{:U('update')}" enctype="application/x-www-form-urlencoded" method="POST" class="form-horizontal">
+    <div class="form-item">
+      <label for="auth-title" class="item-label">发送人</label>
+      <div class="controls">
+        <input type="text" class="text disabled" value="{:get_nickname(1)}" disabled="disabled" />
+        <input type="hidden" value="1" name="uid" />
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">接收用户</label>
+      <div class="controls">
+        {:hook('userSel', array('name' => 'to_uid', 'value' => '', 'empty_tip' => '全站群发'))}
+      </div>
+    </div>
+    <div class="form-item message-preview">
+      <label for="auth-title" class="item-label">消息标题</label>
+      <div class="controls">
+        <input id="auth-title" type="text" name="title" class="text input" value=""/>
+      </div>
+      <div class="preview-box J_preview"></div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">消息内容 <span class="check-tips">（回车换行，链接直接写[左右加空格]，支持HTML）</span></label>
+      <div class="controls">
+        <textarea name="content" class="textarea input-large J_content" rows="8" style="width:390px;"></textarea>
+      </div>
+    </div>
+    <div class="form-item">
+      <div class="controls">
+        <label>
+          <input type="checkbox" name="send_confirm" value="1">
+          确认进行发送 
+        </label>
+        &nbsp;
+        <a href="javascript:message.preview();">消息预览</a>
+      </div>
+    </div>
+    <div class="form-item">
+      <button type="submit" class="btn submit-btn ajax-post" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+  </form>
+<block>
+
+<block name="script">
+  <script type="text/javascript" charset="utf-8">
+    $(function(){
+      //导航高亮
+      highlight_subnav('{:U("index")}');
+      $('input[name="title"],.J_content').change(function(){
+        message.preview();
+      });
+    });
+  </script>
+</block>

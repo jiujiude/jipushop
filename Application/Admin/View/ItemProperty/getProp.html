@@ -1,0 +1,675 @@
+<notempty name="property_all">
+	<eq name="type" value="specification">
+	<script type="text/javascript" language="javascript" src="__JS__/jquery/jquery.form.js"></script>
+	<script language="JavaScript">
+	// 规格组合对应的价格，数量值数组
+	var spc_data_ = null;
+	<notempty name="spc_data">
+		spc_data_ = $.parseJSON('{$spc_data}');
+	</notempty>
+	var spc_data = new Array();
+
+	if(!$.isEmptyObject(spc_data_)){
+		$.each(spc_data_,function(k,spec){
+			spc_data[spec.spc_code] = new Array();
+			spc_data[spec.spc_code]['price'] = spec.price;
+			spc_data[spec.spc_code]['quantity'] = spec.quantity;
+		});
+	}
+
+	// 获取对象的长度，需要指定上下文 this
+	$.extend({
+		Object:{
+			count:function(p){
+				p = p || false;
+				return $.map(this, function(o){
+					if(!p) return o;
+					return true;
+				}).length;
+			}
+		}
+	});
+
+	/*获取图片配置数据*/
+	var property = {
+		getPictureConfigData: function(url){
+			var result;
+			$.ajax({
+				type: 'POST',
+				async: false,
+				url: url,
+				dataType: 'json',
+				success: function(res){
+					result = res;
+				}
+			});
+			return result;
+		}
+	}
+
+	// 根据当前勾选的需要配置图片的规格选项生成图片配置表格行
+	function createPictureConfigTableTr(picture_config_code_array, picture_config_array, item_id, prpid){		
+		var tbody  = '';
+
+		if($.isEmptyObject(picture_config_code_array)) return "";
+		//console.log(picture_config_array);
+
+		var picture_config_data;
+		var url = '{:U("ItemProperty/getPictureConfigData")}?item_id=' + item_id + '&prp_id=' + prpid;
+		picture_config_data = property.getPictureConfigData(url);
+		//console.log(picture_config_data);
+
+		// 图片配置数据转化为数组
+		var picture_config_data_array = new Array();
+		if(!$.isEmptyObject(picture_config_data)){
+			$.each(picture_config_data,function(k,v){
+				picture_config_data_array[k] = new Array();
+				picture_config_data_array[k]['pic_id'] = v.pic_id;
+				picture_config_data_array[k]['pic_path'] = v.pic_path;
+			});
+		}
+		//console.log(picture_config_data_array);
+
+		// console.log(picture_config_array);
+		$.each(picture_config_code_array,function(k, v){
+			var color_code = '';
+			var color_value = '';
+			var color_pic = '';
+			var color_bg = '';
+			var color_text = '';
+			var pic_id = 0;
+			var pic_path = '';
+
+			color_code = v;
+			color_value = picture_config_array[v]['color_value'];
+			color_pic = picture_config_array[v]['color_pic'];
+			color_text = picture_config_array[v]['color_text'];
+
+			if(color_pic){
+				color_pic = '<img width="14" height="14" src="' + color_pic + '">';
+			}else{
+				color_bg = ' style="background:' + color_value + ';"';
+			}
+
+			if(picture_config_data_array){
+				if(picture_config_data_array[v]){
+					pic_id = picture_config_data_array[v]['pic_id'];
+					pic_path = picture_config_data_array[v]['pic_path'];
+				}
+			}
+
+			var pic_html = '';
+			if(pic_path!==''){
+				pic_html = '<a href="' + pic_path + '" target="_blank" class="pre-img"><img width="24" height="24" src="' + pic_path + '"></a>';
+			}
+
+			tbody += '<tr>'
+					  + '<td class="color">'
+					  + '<input type="hidden" value="' + color_code + '" name="code[' + color_code +']" />'
+					  + '<i' + color_bg + ' class="color-lump">' + color_pic + '</i>'
+					  + '<span>' + color_text + '</span>'
+					  + '</td>'
+					  + '<td class="pic"><input type="file" class="uploadfile" name="uploadfile">'
+					  + '<input type="hidden" value="' + pic_id + '" name="pic[' + prpid + '][]" />'
+					  + '<input type="button" class="btn btn-mini-24 selectPic" value="选择图片" />'
+					  + pic_html
+					  + '</td>';
+					  + '</tr>';
+		});
+
+		//替换数据
+		$('.picture-config-table tbody').html(tbody);
+		$('.picture-config-wrapper').show();
+	}
+
+	// 利用Jquery from 实现ajax上传颜色图片
+	$(function () {
+		$(document).on("change",".uploadfile",function(){
+			var self_ = this;
+	
+			if($(self_).nextAll('.selectPic').val()=='选择图片') {
+				$(this).wrap("<form class=\"upload_form\" action=\"{:U('upload')}\" method=\"post\" enctype=\"multipart/form-data\"></form>");
+			}
+
+			$(self_).parent("form.upload_form").ajaxSubmit({
+				dataType:  'json',
+				beforeSend: function() {
+					$(self_).parent().nextAll('.selectPic').val("上传中...");
+				},
+				success: function(data) {
+					if(data){
+						$(self_).parent().nextAll('.selectPic').val("重新上传");
+						$(self_).parent().nextAll('.selectPic').addClass("upload-success");
+						if(data.uploadfile.id){
+							$(self_).parent().next('input').val(data.uploadfile.id);
+						}
+						$(self_).parent().nextAll('.selectPic').next('.pre-img').remove();
+						if(data.uploadfile.path){
+							$(self_).parent().nextAll('.selectPic').after('<a href="' + data.uploadfile.path + '" target="_blank" class="pre-img"><img src="' + data.uploadfile.path + '" height="24" width="24" /></a>');
+						}
+					}
+				},
+				error:function(xhr){
+					$(self_).parent().nextAll('.selectPic').val("上传失败");
+				}
+			});
+		});
+	});
+
+	//根据用户所选规格生成“规格-价格-数量”组合表格
+	function spec_combi(sp_num, spc_a, spc_b, spc_c, spc_d, spc_e, spc_f , spc_data){		
+		var tbody  = '';
+
+		if($.isEmptyObject(spc_a)) return "";
+
+		//计算已选择的规格属性个数
+		var spc_a_num = $.Object.count.call(spc_a);
+		var spc_b_num = $.Object.count.call(spc_b);
+		var spc_c_num = $.Object.count.call(spc_c);
+		var spc_d_num = $.Object.count.call(spc_d);
+		var spc_e_num = $.Object.count.call(spc_e);
+		var spc_f_num = $.Object.count.call(spc_f);
+
+		var spc_price = '';
+		var spc_quantity = '';
+
+		if(sp_num==1){
+			$.each(spc_a,function(k1,v1){
+				if(spc_data){
+					if(spc_data[k1]){
+						spc_price = spc_data[k1]['price'];
+						spc_quantity = spc_data[k1]['quantity'];
+					}
+				}
+				tbody += '<tr>'
+						  + ('<td><span>' + v1 + '</span></td>')
+						  + '<td class="spc_price"><input name="spc_price['+ k1 + ']" type="text" value="'+ spc_price +'" /></td>'
+						  + '<td class="spc_quantity"><input name="spc_quantity['+ k1 + ']" type="text" value="'+ spc_quantity +'" /></td>'
+						  //+ '<td class="spc_tsc"><input name="spc_tsc['+ k1 + ']" type="text" value="" /></td>'
+						  //+ '<td class="batch"><i class="sku-batch"></i></td>'
+						  + '</tr>';
+			});
+		}
+
+		if(sp_num==2){
+			$.each(spc_a,function(k1,v1){
+				var i = 0;
+				$.each(spc_b,function(k2,v2){
+					if(spc_data){
+						if(spc_data[k1 + '-' + k2]){
+							spc_price = spc_data[k1 + '-' + k2]['price'];
+							spc_quantity = spc_data[k1 + '-' + k2]['quantity'];
+						}
+					}
+					tbody += '<tr>'
+						  + ((i==0) ? '<td rowspan=' + spc_b_num + '><span>' + v1 + '</span></td>' : '')
+						  + '<td><span>' + v2 + '</span></td>'
+						  + '<td class="spc_price"><input name="spc_price['+ k1 + '-' + k2 + ']" type="text" value="'+ spc_price +'" /></td>'
+						  + '<td class="spc_quantity"><input name="spc_quantity['+ k1 + '-' + k2 + ']" type="text" value="'+ spc_quantity +'" /></td>'
+						  //+ '<td class="spc_tsc"><input name="spc_tsc['+ k1 + '-' + k2 + ']" type="text" value="" /></td>'
+						 // + '<td class="batch"><i class="sku-batch sku-batch-enable"></i></td>'
+						  + '</tr>';
+					++i;
+				});
+			});
+		}
+
+		if(sp_num==3){
+			$.each(spc_a,function(k1,v1){
+				var i = 0;
+				$.each(spc_b,function(k2,v2){
+					var j = 0;
+					$.each(spc_c,function(k3,v3){
+						if(spc_data){
+							if(spc_data[k1 + '-' + k2 + '-' + k3]){
+								spc_price = spc_data[k1 + '-' + k2 + '-' + k3]['price'];
+								spc_quantity = spc_data[k1 + '-' + k2 + '-' + k3]['quantity'];
+							}
+						}
+						tbody += '<tr>'
+							  + ((i==0) ? '<td rowspan=' + (spc_b_num * spc_c_num) + '><span>' + v1 + '</span></td>' : '')
+							  + ((j==0) ? '<td rowspan=' + spc_c_num + '><span>' + v2 + '</span></td>' : '')
+							  + '<td><span>' + v3 + '</span></td>'
+							  + '<td class="spc_price"><input name="spc_price['+ k1 + '-' + k2 + '-' + k3 + ']" type="text" value="'+ spc_price +'" /></td>'
+							  + '<td class="spc_quantity"><input name="spc_quantity['+ k1 + '-' + k2 + '-' + k3 + ']" type="text" value="'+ spc_quantity +'" /></td>'
+							  //+ '<td class="spc_tsc"><input name="spc_tsc['+ k1 + '-' + k2 + '-' + k3 +']" type="text" value="" /></td>'
+							  //+ '<td class="batch"><i class="sku-batch sku-batch-enable"></i></td>'
+							  + '</tr>';
+						++i;
+						++j;
+					});
+				});
+			});
+		}
+
+		if(sp_num==4){
+			$.each(spc_a,function(k1,v1){
+				var i = 0;
+				$.each(spc_b,function(k2,v2){
+					var j = 0;
+					$.each(spc_c,function(k3,v3){
+						var k = 0;
+						$.each(spc_d,function(k4,v4){
+							if(spc_data){
+								if(spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4]){
+									spc_price = spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4]['price'];
+									spc_quantity = spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4]['quantity'];
+								}
+							}
+							tbody += '<tr>'
+								  + ((i==0) ? '<td rowspan=' + (spc_b_num * spc_c_num * spc_d_num) + '><span>' + v1 + '</span></td>' : '')
+								  + ((j==0) ? '<td rowspan=' + (spc_c_num * spc_d_num) + '><span>' + v2 + '</span></td>' : '')
+								  + ((k==0) ? '<td rowspan=' + spc_d_num + '><span>' + v3 + '</span></td>' : '')
+								  + '<td><span>' + v4 + '</span></td>'
+								  + '<td class="spc_price"><input name="spc_price['+ k1 + '-' + k2 + '-' + k3 + '-' + k4 + ']" type="text" value="'+ spc_price +'" /></td>'
+								  + '<td class="spc_quantity"><input name="spc_quantity['+ k1 + '-' + k2 + '-' + k3 + '-' + k4 + ']" type="text" value="'+ spc_quantity +'" /></td>'
+								  //+ '<td class="spc_tsc"><input name="spc_tsc['+ k1 + '-' + k2 + '-' + k3 + '-' + k4 +']" type="text" value="" /></td>'
+								  //+ '<td class="batch"><i class="sku-batch sku-batch-enable"></i></td>'
+								  + '</tr>';
+							++i;
+							++j;
+							++k;
+						});
+					});
+				});
+			});
+		}
+
+		if(sp_num==5){
+			$.each(spc_a,function(k1,v1){
+				var i = 0;
+				$.each(spc_b,function(k2,v2){
+					var j = 0;
+					$.each(spc_c,function(k3,v3){
+						var k = 0;
+						$.each(spc_d,function(k4,v4){
+							var m = 0;
+							$.each(spc_e,function(k5,v5){
+								if(spc_data){
+									if(spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5]){
+										spc_price = spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5]['price'];
+										spc_quantity = spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5]['quantity'];
+									}
+								}
+								tbody += '<tr>'
+									  + ((i==0) ? '<td rowspan=' + (spc_b_num * spc_c_num * spc_d_num * spc_e_num) + '><span>' + v1 + '</span></td>' : '')
+									  + ((j==0) ? '<td rowspan=' + (spc_c_num * spc_d_num * spc_e_num) + '><span>' + v2 + '</span></td>' : '')
+									  + ((k==0) ? '<td rowspan=' + (spc_d_num * spc_e_num) + '><span>' + v3 + '</span></td>' : '')
+									  + ((m==0) ? '<td rowspan=' + spc_e_num + '><span>' + v4 + '</span></td>' : '')
+									  + '<td><span>' + v5 + '</span></td>'
+									  + '<td class="spc_price"><input name="spc_price['+ k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 + ']" type="text" value="'+ spc_price +'" /></td>'
+									  + '<td class="spc_quantity"><input name="spc_quantity['+ k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 + ']" type="text" value="'+ spc_price +'" /></td>'
+									  //+ '<td class="spc_tsc"><input name="spc_tsc['+ k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 + ']" type="text" value="" /></td>'
+									  //+ '<td class="batch"><i class="sku-batch sku-batch-enable"></i></td>'
+									  + '</tr>';
+								++i;
+								++j;
+								++k;
+								++m;
+							});
+						});
+					});
+				});
+			});
+		}
+		
+		
+		if(sp_num==6){
+			$.each(spc_a,function(k1,v1){
+				var i = 0;
+				$.each(spc_b,function(k2,v2){
+					var j = 0;
+					$.each(spc_c,function(k3,v3){
+						var k = 0;
+						$.each(spc_d,function(k4,v4){
+							var m = 0;
+							$.each(spc_e,function(k5,v5){
+								var l = 0;
+								$.each(spc_f,function(k6,v6){
+									if(spc_data){
+										if(spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 + '-' + k6]){
+											spc_price = spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 + '-' + k6]['price'];
+											spc_quantity = spc_data[k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 + '-' + k6]['quantity'];
+										}
+									}
+									tbody += '<tr>'
+										  + ((i==0) ? '<td rowspan=' + (spc_b_num * spc_c_num * spc_d_num * spc_e_num * spc_f_num) + '><span>' + v1 + '</span></td>' : '')
+										  + ((j==0) ? '<td rowspan=' + (spc_c_num * spc_d_num * spc_e_num * spc_f_num) + '><span>' + v2 + '</span></td>' : '')
+										  + ((k==0) ? '<td rowspan=' + (spc_d_num * spc_e_num * spc_f_num) + '><span>' + v3 + '</span></td>' : '')
+										  + ((m==0) ? '<td rowspan=' + (spc_e_num * spc_f_num) + '><span>' + v4 + '</span></td>' : '')
+										  + ((l==0) ? '<td rowspan=' + spc_f_num + '><span>' + v5 + '</span></td>' : '')
+										  + '<td><span>' + v6 + '</span></td>'
+										  + '<td class="spc_price"><input name="spc_price['+ k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 + '-' + k6 +']" type="text" value="'+ spc_price +'" /></td>'
+										  + '<td class="spc_quantity"><input name="spc_quantity['+ k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 + '-' + k6 +']" type="text" value="'+ spc_price +'" /></td>'
+										  //+ '<td class="spc_tsc"><input name="spc_tsc['+ k1 + '-' + k2 + '-' + k3 + '-' + k4 + '-' + k5 + ']" type="text" value="" /></td>'
+										  //+ '<td class="batch"><i class="sku-batch sku-batch-enable"></i></td>'
+										  + '</tr>';
+									++i;
+									++j;
+									++k;
+									++m;
+									++l;
+								});
+							});
+						});
+					});
+				});
+			});
+		}
+
+		//替换数据
+		$('.specification-table tbody').html(tbody);
+		$('.specification-wrapper').show();
+	}
+
+	var sp_num = $('.label-spc').size();	// 当前所选分类绑定的规格属性数量
+
+	$().ready(function(){
+		//根据用户选择的规格生成规格乘积组合
+		$('.spc_checkbox').click(function(){
+			chooseSpec();
+		});
+
+		//根据数据表中输出的规格生成规格乘积组合
+		chooseSpec();
+		
+		//根据用户选择的颜色生成颜色图片配置表格
+		$('.picture_config').click(function(){
+			createPictureConfigTable();
+		});
+
+		//根据数据表中输出的颜色图片配置生成颜色图片配置表格
+		createPictureConfigTable();
+	});
+
+	//根据用户选择的规格生成规格乘积组合，最多支持五组规格
+	function chooseSpec(){
+		var spc_num = 0;	//当前用户已选择的规格项数量
+		
+		$spc_1 = $('.spc_1:checked');
+		$spc_2 = $('.spc_2:checked');
+		$spc_3 = $('.spc_3:checked');
+		$spc_4 = $('.spc_4:checked');
+		$spc_5 = $('.spc_5:checked');
+		$spc_6 = $('.spc_6:checked');
+
+		var spc_a = {};
+		var spc_b = {};
+		var spc_c = {};
+		var spc_d = {};
+		var spc_e = {};
+		var spc_f = {};
+
+		var spc_1={};
+		var spc_2={};
+		var spc_3={};
+		var spc_4={};
+		var spc_5={};
+		var spc_6={};
+
+		var table_head="";
+
+		//计算选择的规格数_S
+		if($spc_1.length){
+			spc_num++;
+			$.each($spc_1,function(k,spec){
+				$code = $(spec).val();
+				$name = $(spec).attr('title');
+				eval("spc_"+spc_num+"[$code]=$name;")
+			});
+			table_head+="<th><span>"+$spc_1.parent().parent().parent().children('label').html()+"</span></th>";
+		}
+
+		if($spc_2.length){
+			spc_num++;
+			$.each($spc_2,function(k,spec){
+				$code = $(spec).val();
+				$name = $(spec).attr('title');
+				eval("spc_"+spc_num+"[$code]=$name;")
+			});
+			table_head+="<th><span>"+$spc_2.parent().parent().parent().children('label').html()+"</span></th>";
+		}
+
+		if($spc_3.length){
+			spc_num++;
+			$.each($spc_3,function(k,spec){
+				$code = $(spec).val();
+				$name = $(spec).attr('title');
+				eval("spc_"+spc_num+"[$code]=$name;")
+			});
+			table_head+="<th><span>"+$spc_3.parent().parent().parent().children('label').html()+"</span></th>";
+		}
+
+		if($spc_4.length){
+			spc_num++;
+			$.each($spc_4,function(k,spec){
+				$code = $(spec).val();
+				$name = $(spec).attr('title');
+				eval("spc_"+spc_num+"[$code]=$name;")
+			});
+			table_head+="<th><span>"+$spc_4.parent().parent().parent().children('label').html()+"</span></th>";
+		}
+
+		if($spc_5.length){
+			spc_num++;
+			$.each($spc_5,function(k,spec){
+				$code = $(spec).val();
+				$name = $(spec).attr('title');
+				eval("spc_"+spc_num+"[$code]=$name;")
+			});
+			table_head+="<th><span>"+$spc_5.parent().parent().parent().children('label').html()+"</span></th>";
+		}
+		
+		if($spc_6.length){
+			spc_num++;
+			$.each($spc_6,function(k,spec){
+				$code = $(spec).val();
+				$name = $(spec).attr('title');
+				eval("spc_"+spc_num+"[$code]=$name;")
+			});
+			table_head+="<th><span>"+$spc_6.parent().parent().parent().children('label').html()+"</span></th>";
+		}
+		//计算选择的规格数_E
+		if(spc_num > 0){
+			$('.specification-table thead').html(table_head+"<th><span>价格</span></th><th><span>库存</span></th>");
+			spec_combi(spc_num, spc_1, spc_2, spc_3, spc_4, spc_5, spc_6, spc_data);
+		}else{
+			$('.specification-table tbody').empty();
+			$('.specification-wrapper').hide();
+		}
+	}
+
+	// 根据当前勾选的需要配置图片的规格选项生成图片配置表格
+	function createPictureConfigTable(){
+		$picture_config_checked = $('.picture_config:checked');
+
+		// 将当前勾选的需要配置图片的规格选项的编码转换成一维数组
+		var picture_config_code_array = {};
+		var item_id;
+		var prpid;
+		$.each($picture_config_checked,function(k, v){
+			picture_config_code_array[k] = $(v).attr('code');
+		});
+		$.each($picture_config_checked,function(k, v){
+			item_id = $(v).attr('item_id');
+			prpid = $(v).attr('prpid');
+			return false;	//执行一次退出循环
+		});
+
+		//将当前勾选的需要配置图片的规格选项信息转换成对应的二维数组
+		var picture_config_array = new Array();
+		if(!$.isEmptyObject($picture_config_checked)){
+			$.each($picture_config_checked,function(k,v){
+				picture_config_array[$(v).attr('code')] = new Array();
+				picture_config_array[$(v).attr('code')]['color_code'] = $(v).attr('code');
+				picture_config_array[$(v).attr('code')]['color_value'] = $(v).attr('color');
+				picture_config_array[$(v).attr('code')]['color_pic'] = $(v).attr('pic');
+				picture_config_array[$(v).attr('code')]['color_text'] = $(v).attr('title');
+			});
+		}
+
+		// 判断当前是否有勾选需要配置图片的规格选项
+		if($picture_config_checked.length > 0){
+			createPictureConfigTableTr(picture_config_code_array, picture_config_array, item_id, prpid);
+		}else{
+			$('.picture-config-table tbody').empty();
+			$('.picture-config-wrapper').hide();
+		}
+	}
+
+	//校验价格，数量文本框输入合法性
+	$(function () {
+		$(".spc_price input").keyup(function () {
+			//如果输入非价格格式数据，则替换为''
+			var reg = /[0-9]+(\.[0-9]+)?/; 
+			if(!reg.test(this.value)){
+				 this.value = '';
+			}
+		})
+
+		$(".spc_quantity input").keyup(function () {
+			//如果输入非数字，则替换为''
+			this.value = this.value.replace(/[^\d]/g, '');
+		})
+	});
+	</script>
+	</eq>
+	<volist name="property_all" id="vo" key="k">
+		<div class="form-item">
+			<eq name="type" value="specification">
+				<label class="item-label label-spc">{$vo.property.cname}</label>
+			<else/>
+				<label class="item-label">{$vo.property.cname}</label>
+			</eq>
+			<switch name="vo.property.formtype">
+
+				<case value="input"><!-- 文本框 -->
+					<div class="controls">
+						<input type="input" id="property-{$vo.property.ename}-{$vo.property.id}" name="property[{$vo.property.id}][{$vo.property.ename}]" class="text input-large" value="{$vo.value}" />
+					</div>
+				</case>
+
+				<case value="textarea"><!-- 文本域 -->
+					<div class="controls">
+						<label class="textarea input-large">
+							<textarea id="property-{$vo.property.ename}-{$vo.property.id}" name="property[{$vo.property.id}][{$vo.property.ename}]">{$vo.value}</textarea>
+						</label>
+					</div>
+				</case>
+
+				<case value="select"><!-- 下拉列表 -->
+					<div class="controls">
+						<select id="property-{$vo.property.ename}-{$vo.property.id}" name="property[{$vo.property.id}][{$vo.property.ename}]">
+						<volist name="vo.option" id="option">
+							<option value="{$option.code}" <eq name="option.code" value="$vo.value">selected</eq>>{$option.option}</option>
+						</volist>
+						</select>
+					</div>
+				</case>
+
+				<case value="radio"><!-- 单选框 -->
+					<volist name="vo.option" id="option">
+					<div class="controls">
+					  <input type="radio" id="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}" name="property[{$vo.property.id}][{$vo.property.ename}][{$option.code}]" value="{$option.code}" <eq name="option.code" value="$vo.value">checked="checked"</eq> />
+					  <label for="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}">{$option.option}</label>
+					 </div>
+				  </volist>
+				</case>
+
+				<case value="checkbox"><!-- 复选框 -->
+					<div class="controls">
+						<volist name="vo.option" id="option">
+						<label class="checkbox sku-item">
+							<eq name="type" value="specification">
+								<input type="checkbox" id="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}" name="property[{$vo.property.id}][{$vo.property.ename}][{$option.code}]" class="spc_checkbox spc_{$k}" value="{$option.code}" title="{$option.option}" <in name="option.code" value="$vo.value">checked="checked"</in> />
+							<else/>
+								<input type="checkbox" id="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}" name="property[{$vo.property.id}][{$vo.property.ename}][{$option.code}]" value="{$option.code}" <in name="option.code" value="$vo.value">checked="checked"</in> />
+							</eq>
+							<label class="label-name" for="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}">{$option.option}</label>
+						</label>
+						</volist>
+					</div>
+				</case>
+
+				<case value="color"><!-- 颜色选择 -->
+					<div class="controls sku-box">
+						<volist name="vo.option" id="option">
+						<label class="checkbox sku-item">
+							<eq name="type" value="specification">
+								<input type="checkbox" id="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}" name="property[{$vo.property.id}][{$vo.property.ename}][{$option.code}]" title="{$option.option}" code="{$option.code}" color="{$option.color}" pic="{$option.pic|get_cover='path'}" prpid="{$vo.property.id}" item_id="{$item_id}" class="spc_checkbox picture_config spc_{$k}" value="{$option.code}" <in name="option.code" value="$vo.value">checked="checked"</in> />
+							<else/>
+								<input type="checkbox" id="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}" name="property[{$vo.property.id}][{$vo.property.ename}][{$option.code}]" value="{$option.code}" <in name="option.code" value="$vo.value">checked="checked"</in> />
+							</eq>
+              <notempty name="option.pic">
+                <img width="14" height="14" class="pre-img" src="__ROOT__{$option.pic|get_cover='path'}" for="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}" />
+              <else/>
+                <label class="color-lump" style="background-color:{$option.color};" for="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}"></label>
+              </notempty>
+							<label class="label-name" for="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}">{$option.option}</label>
+						</label>
+						</volist>
+					</div>
+				</case>
+
+				<case value="image"><!-- 图片选择 -->
+					<div class="controls sku-box">
+						<volist name="vo.option" id="option">
+						<label class="checkbox sku-item">
+							<eq name="type" value="specification">
+								<input type="checkbox" id="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}" name="property[{$vo.property.id}][{$vo.property.ename}][{$option.code}]" title="{$option.option}" prpid="{$vo.property.id}" class="spc_checkbox spc_{$k}" value="{$option.code}" <in name="option.code" value="$vo.value">checked="checked"</in> />
+							<else/>
+								<input type="checkbox" id="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}" name="property[{$vo.property.id}][{$vo.property.ename}][{$option.code}]" value="{$option.code}" <in name="option.code" value="$vo.value">checked="checked"</in> />
+							</eq>
+							<img width="24" height="24" class="pre-img" src="__ROOT__{$option.pic|get_cover='path'}" for="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}" />
+							<label class="label-name" for="property-{$vo.property.ename}-{$vo.property.id}-{$option.code}">{$option.option}</label>
+						</label>
+						</volist>
+					</div>
+				</case>
+
+				<default />
+			</switch>
+		</div>
+	</volist>
+
+	<eq name="type" value="specification">
+		<!-- 规格组合：价格，数量配置表格 -->
+		<div class="specification-wrapper">
+    	<h4>价格与库存配置</h4>
+			<table cellspacing="1" cellpadding="2" border="0" class="specification-table dynamic-table">
+				<thead>
+					<tr>
+						<volist name="property_all" id="vo">
+						<th><span>{$vo.property.cname}</span></th>
+						</volist>
+						<th><span>价格</span></th>
+						<th><span>库存</span></th>
+						<!--<th><span>商品编码</span></th>
+						<th><span>批量操作</span></th>-->
+					</tr>
+				</thead>
+				<tbody>
+					<!-- 这里是规格组合数据 -->
+				</tbody>
+			</table>
+		</div>
+
+		<!-- 颜色图片配置表格 -->
+		<div class="picture-config-wrapper">
+    	<h4>颜色图片配置（图片尺寸：800px * 800px）</h4>
+			<table cellspacing="1" cellpadding="2" border="0" class="picture-config-table dynamic-table">
+				<thead>
+					<tr>
+						<th class="color">颜色分类</th>
+						<th class="pic">颜色图片</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- 这里是颜色图片配置数据 -->
+				</tbody>
+			</table>
+		</div>
+	</eq>
+<else />
+	<p>当前分类尚未绑定规格！</p>
+</notempty>

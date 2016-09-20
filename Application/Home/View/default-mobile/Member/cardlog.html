@@ -1,0 +1,27 @@
+<extend name="Base/common"/>
+<block name="body">
+	<div class="content-padded">
+		<notempty name="cardlog">
+			<volist name="cardlog" id="vo">
+      	<a href="{:U('Order/detail', array('order_sn' => $vo['order_sn']))}">
+				<div class="mb card text-lists">
+					<p>
+						<em>{$vo.card_name}</em>
+						<em class="pull-right">{$vo.create_time|time_format}</em>
+					</p>
+					<div class="info">
+          	<span class="pull-left">
+            	订单编号：{$vo.order_sn}
+            </span>
+						<span class="pull-right text-danger">
+              使用金额：&yen;{$vo.amount}
+						</span>
+					</div>
+				</div>
+        </a>
+			</volist>
+		<else />
+			<p class="list-empty">该礼品卡暂无使用日志。</p>
+		</notempty>
+	</div>
+</block>

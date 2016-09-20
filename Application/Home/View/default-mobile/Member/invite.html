@@ -1,0 +1,46 @@
+<extend name="Base/common"/>
+<block name="header">
+{:hook('mobileTopNav',array('title'=>$meta_title))}
+</block>
+
+<block name="body">
+  <div class="text-warning">
+    成功邀请一位好友注册，即可奖励<em class="text-danger">{:C('INVITE_REWARD_MONEY')}元</em>（每天限制{:C('INVITE_MAX_PEOPLE')}人）。
+  </div>
+  <div class="content-padded">
+    <notempty name="lists">
+      <volist name="lists" id="vo">
+        <div class="mb invite text-lists">
+          <div class="invite-t">  
+            <span class="pull-left">
+              邀请用户：{$vo.reg_uid|get_nickname}
+            </span>
+            <em class="pull-right">奖励：<span class="text-danger">+{$vo.reward_amount}</span> 元</em>
+          </div>
+          <div class="invite-b">          
+            <span class="pull-left">
+            	备注：<eq name="vo.reward_status" value="1">
+                    <span class="resta-y">奖励已到账</span>
+                    <else/>
+                    <span class="resta-n"> 奖励未到账</span>
+                    </eq>
+            </span>
+            <em class="pull-right">{$vo.create_time|time_format}</em>
+          </div>
+        </div>
+      </volist>
+    <else />
+      <p class="list-empty">暂无邀请记录...</p>
+    </notempty>
+  </div>
+  <div class="bar bar-standard bar-footer-secondary">
+    <button onclick="$.ui.share.init();" class="btn btn-outlined btn-primary btn-block">我要邀请小伙伴</button>
+  </div>
+</block>
+<block name="script">
+  <script type="text/javascript">
+    seajs.use('wechat', function(wechat){
+      wechat.init();
+    });
+  </script>
+</block>

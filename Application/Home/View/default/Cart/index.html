@@ -1,0 +1,131 @@
+<extend name="Base/common"/>
+<block name="body">
+  <div class="page-header">
+    <h3>我的购物车</h3>
+  </div>
+  <!-- 购物车商品列表 -->
+  <gt name="cart_count.total_quantity" value="0">
+    <div class="cart-list" id="J_cart_list">
+      <!-- 购物车商品列表 -->
+      <dl>
+        <dt class="clearfix">
+          <div class="row">
+            <span class="col-xs-1 text-center">选择</span>
+            <span class="col-xs-6 text-center">商品信息</span>
+            <span class="col-xs-1">单价</span>
+            <span class="col-xs-2 text-center">数量</span>
+            <span class="col-xs-1">小计</span>
+            <span class="col-xs-1">操作</span>
+          </div>
+        </dt>
+        <volist name="list" id="supp">
+          <div class="supplier-box">
+          <dd class="supplier-dd">
+            <div class="row">
+              <span class="col-xs-3">
+                <a href="javascript:;" class="check active J_cart_supplier" data-supplier_id="{$supp.supplier_id}"><i class="icon icon-round-check"></i></a>
+                <gt name="supp.supplier_id" value="0">{$supp.supplier_name} <else /> <span class="is-self">{:C('WEB_SITE_TITLE')}自营</span></gt>
+              </span>
+              <span class="col-xs-6 send-items J_send_supp_{$supp.supplier_id}"></span>
+            </div>
+          </dd>
+          <volist name="supp.item" id="vo">
+            <dd id="J_cart_{$vo['item_code']}" class="item clearfix J_cart_{$vo['item_id']}" data-code="{$vo['item_code']}" data-id="{$vo['item_id']}">
+              <div class="row">
+                <div class="col-xs-1">
+                  <a href="javascript:;" class="check active J_cart_checkitem" data-supplier_id="{$vo.supplier_id}" data-id="{$vo.item_id}" data-code="{$vo.item_code}"><i class="icon icon-round-check"></i></a>
+                </div>
+                <div class="col-xs-6">
+                  <div class="pic">
+                    <a href="{:U('Item/detail', array('id' => $vo['item_id']))}" target="_blank"><img src="{:get_image_thumb($vo['cover_path'], 100, 100)}" width="100" height="100"></a>
+                  </div>
+                  <div class="info">
+                    <div class="name">
+                      <a href="{:U('Item/detail', array('id' => $vo['item_id']))}" target="_blank">{$vo['item_id']|get_item_name}</a>
+                    </div>
+                    <div class="spc">
+                      <if condition="$vo['stock'] lt $vo['quantity']"><em class="text-danger J_gt_freenum_tip">此商品所购买数量大于库存</em></if>
+                      <volist name="vo.spec" id="spec">
+                        <span>{$spec['key']}：{$spec['val']}</span>
+                      </volist>
+                    </div>
+                  </div>
+                </div>
+                <php>$vo['stock'] = get_quota_num($vo['item_id']);$vo['quantity'] = min($vo['quantity'], $vo['stock']);</php>
+                <div class="col-xs-1">
+                  <div class="box price">
+                    <span class="text-danger"><em class="yen">&yen;</em> {$vo['price']}</span>
+                  </div>
+                  <div class="price-tip mt-5">
+                    <if condition="$vo.dis_price gt 0">
+                      <span class="text-left">老客户立减</span>
+                    </if>
+                  </div>
+                </div>
+                <div class="col-xs-2">
+                  <div class="quantity clearfix" id="J_item_box_{$vo['item_code']}">
+                    <a href="javascript:;" class="minus <eq name="vo.quantity" value="1">disabled</eq> J_cart_update" data-option="minus" data-item_code="{$vo.item_code}" data-price="{$vo.price}" data-stock="{$vo.stock}">-</a>
+                    <input type="text" id="J_item_num_{$vo['item_code']}" class="num J_cart_change" value="{$vo['quantity']}" min="1" pattern="[0-9]*" data-item_code="{$vo.item_code}" data-price="{$vo.price}" data-stock="{$vo.stock}">
+                    <a href="javascript:;" class="plus <eq name="vo.quantity" value="$vo['stock']">disabled</eq> J_cart_update" data-option="plus" data-item_code="{$vo.item_code}" data-price="{$vo.price}" data-stock="{$vo.stock}">+</a>
+                  </div>
+                  <if condition="get_quota_status($vo['item_id'])">
+                    <div class="text-center">最多购买 <span class="J_quota_num text-danger">{$vo.stock}</span> 件</div>
+                  </if>
+                </div>
+                <div class="col-xs-1">
+                  <div class="box price">
+                    <strong class="text-danger" id="J_item_price_{$vo['item_code']}"><em class="yen">&yen;</em> <em class="J_item_price">{$vo['subAmount']}</em></strong>
+                  </div>
+                  <div class="price-tip mt-5">
+                    <span id="J_second_pieces_{$vo['item_code']}" class="text-left hide">第二件折扣</span>
+                  </div>
+                  
+                </div>
+                <div class="col-xs-1">
+                  <div class="box">
+                    <a href="javascript:;" title="删除" class="del J_cart_remove" data-item_code="{$vo.item_code}"><i class="icon icon-close"></i></a>
+                  </div>
+                </div>
+              </div>
+            </dd>
+          </volist>
+          </div>
+        </volist>
+      </dl>
+      <div class="bar">
+        <div class="row">
+          <div class="col-xs-4">
+            <div class="clear">
+              <a href="javascript:;" class="check active" id="J_cart_checkall"><i class="icon icon-round-check"></i> 全选</a>
+              <a href="javascript:;" id="J_cart_clear" class="btn btn-link">清空购物车</a>
+            </div>
+          </div>
+
+          <div class="col-xs-8">
+            <div class="checkout text-right clearfix">
+            已选择 <span class="text-danger J_item_count">{$cart_count.total_quantity}</span> 件商品，
+            总价（不含运费）：<span class="text-danger"><em class="yen">&yen;</em><em class="text-price" id="J_cart_total">{$cart_count.total_amount}</em></span>
+            <a href="javascript:;" class="pull-right btn btn-positive btn-checkout" id="J_cart_checkout">去结账</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <else />
+      <div class="cart-empty">
+        <h2>你的购物车还是空的赶紧行动吧！</h2>
+        <a href="{:U('Item/search')}" class="btn btn-positive">马上去购物</a>
+      </div>
+    </gt>
+</div>
+</block>
+
+<block name="script">
+  <script>
+    seajs.use('cart', function(cart){
+      <notempty name="list">
+      cart.init({$second_pieces_item});
+      </notempty>
+    });
+  </script>
+</block>

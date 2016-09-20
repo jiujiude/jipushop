@@ -1,0 +1,224 @@
+/**********用户模块**********/
+/*用户个人中心*/
+.user-info {
+  padding-top: 20px;
+  text-align: center;
+  background: url(../images/user-bg.jpg) center top no-repeat;
+  background-size: cover;
+  color: #fff;
+  position: relative;
+  
+  /*站内消息*/
+  .message {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    color: #444;
+    
+    > .icon {
+      font-size: 18px;
+    }
+    
+    > s {
+      display: block;
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #f44336;
+      border-radius: 8px;
+      right: -10px;
+      top: -1px;
+    }
+  }
+  
+  .avatar {
+    border-radius: 50%;
+  }
+
+  > .name {
+    line-height: 30px;
+  }
+
+  .order-bar {
+    margin-top: 10px;
+    padding: 10px 0;
+    font-size: 12px;
+    background-color: rgba(0,0,0,.3);
+
+    > li {
+      text-align: center;
+      border-right: 1px solid rgba(255,255,255,.2);
+
+      &:last-child {
+        border-right: none;
+      }
+
+      > a {
+        color: #fff;
+
+        > .num {
+          display: block;
+          font-size: 18px;
+        }
+      }
+    }  
+  }
+}
+
+.user-table {
+  background-color: #f2f2f2;
+
+  > .user-table-view {
+
+    &:last-child {
+      margin-bottom: 10px;
+    }
+
+    .media-object {
+
+      &.icon {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+.user-bind-text {
+  line-height: 40px;
+}
+
+/*第三方登录*/
+.user-third {
+
+  > ul {
+    margin-top: 10px;
+
+    > li {
+      margin-bottom: 10px;
+      text-align: center;
+
+      > a {
+        display: block;
+        margin: 0 auto;
+        padding: 20px;
+        width: 74px;
+        height: 74px;
+        border: $border-default;
+        border-radius: 50%;
+        background-color: #f9f9f9;
+        color: #888;
+
+        &:hover,
+        &:active {
+          border-color: $negative-color;
+
+          > i {
+            color: $negative-color;
+          }
+        }
+
+        > .icon {
+          font-size: 32px;
+          cursor: pointer;
+          text-shadow: 1px 1px 10px #fff;
+          line-height: 32px;
+        }
+      }
+
+      > p {
+        line-height: 30px;
+        color: #999;
+      }
+    }
+  }
+}
+
+/*找回密码*/
+.find_password {
+
+  &:active,
+  &:visited {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: #33619b;
+  }
+}
+
+/*第三方登录回调绑定*/
+.user-bind {
+
+  > .userinfo {
+    padding: 10px;
+    height: 60px;
+    background: #fff;
+
+    > .avatar {
+      float: left;
+      margin-right: 10px;
+      width: 50px;
+      height: 50px;
+    }
+
+    > .tips {
+      line-height: 25px;
+    }
+  }
+}
+
+/*头像*/
+.set-avatar {
+  height: 84px;
+  position: relative;
+  
+  > label {
+    padding: 32px 15px;
+  }
+
+  > .btn-upload {
+    margin: 10px 0;
+    display: inline-block;
+    width: 64px;
+    height: 64px;
+    line-height: 64px;
+    border: 2px dashed #eee;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    text-align: center;
+
+    &:active {
+      background-color: #eee;
+    }
+
+    > .icon-camera-add {
+      font-size: 32px;
+    }
+  }
+
+  > .tips {
+    position: absolute;
+    top: 20px;
+    padding: 0 10px;
+    height: 40px;
+    line-height: 20px;
+  }
+}
+
+/*顶部分类样式，仿微博交易记录*/
+.nav-tabs-wb {
+  text-align: center;
+  line-height: 34px;
+  background: #FFF;
+  border-bottom: 1px solid #eee;
+  color: #555;
+  
+  > a {
+    display: inline-block;
+    padding: 0 10px;
+    margin: 0 10px;
+    
+    &.active {
+      border-bottom: 2px solid $negative-color;
+    }
+  }
+}

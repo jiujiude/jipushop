@@ -1,0 +1,238 @@
+/**********红包（新）模块**********/
+.redpackage-detail {
+  position: absolute;
+  width: 100%;
+  min-height: 100%;
+  top: -44px;
+  background: url(../images/redpacket-bg-star.png) center bottom no-repeat;
+  background-size: 100%;
+
+  .bd {
+    width: 75%;
+    height: 60%;
+    margin: 30% auto 0;
+    background:#a04539 url(../images/red-package-bg.jpg) no-repeat center bottom;
+    background-size: 100%;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,.1);
+    text-align: center;
+    overflow: hidden;
+    min-height: 335px;
+    max-height: 430px;
+    position: relative;
+
+    > h3 {
+      font-size: 16px;
+      margin-top: 5px;
+      color: #fff;
+    }
+    
+    > p {
+      color: #cab9b0;
+      margin-top: 10px;
+      font-size: 12px;
+      
+      &.info {
+        margin-top: 15px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #fff;
+        padding:0 10px;
+      }
+    }
+    
+    > a {
+      color: #fff;
+      display: inline-block;
+      
+      &.close {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        color: #833328; 
+      }
+      
+      &.avatar {
+        margin-top: 30px;
+
+        > img {
+
+          width: 60px;
+          width: 60px;
+          height: 60px;
+          border-radius: 30px;
+        }
+      }
+      
+      &.open-btn {
+        background: #fba947;
+        width: 80px;
+        height: 80px;
+        text-align: center;
+        line-height: 80px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 40px;
+        position: absolute;
+        bottom: 15%;
+        left:50%;
+        margin-left: -40px; 
+        box-shadow: 0 4px 4px rgba(150, 64, 54, 1);
+        
+        &:active {
+          width: 90px;
+          height: 90px;
+          margin-left: -45px;
+          margin-top: -5px;
+          border-radius: 45px;
+          line-height: 90px;
+        }
+      }
+      
+      &.show-record {
+        position: absolute;
+        color: #f9a34e;
+        bottom: 20px;
+        left: 50%; 
+        margin-left: -49px;
+      }
+    }
+  }
+}
+
+/*红包打开详情*/
+.redpackage-open {
+  position: absolute;
+  width: 100%;
+  min-height: 100%;
+  top: -34px;
+  background:#f5f5f5 url(../images/red-package-open.jpg) center top no-repeat;
+  background-size: 100% 225px;
+  padding-bottom: 55px;
+  
+  .bd {
+    text-align:center;
+    margin-top: 60px;
+    
+    .avatar {
+      
+      a > img {
+        width: 80px;
+        height: 80px;
+        border-radius: 40px;
+        box-shadow: 0 2px 4px rgba(0,0,0,.3);
+      }
+    }
+    
+    h3 {
+      background: #fff;
+      font-size: 16px;
+      font-weight: normal;
+      color: #333;
+      margin-top: 15px;
+    }
+    
+    > p {
+      font-size: 14px;
+      color: #a5a5a5;
+      padding-top: 13px;
+      
+      &.info,
+      &.amount,
+      &.amount-info,
+      &.no-record{
+        background: #fff;
+      }
+      
+      &.amount {
+        
+        > span {
+          font-size: 60px;
+          line-height: 60px;
+          padding-right: 8px;
+        }
+        
+        color: #030303;
+        padding: 30px 0 15px;
+      }
+      
+      &.amount-info {
+        font-size: 12px;
+        color: #536ea3;
+        padding-bottom: 25px;
+        
+        > a {
+          color: #f44336!important;
+        }
+      }
+      
+      &.no-record {
+        padding-top: 5px;
+      }
+    }
+  }
+  
+  .fd {
+    > h6 {
+      color: #b0b0b0;
+      font-size: 14px;
+      font-weight: normal;
+      padding-left: 15px;
+      line-height: 35px;
+      height: 35px;
+    }
+    
+    > ul {
+      background: #fff;
+      
+      li {
+        overflow: hidden;
+        min-height: 56px;
+        border-bottom: 1px solid #f5f5f5;
+        position: relative;
+        padding: 10px 15px;
+        
+        > img {
+          float: left;
+          width: 42px;
+          height: 42px;
+          position: absolute;
+          left: 15px;
+          top: 10px;
+          border-radius: 21px;
+        }
+        
+        > div {
+          padding-left: 55px;
+          
+          h3 {
+            font-size: 14px;
+            color: #030303;
+            font-weight: normal;
+            
+            em {
+              float: right;
+              font-size: 14px;
+            }
+          }
+          
+          p {
+            color: #b0b0b0;
+            font-size: 12px;
+            padding-top: 8px;
+            
+            em {
+              float: right;
+              color: #fdaa3a;
+              font-size: 12px;
+              
+              > i {
+                font-size: 14px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

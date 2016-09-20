@@ -1,0 +1,29 @@
+<extend name="Base/common"/>
+
+
+
+
+<block name="body">
+  <div class="shop list-bg" id="Z_load_itemlist">
+    <notempty name="lists">
+      <include file="orderList"/>
+    <else/>
+      <p class="list-empty">还没有返现订单信息</p>
+    </notempty>
+  </div>
+</block>
+
+<block name="footer">
+
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use(['common', 'order'], function(common, o){
+      var url = window.location.href;
+      order = o;
+      o.bindList();
+      common.loadmore(url);
+    });
+  </script>
+</block>

@@ -1,0 +1,68 @@
+<extend name="Base/common"/>
+
+<block name="body">
+  <div class="crowdfunding">
+    <notempty name="info">
+      <!-- 商品信息 -->
+      <div class="info">
+        <div class="hd">发起众筹</div>
+        <div class="bd">
+          <img src="{$info.OrderItem.cover_path}" class="img" width="60" height="60">
+          <h5 class="name">{$info.OrderItem.name}</h5>
+          <div class="detail">
+            <p>{$info.ship|get_short=20}</p>
+            <p>{$info.ship_uname} {$info.ship_mobile}</p>
+            <p><span class="text-danger"><em class="yen">&yen;</em>{$info.total_amount}</span></p>
+            <a href="{:U('Item/detail',array('id'=>$info['OrderItem']['item_id']))}" class="btn"><i class="icon icon-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+      <!-- 众筹步骤 -->
+      <div class="step">
+        <ul class="flex-box">
+          <li>
+            <span class="badge">1</span>
+            <p>留言并分享</p>
+          </li>
+          <li>
+            <span class="badge">2</span>
+            <p>多人付款</p>
+          </li>
+          <li>
+            <span class="badge">3</span>
+            <p>众筹成功</p>
+          </li>
+        </ul>
+      </div>
+      <div class="content-padded">
+        <form id="Z_crowdfunding_add" action="{:U('Crowdfunding/add')}" method="post">
+          <div class="control-group">
+            <input type="text" name="msg" value="{:C('CROWDFUNDING_SHEAR_CONTENT')}" placeholder="给小伙伴留言">
+          </div>
+          <div class="control-action">
+            <input type="hidden" name="id" value="{$info.id}">
+            <input type="button" class="btn btn-block btn-positive Z_crowdfunding_netx" value="下一步">
+          </div>
+        </form>
+      </div>
+    <else/>
+      <a href="{:U('Index/index')}" class="btn btn-block btn-positive Z_crowdfunding_next">亲，请先下单</a>
+    </notempty>
+  </div>
+</block>
+<block name="script">
+  <script type="text/javascript">
+    seajs.use('crowdfunding', function(crowdfunding) {
+      //crowdfunding.init();
+      $('.Z_crowdfunding_netx').click(function(){
+        $.post($('#Z_crowdfunding_add').attr('action'), $('#Z_crowdfunding_add').serialize(), function(response){
+          if(response.code==200){
+            window.location.href=response.url;
+          }else{
+            alert(response.title)
+          }
+        })
+      });
+    });
+  </script>
+</block>

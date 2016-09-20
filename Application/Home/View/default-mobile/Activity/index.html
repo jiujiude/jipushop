@@ -1,0 +1,15 @@
+<extend name="Base/common"/>
+
+<block name="body">
+  <div class="activity-list">
+    <ul>
+      <notempty name="data.list">
+        <volist name="data.list" id="vo">
+          <li>
+            <a href="{:U('Topic/detail', array('id' => $vo['id']))}" title="{$vo.name}" target="_blank"><img src="__ROOT__{:get_image_thumb($vo['src'], 840, 300)}" alt="{$vo.name}"></a>
+          </li>
+        </volist>
+      </notempty>
+    </ul>
+  </div>
+</block>

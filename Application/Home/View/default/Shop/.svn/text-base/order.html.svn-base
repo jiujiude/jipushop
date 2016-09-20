@@ -1,0 +1,19 @@
+<extend name="Base/member"/>
+
+<block name="body">
+  <div class="user-box shop">
+    <include file="Sdp/topbar" />
+
+    <notempty name="lists">
+      <div class="user-order">
+        <div class="list">
+          <include file="orderList"/>
+        </div>
+        <div class="page">{$_page}</div>
+      </div>
+    <else/>
+      <p class="list-empty">还没有返现订单信息</p>
+    </notempty>
+
+  </div>
+</block>

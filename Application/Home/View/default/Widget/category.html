@@ -1,0 +1,11 @@
+<notempty name="data.category">
+  <div class="nav-category J_home_category">
+    <ul>
+      <volist name="data.category" id="vo">
+        <li class="item">
+          <a class="title" href="{:U('Item/search', array('cid' => $vo['id']))}"><i class="iconfont">&#xe610;</i>{$vo.name}</a>
+        </li>
+      </volist>
+    </ul>
+  </div>
+</notempty>

@@ -1,0 +1,65 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>新增礼品卡</h2>
+  </div>
+  <form action="{:U()}" method="post" class="form-horizontal">
+    <div class="form-item">
+      <label class="item-label">卡名称<span class="check-tips"></span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="name" value="">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">卡数量<span class="check-tips"></span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="quantity" value="50"> 张
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">卡面值<span class="check-tips"></span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="amount" value=""> 元
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">卡号长度<span class="check-tips"></span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="length" value="16"> 位
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">有效日期<span class="check-tips">（截止所选当日23时59分59秒）</span></label>
+      <div class="controls">
+        <input type="text" class="text input-large time" name="expire_time" value="">
+      </div>
+    </div>
+    <div class="form-item">
+      <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+  </form>
+</block>
+
+<block name="script">
+  <link href="__JS__/datetimepicker/css/datetimepicker.css" rel="stylesheet" type="text/css">
+  <php>if(C('COLOR_STYLE')=='blue_color') echo '<link href="__JS__/datetimepicker/css/datetimepicker_blue.css" rel="stylesheet" type="text/css">';</php>
+  <link href="__JS__/datetimepicker/css/dropdown.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="__JS__/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+  <script type="text/javascript" src="__JS__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+
+  <script type="text/javascript">
+    //日期选择
+    $(function(){
+      $('.time').datetimepicker({
+        format: 'yyyy-mm-dd',
+        language:"zh-CN",
+        minView:2,
+        autoclose:true
+      });
+    });
+    //导航高亮
+    highlight_subnav("{:U('index')}");
+  </script>
+</block>

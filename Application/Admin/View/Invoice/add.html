@@ -1,0 +1,202 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>核对开票信息</h2>
+  </div>
+
+  <style type="text/css">
+  .sub-title h3 {
+    float: none;
+  } 
+  
+  .receiver {
+    background: #efefef;
+    padding: 5px 20px 15px;
+    margin-bottom: 20px;
+    border-radius: 3px;
+  }
+
+  .receiver p{
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #E0E0E0;
+  }
+
+  .data-table thead th {
+    background-color: #DDDDDD;
+    color: #2D7200;
+    font-weight: 700;
+    border-bottom: 2px solid #2D7200;
+  }
+
+  .add-receiver-form {
+    display: none;
+    margin-top: 10px;
+  }
+
+  .add-receiver-form .form-item {
+    margin-bottom: 10px;
+  }
+
+  .add-receiver-form .form-item input {
+    border: 1px solid #E0E0E0;
+  }
+  </style>
+  <div class="receiver">
+    <form action="{:U('saveadd')}" method="post" class="form-horizontal">
+    <input type="hidden" name="invoice_amount" value="{$orderCount['total_amount']}">
+    <input type="hidden" name="orderids" value="{$orderids}">
+    <div class="sub-title">
+      <h3>发票类型</h3>
+      <p>
+        <input type="radio" name="invoice_type" value="普通发票"> 普通发票
+        &nbsp;&nbsp;
+        <input type="radio" name="invoice_type" value="增值税发票"> 增值税发票
+      </p>
+    </div>
+  
+    <div class="sub-title">
+      <h3>发票抬头</h3>
+      <p>
+      <select id="invoice_title" name="invoice_title">
+        <option value="">请选择发票抬头</option>
+        <volist name="invoiceTitleList" id="vo">
+        <option value="{$vo.title}">{$vo.title}</option>
+        </volist>
+      </select>
+      <a href="{:U('addTitle')}"> +新增发票抬头+</a>
+      </p>
+    </div>
+    
+    <div class="sub-title">
+      <h3>收件人信息</h3>
+    </div>
+    <volist name="receiverList" id="vo">
+    <p>
+      <input type="radio" name="receiverid" value="{$vo.id}">
+      <strong>收件人：</strong>{$vo.name}&nbsp;&nbsp;
+      <strong>手机：</strong>{$vo.mobile|default='无'}&nbsp;&nbsp;
+      <strong>座机：</strong>{$vo.phone|default='无'}&nbsp;&nbsp;
+      <strong>收件地址：</strong>{$vo.area}{$vo.address}
+    </p>
+    </volist>
+    <p><a href="javascript:void();" id="add-receiver-href"> +新增收件人+</a></p>
+    </form>
+
+    <div class="add-receiver-form">
+      <form action="{:U('Receiver/add')}" method="post" class="form-receiver">
+      <div class="form-item">
+         <label>姓名：</label>
+         <input type="text" class="text input-large" name="name" value="">
+      </div>
+      <div class="form-item">
+         <label>手机：</label>
+         <input type="text" class="text input-large" name="mobile" value="">
+      </div>
+      <div class="form-item">
+         <label>座机：</label>
+         <input type="text" class="text input-large" name="phone" value="">
+      </div>
+      <div class="form-item">
+         <label>地区：</label>
+         <input type="text" class="text input-large" name="area" value="">
+      </div>
+      <div class="form-item">
+         <label>地址：</label>
+         <input type="text" class="text input-large" name="address" value="">
+      </div>
+      <div class="form-item">
+         <label>邮编：</label>
+         <input type="text" class="text input-large" name="zipcode" value="">
+      </div>
+      <div class="form-item">
+        <input type="hidden" name="user_id" value="{$Think.UID}">
+        <input type="hidden" name="jump_url" value="{:U('','orderids='.$orderids)}">
+        <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-receiver">确 定</button>
+      </div>
+      </form>   
+    </div>
+  </div>
+
+    <div class="data-table">    
+    <div class="sub-title">
+      <h3>开票订单明细</h3>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th width="150">订单编号</th>
+          <th>订单明细</th>
+          <th width="100">订单总额</th>
+          <th width="130">下单时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <volist name="list" id="vo">
+        <tr>
+          <td><a href="{:U('Order/myview?id='.$vo['id'])}">{$vo.order_sn}</a></td>
+          <td style="font-size: 13px; line-height:24px;">{:getOrderItemForInvoice($vo['id'])}</td>
+          <td>￥{$vo.total_amount}</td>
+          <td>{$vo.create_time|time_format}</td>
+        </tr>
+        </volist>
+      </tbody>
+    </table> 
+  </div>
+
+  <!-- 按钮工具栏 -->
+  <div class="cf">
+    <div class="fl">
+      <a href="{$Think.cookie.__forward__}" class="btn">返 回</a>
+    </div>
+
+    <!-- 结算合计 -->
+    <div class="fr cf">
+      商品共计: <font color="red">{$orderCount['total_quantity']}</font> 件&nbsp;&nbsp;&nbsp;&nbsp;商品总金额(不含运费): <font color="red">￥{$orderCount['total_qmount']}</font>
+      &nbsp;
+      <button class="btn ajax-post orderbtn" id="submit" type="submit" target-form="form-horizontal">提交发票申请</button>
+    </div>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    // 隐藏/显示新增收件人表单
+    $("#add-receiver-href").click(function (){
+      $(".add-receiver-form").toggle(500);
+    });
+
+    $(".orderbtn").click(function (){
+      //判断是否选择发票类型（单选）
+      var invoice_type = $('input[name="invoice_type"]:checked').val();
+      if (typeof(invoice_type) == "undefined") { 
+        alert("请选择发票类型！")
+        return false();
+      } 
+
+      //判断是否选择发票抬头（下拉）
+      var invoice_title = $("#invoice_title option:selected").attr("value");
+      if(invoice_title==""){
+        alert("请选择发票抬头！")
+        return false();
+      }
+
+      //判断是否选择收件人（单选）
+      var flag=0;
+      for(i=0;i<$("input[name='receiverid']:radio:checked").length;i++)
+      if($(":radio:checked").get(0).checked=true){
+        flag=1;
+        break;
+      }
+      if(!flag){
+        alert("请选择收件人！")
+        return false();
+      }
+    });
+
+    //导航高亮
+    highlight_subnav("{:U('apply')}");
+  </script>
+</block>

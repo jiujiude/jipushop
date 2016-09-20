@@ -1,0 +1,30 @@
+<extend name="Base/common"/>
+<block name="header">
+{:hook('mobileTopNav',array('title'=>$meta_title))}
+</block>
+
+<block name="body">
+  <div class="content-padded">
+    <p><span>当前可用积分：<em class="text-danger money">{$member.score}</em>分</span></p>
+  </div>
+  <div class="list-bg">
+    <notempty name="lists">
+      <div class="table-view">
+        <ul id="Z_load_itemlist">
+          <include file="scoreList"/>
+        </ul>
+      </div>
+    <else/>
+      <p class="list-empty">暂无积分消费记录...</p>
+    </notempty>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use('common', function(common){
+      var url = window.location.href;
+      common.loadmore(url);
+    });
+  </script>
+</block>

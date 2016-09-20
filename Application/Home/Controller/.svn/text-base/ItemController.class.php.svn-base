@@ -1,0 +1,273 @@
+<?php
+/**
+ * 前台商品控制器
+ * @version 2014100714
+ * @author Max.Yu <max@winhu.com>
+ */
+
+namespace Home\Controller;
+use Think\Cache;
+
+class ItemController extends HomeController{
+
+  /**
+   * 搜索列表页
+   * @param $cid 商品分类
+   * @param $label 筛选标签：is_recommend->首页推荐，is_new->新品，is_hot->
+   * 热卖，is_promote->特价
+   * @param $keyword 关键词
+   * @param $_field 排序字段
+   * @param $_order 排序
+   * @author Max.Yu <max@winhu.com>
+   */
+  public function search($cid = '', $label = '', $keyword = '', $_field = '', $_order = ''){
+    $where = array('status' => 1);
+    //实例化数据模型
+    $item_model = M('Item');
+    $item_category_model = D('ItemCategory');
+    $search_model = D('Search');
+    $fav_model = D('Fav');
+    $coupon=I('get.coupon');
+    if($coupon){
+      $cp=M('coupon')->find($coupon);
+      if(!empty($cp['items'])){
+        $where['id']=array('in',explode(',',$cp['items']));
+      }
+    }
+    //设置查询条件：商品分类
+    if($cid){
+      $where['cid_1|cid_2|cid_3'] = $cid;
+      $data_category = $item_category_model->info($cid);
+      $meta_title = $data_category['meta_title'];
+    }
+
+    //设置查询条件：商品标注&标签&特征
+    //（is_recommend->首页推荐，is_new->新品，is_hot->热卖，is_promote->特价）
+    if($label){
+      $label_key = array(
+        'index' => array('is_recommend', '推荐'),
+        'new' => array('is_new', '新品'),
+        'hot' => array('is_hot', '热卖'),
+        'promote' => array('is_promote', '特价')
+      );
+      if($res = $label_key[$label]){
+        $where[$res[0]] = 1;
+        $meta_title = $res[1];
+      }
+    }
+
+    //设置查询条件：查询关键词
+    if($keyword){
+      $has_keyword = $search_model->hasKeyword($keyword);
+      if($has_keyword){
+        $map['keyword'] = $has_keyword['keyword'];
+        $search_model->where($map)->setInc('num');
+        $where['id'] = array('IN', $has_keyword['result']);
+      }else{
+        $where['name'] = array('LIKE', '%'.$keyword.'%');
+      }
+      $meta_title = $keyword;
+    }
+
+    //根据查询条件查询商品数据
+    $order = '`is_top` desc, `sort` asc, `id` desc';
+    if(I('get._field'))$order='`'.I('get._field').'` '.I('get._order').', '.$order;
+    $lists = $this->lists($item_model, $where, $order, true, 24);
+
+    //搜索结果加入索引
+    //2015071114 Justin 增加过滤空关键字和空结果集 delete from jipu_search where keyword = '' or result=''
+    if($keyword && !$has_keyword && $lists){
+      $item_ids = get_sub_by_key($lists, 'id', '', true);
+      //搜索结果加入索引
+      $data = array(
+        'keyword' => $keyword,
+        'result' => $item_ids,
+        'num' => 1,
+      );
+      $search_model->update($data);
+    }
+
+    //获取分类数据
+    if(empty($cid))$cid=0;
+    
+    //获取当前类所在层级
+    $cates[]=array('item'=>$item_category_model->getChild($cid),'pid'=>$cid,'cid'=>0);
+    $cate_active[$cid][0] = 'current';
+    
+    if(count($cates[0]['item'])==0)$cates=array();
+    $pid=$cid;
+    while($pid>0){
+        $item_info=$item_category_model->info($pid);
+        $item_tmp=$item_category_model->getBrother($pid);
+        $cate_active[$item_tmp[0]['pid']][$pid] = 'current';
+        $cates[]=array('item'=>$item_tmp,'cid'=>$pid,'cname'=>$item_info['name'],'pid'=>$item_tmp[0]['pid']);
+        $pid=$item_tmp[0]['pid'];
+    }
+    
+    $cates=array_reverse($cates);
+    
+    //设置当前排序条件的活动样式
+    $order_css['active'][I('get._field')][I('get._order')] = 'active';
+
+    //获取当前用户收藏商品数据和封面图片路径
+    $fav_list = $fav_model->listUserFav(UID, 'item');
+    if($lists && is_array($lists)){
+      foreach($lists as $key => &$value){
+        if($value['thumb']){
+          $value['cover_path'] = get_cover($value['thumb'], 'path');
+        }
+        if(!$value['buynum']){
+          $value['buynum'] = 0;
+        }
+
+        //判断收藏状态
+        if($fav_list && is_array($fav_list)){
+          $value['is_fav'] = (in_array($value['id'], $fav_list)) ? 1 : 0;
+        }else{
+          $value['is_fav'] = 0;
+        }
+      }
+    }
+    
+    //记录当前页面URL地址Cookie
+    Cookie('__forward__', $_SERVER['REQUEST_URI']);
+    //模板输出变量赋值
+    $this->category = $cates;
+    $this->show_child=1;
+    $this->cateTree=$item_category_model->getTree();
+    
+    $this->cate_active = $cate_active;
+    $this->cid = $cid;
+    $this->label = $label;
+    $this->keyword = $keyword;
+    $this->_field = $_field;
+    $this->_order = $_order;
+    $this->order = $order;
+    $this->lists = $lists;
+    $this->order_css = $order_css;
+    $this->meta_title = $meta_title;
+    IS_AJAX ? $this->display('itemList') : $this->display();
+  }
+
+  /**
+   * 商品详情页
+   * @author Max.Yu <max@winhu.com>
+   */
+  public function detail($id = 0){
+    //验证参数的合法性
+    if(!(is_numeric($id) && $id > 0)){
+      $this->error('参数非法！');
+    }
+    
+    //实例化数据模型
+    $item_model = D('Item');
+    //获取商品数据
+    $data = $item_model->detail($id);
+
+    if(empty($data)){
+      $this->error('商品不存在！', U('/'));
+    }elseif($data['status'] <= 0){
+      $this->error('该商品已下架！', U('/'));
+    }
+    //如果有规格，库存为规格的
+    $data['property']['stock'] && $data['stock'] = $data['property']['stock'];
+    //获取商品评价数据
+    $data['comment'] = D('ItemComment')->lists(array('item_id' => $id, 'status' => array('gt', 0)));
+
+    //获取商品评价数量
+    if($data['comment']){
+      $data['comment_total'] = count($data['comment']);
+      //获取商品评价回复
+      foreach($data['comment'] as $k => $v){
+        $data['comment'][$k]['reply'] = D('ItemComment')->detail(array('pid' => $v['id']));
+      }
+    }else{
+      $data['comment_total'] = 0;
+    }
+
+    //获取左侧相关商品列表：当前分类下的按销量排序
+    if($data['cid_1']){
+      $map_relative = array(
+        'cid_1' => $data['cid_1'],
+        'id' => array('NEQ', $data['id']),
+        'buynum' => array('GT', 0),
+      );
+      $data['relative'] = D('Item')->lists($map_relative, 'id, name, price, mprice, thumb, buynum', 'buynum DESC', 6);
+    }
+
+    //赠品
+    $data['send_item'] = A('Item', 'Event')->getSendItems(array(array($data['id'])), false);
+    if($data['send_item']){
+      $data['send_min_num'] = M('BuySend')->where(array('item_id' => $data['id'], 'status' => 1))->getField('min_num');
+    }
+
+    //第二件折扣
+    $data['SecondPieces'] = A('Order', 'Event')->getSecondPiecesItemIds($id);
+    $data['SecondPieces'] = $data['SecondPieces'][$id];
+
+    //秒杀
+    $data['seckill'] = A('Item', 'Event')->getSeckill($id);
+
+    //是否开启复购
+    $data['fugou_dis_price'] = A('Fugou', 'Event')->getDisPrice($data['id']);
+
+    //更新浏览次数
+    $item_model->where(array('id' => $id))->setInc('viewnum');
+
+    //记录当前页URL地址Cookie
+    Cookie('__forward__', $_SERVER['REQUEST_URI']);
+
+    //是否显示优惠信息
+    $data['show_preferential'] = $data['SecondPieces'] || $data['fugou_dis_price'] > 0;
+    //商品详情懒加载替换
+    $data['intro'] = img_lazy_replace($data['intro']);
+
+    $share = array(
+      'title' => $data['name'].'&yen;'.$data['price'],
+      'desc' => $data['summary'],
+      'img_url' => SITE_URL.$data['cover_path'],
+      'link' => SITE_URL.U('Item/detail', array('id' => $data['id'], 'sdp_secret' => SHOP_SECRET))
+    );
+    $this->data = $data;
+    $this->meta_share = $share;
+    $this->meta_title = $data['name'];
+    $this->display();
+  }
+
+  /**
+   * 分类列表页
+   * @author Max.Yu <max@winhu.com>
+   */
+  public function category(){
+    //请求页面传递参数
+    $cid = I('get.cid');
+
+    //实例化数据模型
+    $item_category_model = D('ItemCategory');
+
+    //定义meta_title
+    $meta_title = '商品分类';
+
+    if(!$cid){
+      $category['info'] = $item_category_model->getTree();
+      $category['tpl'] = 'index';
+    }else{
+      $category['info'] = $item_category_model->getTree($cid);
+      $category['tpl'] = 'list';
+      $meta_title = $category['info']['name'];
+    }
+
+    //记录当前页URL地址Cookie
+    Cookie('__forward__', $_SERVER['REQUEST_URI']);
+    /*
+    echo '<pre>';
+    print_r($category['info']);
+    echo '</pre>';
+    */
+    //模板输出变量赋值
+    $this->category = $category;
+    $this->meta_title = $meta_title;
+    $this->display();
+  }
+
+}

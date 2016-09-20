@@ -1,0 +1,33 @@
+<extend name="Base/common"/>
+<block name="header">
+{:hook('mobileTopNav',array('title'=>$meta_title))}
+</block>
+
+<block name="body"> <style>
+  .bar-tab{display: none;}
+  .order h4 {
+  padding: 0 10px;
+  height: 42px;
+  line-height: 42px;
+  background-color: rgba(255,255,255,0); 
+  color: #333;
+}
+</style>
+    <notempty name="lists">
+      <include file="orderList"/>
+    <else/>
+      <p class="list-empty">您暂时没有{$meta_title}。</p>
+    </notempty>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use(['common', 'order'], function(common, o){
+      var url = window.location.href;
+      order = o;
+      o.bindList();
+      common.loadmore(url);
+    });
+  </script>
+</block>
+

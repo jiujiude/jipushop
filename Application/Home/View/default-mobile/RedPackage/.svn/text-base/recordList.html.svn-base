@@ -1,0 +1,20 @@
+<notempty name="lists">
+  <volist name="lists" id="vo">
+  <li>
+    <img src="{$vo.avatar}" width="42">
+    <div>
+      <h3>
+        {$vo.nickname}
+        <em>{$vo.amount} 元</em>
+      </h3>
+      <p>
+        {:date('m月d日 H:i:s', $vo['create_time'])}
+      <if condition="$data['user_amount_max'] eq $vo['amount']"><em><i class="icon icon-appreciate-fill"></i> 手气最佳</em></if>
+      </p>
+    </div>
+  </li>
+  </volist>
+</notempty>
+<script>
+  C.has_more = '{$_hasmore}';
+</script>

@@ -1,0 +1,79 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>优惠券管理({$_total})</h2>
+  </div>
+
+  <!-- 按钮工具栏 -->
+  <div class="cf">
+    <div class="fl">
+      <a class="btn" href="{:U('Coupon/add')}">新 增</a>
+      <button class="btn ajax-post confirm" url="{:U('del')}" target-form="ids">删 除</button>
+    </div>
+  </div>
+  
+  <!-- 数据表格 -->
+  <div class="data-table">
+    <table>
+      <thead>
+        <tr>
+          <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+          <th>优惠券编号</th>
+          <th>优惠券名称</th>
+          <th>优惠券数量</th>
+          <th>优惠券金额</th>
+          <th>适用商品</th>
+          <th>适用限额</th>
+          <th>添加时间</th>
+          <th>有效日期</th>
+          <th>是否前台展示</th>
+          <th width="185">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <notempty name="list">
+          <volist name="list" id="vo">
+            <tr class="status_trclass_{$vo.status}">
+              <td><input class="ids" type="checkbox" name="ids[]" value="{$vo.id}" /></td>
+              <td><a href="{:U('edit?id='.$vo['id'])}">{$vo['number']}</a></td>
+              <td><a href="{:U('edit?id='.$vo['id'])}">{$vo['name']}</a></td>
+              <td><a href="{:U('CouponUser/index?id='.$vo['id'])}">{$vo['num']}</a></td>
+              <td>{$vo['amount']}</td>
+              <td>
+                <notempty name="vo.items">
+                  <a href="javascript:showItems('{$vo['items']}');">点击查看</a>
+                  <else/>
+                  全场通用
+                </notempty>
+              </td>
+              <td>购物满{$vo['norm']}元</td>
+              <td>{$vo['create_time']|time_format}</td>
+              <td <eq name="vo.is_expire" value="1">class="date-expired"</eq>>{$vo.expire_time|time_format='Y-m-d'}</td>
+              <td><eq name='vo.is_show' value='1'>是 <else /> 否</eq></td>
+              <td width="240">
+                <a href="{:U('edit?id='.$vo['id'])}">[编辑]</a>
+                <a href="{:U('setStatus?ids='.$vo['id'].'&status='.abs(1-$vo['status']))}" class="ajax-get">[{$vo.status_text}]</a>
+                <eq name="vo.is_expire" value="0">
+                  <a href="{:U('CouponUser/add?id='.$vo['id'])}">[发放]</a>
+                <else/>
+                  <span class="disabled">[发放]</span>
+                </eq>
+                <a href="{:U('del?ids='.$vo['id'])}" class="confirm ajax-get">[删除]</a>
+                <neq name="vo.num" value="0"><a target="_blank" href="{:U('Coupon/export?id='.$vo['id'])}">[导出]</a></neq>
+              </td>
+            </tr>
+          </volist>
+        <else/>
+          <tr><td colspan="9" class="text-center"> 暂无优惠券!  <a href="{:U('Coupon/add')}" class="btn btn-mini">&plus;立即添加</a></td></tr>
+        </notempty>
+      </tbody>
+    </table> 
+  </div>
+
+  <!-- 分页 -->
+  <div class="page">
+    {$_page}
+  </div>
+</block>

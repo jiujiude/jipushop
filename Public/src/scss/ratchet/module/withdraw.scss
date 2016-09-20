@@ -1,0 +1,169 @@
+//
+// Withdraw
+// --------------------------------------------------
+
+.withdraw {
+
+  /*提现记录*/
+  > .lists {
+
+    > .table-view {
+      border-bottom: none;
+
+      > .table-view-cell {
+        background-repeat: no-repeat;
+        background-size: 50px 50px;
+        background-position:0 1px;
+        padding:8px 65px 8px 30px; 
+        
+        .money {
+          position: absolute;
+          top: 25px;
+          right: 40px;
+          margin-top: -10px;
+        }
+
+        .status {
+          position: absolute;
+          bottom: 15px;
+          right: 40px;
+          width: 100px;
+          text-align: right;
+        }
+        
+        .text-info {
+          font-size: 12px;
+        }
+
+        .number {
+          margin-right: 20px;
+          font-size: 16px;
+
+          > .star {
+            height: 10px;
+            line-height: 10px;
+            vertical-align: -4px;
+          }
+
+          ~ .remove {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            margin-top: -22px;
+          }
+        }
+      }
+    }
+  }
+
+  /*提现详情*/
+  .detail {
+
+    .amount {
+      padding: 10px 0;
+      font-size: 36px;
+      font-weight: 100;
+
+      > small {
+        vertical-align: 5px;
+        font-size: 30px;
+      }
+      
+      > i {
+        vertical-align: bottom;
+        font-size: 20px; 
+      }
+    }
+
+    > .table-view {
+
+      > .table-view-cell {
+
+        &.step {
+          padding: 10px 0;
+
+          > .flex-box {
+
+            > li {
+              position: relative;
+              text-align: center;
+
+              &:not(:last-child) {
+
+                &:after {
+                  position: absolute;
+                  top: 12px;
+                  left: 50%;
+                  width: 100%;
+                  height: 2px;
+                  background-color: #ccc;
+                  content: '';
+                }
+              }
+
+              > .icon {
+                position: relative;
+                z-index: 10;
+                background-color: #fff;
+                color: #ccc;
+              }
+
+              > .time {
+                font-size: 12px;
+              }
+
+              &.active {
+
+                &:after {
+                  background-color: $positive-color;
+                }
+
+                > .icon {
+                  color: $positive-color;
+                }
+              }
+            }
+          }
+        }
+
+        > .th {
+          float: left;
+          width: 30%;
+        }
+      }
+    }
+  }
+}
+
+/* 提现账户列表 */
+.user-account-list {
+  margin: 10px 0;
+  border-bottom: 1px solid #eee;
+  
+  > li {
+    padding-right: 0;
+    overflow: hidden;
+    
+    > img {
+      float: left;
+    }
+    
+    > .media-body {
+      float: left;
+      line-height: 25px;
+      
+      > p {
+        color: #999;
+      }
+    }
+    
+    >.media-todo {
+      float: right;
+      margin: 13px 15px 0 0;
+      
+      .icon{
+        color: #999;
+      }
+    }
+  }
+}

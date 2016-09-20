@@ -1,0 +1,109 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>红包信息</h2>
+  </div>
+  <!-- 按钮工具栏 -->
+  <div class="cf mb-20">
+    <div class="fl">
+      <a class="btn" href="{:cookie('__forward__')}">返回列表</a>
+    </div>
+  </div>
+  <div class="order-box">
+    <p>
+      <strong>红包编号：</strong>{$data.id}
+      <span class="sep"></span>
+      <strong>活动名称：</strong>{$data.name}
+      <span class="sep"></span>
+      <strong>祝福语：</strong>{$data.info}
+      <span class="sep"></span>
+      <a href="javascript:;" class="fr" onclick="UI.load('{:U('qrcode?id='.$data['id'].'&code='.$data['code'])}', '扫码分享');">[分享红包]</a>
+    </p>
+    <p>
+      <strong>已领取：</strong>{$data.send_number} /  {$data.number} 个
+      <if condition="$data['number'] eq $data['send_number']">
+        <span class="text-danger">（已领完）</span>
+      </if>
+      <span class="sep"></span>
+      <strong>红包金额：</strong><span class="text-danger">{$data.amount}</span> 元
+      <gt name="data.send_amount" value="0">
+        [ <strong>已领取</strong> <span class="text-danger">{$data.send_amount}</span> 元 ]
+      <else/>
+        [ <span class="text-danger">还没有人领取</span> ]
+      </gt>
+    </p>
+      <p>
+        <strong>分享标题：</strong>{$data.share_title}
+        <span class="sep"></span>
+        <strong>描述：</strong>{$data.share_desc}
+      </p>
+    </div>
+  <!-- 数据表格 -->
+  <div class="data-table">
+    <p></p>
+    <table>
+      <thead>
+        <tr>
+          <th><a href="{:U('detail?id='.$data['id'].'&_field=id&_order='.$_order)}" title="领取编号排序">领取编号{$_order_icon.id}{$_order_icon_show}</a></th>
+          <th>领取用户</th>
+          <th><a href="{:U('detail?id='.$data['id'].'&_field=amount&_order='.$_order)}" title="领取金额排序">领取金额{$_order_icon.amount}{$_order_icon_show}</a></th>
+          <th>微信用户信息</th>
+          <th>性别</th>
+          <th>用户地区</th>
+          <th>状态</th>
+          <th>关注时间</th>
+          <th>领取时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <notempty name="lists">
+          <volist name="lists" id="vo">
+            <tr>
+              <td>{$vo.id}</td>
+              <td>
+                <eq name="vo.uid" value="0">
+                  粉丝(匿名)
+                <else/>
+                  <a href="{:U('User/view', array('id'=>$vo['uid']))}" target="_blank">{:get_nickname($vo['uid'])}</a>
+                </eq>
+              </td>
+              <td><span class="text-danger">{$vo.amount}</span> 元</td>
+              <td>
+                <img src="{$vo.avatar}" width="24"/>
+                {$vo.nickname}
+              </td>
+              <td>{$vo['sex'] == 1 ? '男' : ($vo['sex'] == 2 ? '女': '未知')}</td>
+              <td>{$vo.country} · {$vo.province} · {$vo.city}</td>
+              <td>
+                <eq name="vo.uid" value="0">
+                未激活
+                <else/>
+                <span class="text-success">已激活</span>
+                </eq>
+              </td>
+              <td>{:time_format($vo['subscribe_time'])}</td>
+              <td>{:time_format($vo['create_time'])}</td>
+            </tr>
+          </volist>
+        <else/>
+          <tr><td colspan="5" class="text-center"> 暂无红包领取数据! </td></tr>
+        </notempty>
+      </tbody>
+    </table> 
+  </div>
+
+  <!-- 分页 -->
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script>
+    $(function(){
+      highlight_subnav('{:U("index")}');
+    });
+  </script>
+</block>

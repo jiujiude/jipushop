@@ -1,0 +1,17 @@
+<block name="body">
+  <notempty name="category">
+    <select name="category_id" id="J_category_id">
+      <option value="0">请选择文章分类</option>
+      <volist name="category" id="vo">
+        <notempty name="vo._">
+          <optgroup label="{$vo.name}"></optgroup>
+          <volist name="vo._" id="vl">
+            <option value="{$vl.id}">&nbsp;&nbsp;&nbsp;&nbsp;{$vl.name}</option>
+          </volist>
+        <else/>
+          <option value="{$vo.id}">{$vo.name}</option>
+        </notempty>
+      </volist>
+    </select> 
+  </notempty>
+</block>

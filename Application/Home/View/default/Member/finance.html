@@ -1,0 +1,73 @@
+<extend name="Base/member"/>
+
+<block name="breadcrumb">
+  <ul class="breadcrumb">
+    <li><a href="{:U('/')}">首页</a></li>
+    <li class="active">我的现金账户</li>
+  </ul>
+</block>
+
+<block name="body">
+  <div class="user-box">
+    <h3 class="title">
+      我的现金账户
+    </h3>
+    <p class="text-space">
+      <span>当前可用余额：<em class="text-danger money">&yen;{$member.finance}</em></span>
+      <span>可提现余额：<em class="text-danger money">&yen;{$withdraw_finance|default=0.00}</em> (推广联盟和分销订单赚取的钱满50元方可提现)</span>
+      <a href="{:U('Withdraw/add')}" class="btn btn-sm btn-positive pull-right">申请提现 &gt;&gt;</a>
+    </p>
+    
+    <ul class="nav nav-tabs">
+      <li class="<if condition="!$type and !I('get.flow')"> active</if>"><a href="{:U('')}">全部</a></li>
+      <li class="<if condition="$type eq 'sdp_order'"> active</if>"><a href="{:U('', 'type=sdp_order')}">分销</a></li>
+      <li class="<if condition="(I('get.type') eq 'union') OR (I('get.type') eq 'union_subscribe') OR (I('get.type') eq 'union_order')"> active</if>"><a href="{:U('', 'type=union')}">推广</a></li>
+      <li class="<if condition="I('get.flow') eq 'out'"> active</if>"><a href="{:U('', 'flow=out')}">支出</a></li>
+      <li class="<if condition="$type eq 'withdraw'"> active</if>"><a href="{:U('', 'type=withdraw')}">提现</a></li>
+    </ul>
+    
+    <notempty name="lists">
+      <div class="row list-info">
+        <div class="col-xs-12">
+          <div class="hd clearfix">
+            <span class="col-xs-2">交易类型</span>
+            <span class="col-xs-2">收入/支出<small>(元)</small></span>
+            <span class="col-xs-3">交易时间</span>
+<!--            <span class="col-xs-2">订单ID</span>-->
+            <span class="col-xs-5">备注信息</span>
+          </div>
+        </div>
+        
+        <volist name="lists" id="vo">
+          <div class="col-xs-12">
+            <div class="bd clearfix">
+              <div class="col-xs-2">{$vo.type|get_finance_type_name}</div>
+              <div class="col-xs-2">
+              <if condition='$vo.status neq 2'>
+                <eq name="vo.flow" value="in"><span class="text-success">+{$vo.amount}</span></eq>
+                <eq name="vo.flow" value="out"><span class="text-danger">-{$vo.amount}</span></eq>
+                <else />
+                <span class="text-danger" style="color:red">已失效</span>
+                </if>
+              </div>
+              <div class="col-xs-3">{$vo.create_time|time_format}</div>
+<!--              <div class="col-xs-2">
+                <gt name="vo.order_id" value="0">{$vo.order_id}</gt>
+              </div>-->
+              <div class="col-xs-5">{$vo.memo}
+               <if condition='$vo.status eq 2'>
+              <em style="color:red">&nbsp;&nbsp;（订单交易失败）</em>
+                </if>
+              </div>
+            </div>
+          </div>
+        </volist>
+      </div>
+      <div class="page">{$_page}</div>
+    <else/>
+      <p class="list-empty">暂无数据...</p>
+    </notempty>
+  </div>
+</block>
+<block name="script">
+</block>

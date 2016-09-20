@@ -1,0 +1,148 @@
+<block name="body">
+  <a href="javascript:selectItem.load();" class="btn btn-mini btn-return">&plus;选择商品</a>
+  <span class="item-sum J_itemSum"><elt name="param.item_count" value="0">尚未选择商品<else/>已选择<strong class="text-danger">{$param.item_count}</strong>件商品</elt></span>
+  <input type="hidden" class="J_current_items" value="{$param.value}">
+  <input type="hidden" name="{$param.name}" class="text input-large" id="items" value="{$param.value}">
+</block>
+<block name="script">
+<script type="text/javascript">
+/*选择商品*/
+var current_items = '{$param.item_ids}';
+var current_count = '{$param.item_count}';
+var selectItem = {
+  current_items: JSON.parse(current_items),
+  selectedItems: {},
+  selectedCount: current_count,
+  load: function(){
+    var item_ids = $('.J_current_items').val();
+    var url = '{:addons_url("ItemSelect://ItemSelect/selectItem")}?item_ids=' + item_ids;
+    UI.load(url, '选择商品');
+  },
+  getItemPage: function(page){
+    var item_ids = $('.J_current_items').val();
+    var url  = '{:addons_url("ItemSelect://ItemSelect/selectItem")}';
+    $.ajax({
+      type: 'GET',
+      url: url,
+      cache: false,
+      data: 'item_ids='+ item_ids +'&p=' + page,
+      dataType: 'json',
+      async: false,
+      success:function(res){
+        if(res.status == 1){
+          var html = '';
+          $.each(res.data, function(i, item){
+            html += '<tr class="item-info" data-id="'+ item.id +'"><td class="title"><div class="title-wrapper"><span class="item-pic"><a href="'+ item.url +'" target="_blank"><img class="J_TShowBigPic" alt="'+ item.name +'" title="'+ item.name +'" src="'+ Core.ROOT + item.cover_path_tiny +'"></a></span><a href="'+ item.url +'" target="_blank" class="title-text" title="'+ item.name +'">'+ item.name +'</a></div></td><td class="price ellipsis g_price" title="'+ item.price +'"><strong>'+ item.price +'</strong></td>';
+
+            if(item.has_select === 1){
+              html += '<td class="opt J_Opt_'+ item.id +'"><a href="javascript:selectItem.calcel('+ item.id +');" class="J_Cel_'+ item.id +'">取消选择</a></td></tr>';
+            }else{
+              html += '<td class="opt J_Opt_'+ item.id +'"><a href="javascript:selectItem.select(' + item.id +');" title="选择" class="J_Sel_'+ item.id +' J_Item" data-id="'+ item.id +'">选择</a></td></tr>';
+            }
+          });
+
+          $('.J_TItems').html(html);
+          var prev = $('.J_Page span.current').html();
+          $('.J_Page span.current').replaceWith('<a class="num J_page_'+ prev +'" href="javascript:selectItem.getItemPage('+ prev +');">'+ prev +'</a>');
+          $('.J_page_' + page).replaceWith('<span class="current">'+ page +'</span>');
+
+          /*处理获取的列表信息*/
+          var selectedItems = selectItem.selectedItems;
+          var items = res.dataIds;
+          $.each(items, function(i, item){
+            for(k in selectedItems){
+              if(selectedItems[k] == item){
+                $('.J_Opt_' + item).html('<a href="javascript:selectItem.calcel('+ item +');" class="J_Cel_'+ item +'">取消选择</a>');
+              }
+            }
+          });
+        }
+      }
+    });
+  },
+  search: function(cid){
+    var url = '{:addons_url("ItemSelect://ItemSelect/selectItem")}';
+    $.ajax({
+      type: 'POST',
+      url: url,
+      data: {cid: cid, p: 1},
+      dataType: 'json',
+      async: false,
+      success: function(res){
+        if(res.status == 1){
+          var html = '';
+          $.each(res.data, function(i, item){
+            html += '<tr class="item-info" data-id="'+ item.id +'"><td class="title"><div class="title-wrapper"><span class="item-pic"><a href="'+ item.url +'" target="_blank"><img class="J_TShowBigPic" alt="'+ item.name +'" title="'+ item.name +'" src="'+ Core.ROOT + item.cover_path_tiny +'"></a></span><a href="'+ item.url +'" target="_blank" class="title-text" title="'+ item.name +'">'+ item.name +'</a></div></td><td class="price ellipsis g_price" title="'+ item.price +'"><strong>'+ item.price +'</strong></td>';
+
+            if(item.has_select === 1){
+              html += '<td class="opt J_Opt_'+ item.id +'"><a href="javascript:selectItem.calcel('+ item.id +');" class="J_Cel_'+ item.id +'">取消选择</a></td></tr>';
+            }else{
+              html += '<td class="opt J_Opt_'+ item.id +'"><a href="javascript:selectItem.select(' + item.id +');" title="选择" class="J_Sel_'+ item.id +' J_Item" data-id="'+ item.id +'">选择</a></td></tr>';
+            }
+          });
+
+          $('.J_TItems').html(html);
+
+          var prev = $('.J_Page span.current').html();
+          $('.J_Page span.current').replaceWith('<a class="num J_page_'+ prev +'" href="javascript:selectItem.getItemPage('+ prev +');">'+ prev +'</a>');
+          /*处理获取的列表信息*/
+          var selectedItems = selectItem.selectedItems;
+          var items = res.dataIds;
+          $.each(items, function(i, item){
+            for(k in selectedItems){
+              if(selectedItems[k] == item){
+                $('.J_Opt_' + item).html('<a href="javascript:selectItem.calcel('+ item +');" class="J_Cel_'+ item +'">取消选择</a>');
+              }
+            }
+          });
+
+
+        }else{
+          $('.J_TItems').html('');
+        }
+      }
+    });
+  },
+  select: function(id){
+    if(this.current_items){
+      var current_items = this.current_items;
+      this.selectedItems = current_items;
+    }
+    var selectedIds = $('#selectedIds').val();
+    this.selectedItems[id] = String(id);
+    this.selectedCount++;
+    $('.J_Save span.count').text(this.selectedCount);
+    $('.J_Sel_' + id).replaceWith('<a href="javascript:selectItem.calcel('+ id +');" class="J_Cel_'+ id +'">取消选择</a>');
+  },
+  calcel: function(id){
+    if(this.current_items){
+      var current_items = this.current_items;
+      this.selectedItems = current_items;
+    }
+    delete this.selectedItems[id];
+    this.selectedCount--;
+    $('.J_Save span.count').text(this.selectedCount);
+    $('.J_Opt_' + id).html('<a href="javascript:selectItem.select('+ id +');" class="J_Sel_'+ id +'">选择</a>');
+  },
+  save: function(){
+    if(this.selectedCount > 0){
+      $('.J_itemSum').html('已选择<strong class="text-danger">'+ this.selectedCount +'</strong>件商品');
+    }else if(this.selectedCount == 0){
+      $('.J_itemSum').html('尚未选择商品');
+    }
+    var sids = '';
+    for(k in this.selectedItems){
+      sids += this.selectedItems[k] + ',';
+    }
+    sids = sids.substring(0, sids.length-1);
+    $('#items').val(sids);
+    UI.box.close();
+  },
+  close: function(){
+    UI.box.close();
+  }
+}
+
+
+</script>
+</block>

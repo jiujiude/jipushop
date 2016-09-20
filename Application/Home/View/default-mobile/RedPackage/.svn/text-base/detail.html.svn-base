@@ -1,0 +1,37 @@
+<extend name="Base/common"/>
+
+<block name="header"></block>
+
+<block name="body">
+  <div class="redpackage-detail">
+    <div class="bd">
+      <a href="/" class="avatar"><img src="__IMG__/logo-avatar.png"></a>
+      <a href="/" class="close"><i class="icon icon-close"></i></a>
+      <h3>商城</h3>
+      <if condition="$data.is_finished eq false">
+        <p>发了一个红包，金额随机</p>
+        <p class="info">{$data.info}</p>
+        <a href="javascript:;" class="open-btn Z_open_redpackage">拆红包</a>
+      <else/>
+        <p>&nbsp;</p>
+        <p class="info">手慢了，红包派完了</p>
+      </if>
+      <a href="{:U('open', array('_code' => $data['code'], 'onlyshow' => 1))}" class="show-record">看看大家的手气</a>
+    </div>
+  </div>
+</block>
+<block name="footer">
+  <div class="bar bar-tab item-act">
+    <a href="{:U('/')}" class="btn btn-block btn-negative btn-tab"><i class="icon icon-cart"></i> 去购物</a>
+  </div>  
+</block>
+<block name="script">
+  <script type="text/javascript">
+    seajs.use(['wechat', 'redpackage'], function(wechat, redpackage){
+      //微信分享
+      wechat.init();
+      //拆红包
+      redpackage.open({$data|json_encode});
+    });
+  </script>
+</block>

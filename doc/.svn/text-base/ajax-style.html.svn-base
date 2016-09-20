@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Ajax请求编码风格约定</title>
+		<style>
+			/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+sup {
+   vertical-align: super;
+   font-size: smaller;
+}
+
+sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+
+/* Generic styles */
+body {
+	background: #f5f5f5;
+  color: #444;
+  font-family: 'Microsoft Yahei','Book Antiqua',Palatino,FreeSerif,serif;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6,
+code, pre,
+ul, ol,
+p,
+hr {
+  margin: 1.5em 0 0.5em 0;
+}
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.5em;
+}
+
+ul, ol,
+p,
+hr {
+	line-height: 2em;
+}
+
+code, pre {
+  line-height: 1.5em;
+}
+
+*:first-child {
+	margin-top: 0;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+	font-weight: bold;
+}
+
+h1 {
+	font-size: 3.5em;
+}
+
+h2 {
+	font-size: 2.5em;
+}
+
+h3 {
+	font-size: 2em;
+}
+
+h4 {
+	font-size: 1.5em
+}
+
+h5 {
+	font-size: 1.2em;
+}
+
+h6 {
+	font-size: 1em;
+}
+
+/* Lists */
+ul, ol {
+	padding-left: 2em;
+}
+
+ul {
+	list-style-type: disc;	
+}
+
+ol {
+	list-style-type: decimal;
+}
+
+/* Code and pre */
+code, pre {
+	font-family: "Bitstream Vera Sans Mono", "Courier", monospace;
+}
+code {
+	background: none repeat scroll 0 0 #F8F8FF;
+  border: 1px solid #DEDEDE;
+  border-radius: 3px 	;
+  padding: 0 0.2em;
+}
+pre {
+	border-left: 5px solid #eee;
+	margin-left: 2em;	
+	padding-left: 1em;
+}
+pre > code {
+	background: transparent;
+	border: none;
+	padding: 0;
+  word-wrap: break-word;
+}
+
+/* Links */
+a {
+  color: #e91e63;
+}
+
+a:visited {
+  color: #666;
+}
+
+/* Inlines */
+strong {
+	font-weight: bold;
+}
+
+em {
+	font-style: italic;
+}
+
+/* Container */
+.container {
+	background: #FFF;
+	padding: 30px 50px;
+	margin: 0 auto;
+	width: 700px;
+}
+
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h2 id="ajax-">Ajax请求编码风格约定</h2>
+<p>统一采用$.ajax()方法实现Ajax请求，该方法在jQuery和Zepto框架中通用。具体写法如下：</p>
+<pre><code>$.ajax({
+  type: &#39;POST&#39;,
+  url: $.U(),
+  data: $(&#39;form&#39;).serialize(),  //或对象的形式，如：{name: name, type: type, id: id}
+  dataType: &#39;json&#39;,
+  success: function(res){ //统一期间，这里约定结果变量名称为：res
+    if(res.status == 1){
+      console.log(res.data)  
+    }else{
+
+    }
+  }
+})
+</code></pre><h2 id="-ajax-">服务端Ajax请求数据返回</h2>
+<p>服务端返回数据统一采用TP $this-&gt;ajaxReturn($data)方法，返回标准json数据，下面是一个简单的例子：</p>
+<pre><code>$user_model = M(&#39;User&#39;); //实例化User对象
+$result = $user_model-&gt;add($data);
+if($result){
+  //成功后返回客户端新增的用户ID，并返回提示信息和操作状态
+  $this-&gt;ajaxReturn($result, &#39;新增成功！&#39;, 1);
+ }else{
+  //错误后返回错误的操作状态和提示信息
+  $this-&gt;ajaxReturn(0, &#39;新增错误！&#39;, 0);
+}
+</code></pre><p>ajaxReturn()的返回参数约定为以下形式：<br>status：操作状态，一般为1 | 0，也可为y | n(jquery.validate中返回y | n) ，或其他约定的数字；
+info：提示信息；
+data：返回数据； 
+url：跳转地址或回调地址。</p>
+
+		</div>
+
+		<script></script>
+	</body>
+</html>

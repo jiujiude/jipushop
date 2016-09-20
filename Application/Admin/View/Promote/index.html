@@ -1,0 +1,86 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>营销工具</h2>
+  </div>
+
+  <div class="promote-list">
+    <ul>
+       <li class="danger-dark">
+        <a href="{:U('RedPackage/index')}">
+          <i class="icon icon-redpacket"></i>
+          <h4 class="title">红包</h4>
+        </a>
+      </li> 
+      <li class="info">
+        <a href="{:U('Advertise/index')}">
+          <i class="icon icon-advertise"></i>
+          <h4 class="title">广告</h4>
+        </a>
+      </li>
+      <li class="warning">
+        <a href="{:U('Coupon/index')}">
+          <i class="icon icon-coupon"></i>
+          <h4 class="title">优惠券</h4>
+        </a>
+      </li>
+      <!-- <li class="success">
+        <a href="{:U('Card/index')}">
+          <i class="icon icon-vipcard"></i>
+          <h4 class="title">礼品卡</h4>
+        </a>
+      </li>-->
+      <li class="success">
+        <a href="{:U('Invite/index')}">
+          <i class="icon icon-invite"></i>
+          <h4 class="title">邀请</h4>
+        </a>
+      </li>
+      <li class="danger">
+        <a href="{:U('Activity/index')}">
+          <i class="icon icon-activity"></i>
+          <h4 class="title">专题</h4>
+        </a>
+      </li>
+      <li class="info">
+        <a href="{:U('Manjian/index')}">
+          <i class="icon icon-manjian"></i>
+          <h4 class="title">满减</h4>
+        </a>
+      </li>
+      <li class="success">
+        <a href="{:U('SecondPieces/index')}">
+          <i class="icon icon-banjia"></i>
+          <h4 class="title">第二件折扣</h4>
+        </a>
+      </li>
+      <li class="warning">
+        <a href="{:U('BuySend/index')}">
+          <i class="icon icon-zeng"></i>
+          <h4 class="title">买送</h4>
+        </a>
+      </li>
+      <li class="info">
+        <a href="{:U('Seckill/index')}">
+          <i class="icon icon-activity"></i>
+          <h4 class="title">秒杀</h4>
+        </a>
+      </li>
+      <li class="danger">
+        <a href="{:U('Fugou/index')}">
+          <i class="icon icon-manjian"></i>
+          <h4 class="title">老客户立减</h4>
+        </a>
+      </li>
+    </ul>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //导航高亮
+    highlight_subnav("{:U('Promote/index')}");
+  </script>
+</block>

@@ -1,0 +1,194 @@
+/*icon*/
+.icon-money:before { content: "\e638"; }
+.icon-wechat:before { content: "\e600"; }
+.icon-appreciate:before { content: "\e601"; }
+.icon-check:before { content: "\e602"; }
+.icon-close:before { content: "\e603"; }
+.icon-edit:before { content: "\e604"; }
+.icon-favor:before { content: "\e605"; }
+.icon-location:before { content: "\e606"; }
+.icon-round-check-fill:before { content: "\e607"; }
+.icon-round-check:before { content: "\e608"; }
+.icon-round-close-fill:before { content: "\e609"; }
+.icon-round-close:before { content: "\e60a"; }
+.icon-round-right-fill:before { content: "\e60b"; }
+.icon-roundright:before { content: "\e60c"; }
+.icon-search:before { content: "\e60d"; }
+.icon-time-fill:before { content: "\e636"; }
+.icon-time:before { content: "\e635"; }
+.icon-arrow-bottom:before { content: "\e60e"; }
+.icon-like-fill:before { content: "\e60f"; }
+.icon-like:before { content: "\e610"; }
+.icon-shop:before { content: "\e62d"; }
+.icon-ticket:before { content: "\e611"; }
+.icon-list:before { content: "\e613"; }
+.icon-my-fill:before { content: "\e614"; }
+.icon-my:before { content: "\e615"; }
+.icon-form:before { content: "\e62c"; }
+.icon-refresh:before { content: "\e616"; }
+.icon-cart:before { content: "\e617"; }
+.icon-remove:before { content: "\e618"; }
+.icon-home:before { content: "\e619"; }
+.icon-cart-fill:before { content: "\e61a"; }
+.icon-home-fill:before { content: "\e630"; }
+.icon-link:before { content: "\e62e"; }
+.icon-lock:before { content: "\e61b"; }
+.icon-weibo:before { content: "\e633"; }
+.icon-items:before { content: "\e62f"; }
+.icon-square-check-fill:before { content: "\e61c"; }
+.icon-square:before { content: "\e61d"; }
+.icon-add:before { content: "\e61e"; }
+.icon-arrow-top:before { content: "\e612"; }
+.icon-redpacket:before { content: "\e620"; }
+.icon-category:before { content: "\e621"; }
+.icon-appreciate-fill:before { content: "\e622"; }
+.icon-info-fill:before { content: "\e623"; }
+.icon-info:before { content: "\e624"; }
+.icon-forward:before { content: "\e62b"; }
+.icon-recharge:before { content: "\e625"; }
+.icon-card:before { content: "\e632"; }
+.icon-qq:before { content: "\e626"; }
+.icon-service:before { content: "\e645"; }
+.icon-sort:before { content: "\e627"; }
+.icon-invite:before { content: "\e628"; }
+.icon-mobile:before { content: "\e629"; }
+.icon-category-fill:before { content: "\e62a"; }
+.icon-camera-add:before { content: "\e637"; }
+.icon-arrow-right:before { content: "\e61f"; }
+.icon-arrow-left:before { content: "\e631"; }
+.icon-message:before { content: "\e641"; }
+.icon-sdp:before { content: "\e642"; }
+.icon-stat:before { content: "\e634"; }
+.icon-withdraw:before { content: "\e643"; }
+
+
+.icon-special:before {
+  content: "\e62f";
+}
+.icon-nice:before {
+  content: "\e634";
+}
+.icon-gift:before {
+  content: "\e635";
+}
+.icon-time:before {
+  content: "\e636";
+}
+.icon-vegetables:before {
+  content: "\e62d";
+}
+.icon-soup:before {
+  content: "\e62e";
+}
+
+/*商品列表*/
+.item-list {
+  border-bottom: 1px solid $border-color;
+
+  > .item {
+    float: left;
+    width: 20%;
+    height: 320px;
+    border: none;
+
+    > .thumbnail {
+      padding: 10px;
+      height: 321px;
+      border-right: none;
+
+      .pic {
+        @include transition(.2s linear);
+      }
+
+      &:hover {
+
+        .pic {
+          @include translate(-5px, 0);
+          @include opacity(0.9);
+        }
+      }
+
+      &.last {
+        border-right: 1px solid $border-color;
+      }
+    }
+
+
+    .caption {
+
+      .thumbnail-label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -o-text-overflow: ellipsis;
+        -webkit-text-overflow: ellipsis;
+        -moz-text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .thumbnail-info {
+        margin-bottom: 0;
+        line-height: 30px;
+
+        .text-danger {
+          font-size: 24px;
+        }
+
+        .text-info {
+
+          > .icon {
+            vertical-align: 1px;
+          }
+        }
+      }
+    }
+  }
+
+  .item-2x {
+    width: 40%;
+
+    > .thumbnail {
+      padding: 0;
+      height: 320px;
+      border-bottom: none;
+
+      .pic {
+        padding: 10px;
+      }
+
+      > a,
+      > .caption {
+        float: left;
+        padding: 8% 0;
+        width: 50%;
+      }
+
+      > .caption {
+        padding: 10% 10px;
+
+        .summary {
+          margin-top: 20px;
+          line-height: 1.8
+        }
+      }
+    }
+  }
+}
+
+.nav-category-list {
+  height: 400px;
+}
+
+/*首页焦点图*/
+.home-slider {
+  height: 400px;
+
+  > .item {
+
+    > li {
+
+      > a {
+        height: 400px;
+      }
+    }
+  }
+}

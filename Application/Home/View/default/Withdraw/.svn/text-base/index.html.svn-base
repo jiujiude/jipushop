@@ -1,0 +1,30 @@
+<extend name="Base/user"/>
+
+<block name="body">
+  <div class="user-box shop">
+    <include file="head" />
+    <notempty name="lists">
+      <div class="row list-info">
+        <div class="col-xs-12">
+          <div class="hd clearfix">
+            <span class="col-xs-2">账户</span>
+            <span class="col-xs-2">户名</span>
+            <span class="col-xs-2">提现金额</span>
+            <span class="col-xs-2">状态</span>
+            <span class="col-xs-3">申请时间</span>
+            <span class="col-xs-1">操作</span>
+          </div>
+        </div>
+        <include file="recordList"/>
+      </div>
+      <div class="page">{$_page}</div>
+    <else/>
+      <p class="list-empty">还没有提现记录哦...</p>
+    </notempty>
+
+    <block name="script">
+    </block>
+    
+  </div>
+</block>
+

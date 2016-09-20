@@ -1,0 +1,90 @@
+{//买送赠品选择}
+<a href="javascript:;" class="btn btn-mini btn-return J_item_select{$param.name}">选择商品</a>
+<input type="hidden" name="{$param.name}" id="J_itemsel_input{$param.name}" value="{$param.items}">
+  <ul class="send-items J_itemsel_tip{$param.name}">
+    <volist name="param.item_info" id="data">
+    <li data-item_id="{$data.id}">
+      <input type="text" name="item_num[{$data.id}]" class="text input-xmini text-center" value="{$data.num|default=1}"/> 件
+      <span><img src="{$data.thumb}" width="32"><a href="{:U('/Item/detail?id='.$data['id'])}" target="_blank">{$data.name}</a>（ID：{$data.id}）</span>
+      <a href="javascript:;" class="icon icon-close"></a>
+    </li>
+    </volist>
+  </ul>
+<script>
+var itemSel{$param.name} = {
+  index : '{:addons_url("ItemSel://ItemSel/index?param_name=".$param["name"])}',
+  load: function(){
+    UI.load(this.index , '选择商品');
+  },
+  search: function(param){
+    var url = this.index;
+    url = url + (url.indexOf('?') > -1 ? '&' : '?') + param;
+    UI.load(url);
+  },
+  selSum: function(){
+    var itemsel = $('#J_itemsel_input{$param.name}').val(),
+        tip_text = '';
+        itemsel = itemsel.split(',');
+    var ul = $('.J_itemsel_tip{$param.name}');
+    //移除掉已经删除的元素
+    ul.find('li').each(function(){
+      var index = $.inArray($(this).data('item_id').toString(), itemsel);
+      if(index === -1){
+        $(this).remove();
+      }
+    });
+    //循环追加新元素
+    for(var i in itemsel){
+      item_id = itemsel[i];
+      if(item_id > 0){
+        var obj = $('.J_itemsel_tip{$param.name} li[data-item_id="'+ item_id +'"]');
+        if(obj.length === 0){
+          url = '{:addons_url("ItemSel://ItemSel/getItemInfo")}';
+          $.get(url, {item_id: item_id}, function(data){
+            html = '<li data-item_id="'+ data.id +'">';
+            html+= '<input type="text" name="item_num['+ data.id +']" class="text input-xmini text-center" value="1"/> 件 ';
+            html+= '<span>'+ (data.thumb !== '' ? '<img src="'+ data.thumb +'" width="32">': '') + '<a href="'+ Core.U('/Item/detail', 'id='+ data.id) +'" target="_blank">' + data.name + '</a>（ID：'+ data.id +'）</span>';
+            html+= '<a href="javascript:;" class="icon icon-close"></a></li>';
+            $(html).appendTo('.J_itemsel_tip{$param.name}');
+          }, 'json');
+        }
+      }
+    }
+    this.checkLastShow();
+  },
+  removeId: function(id){
+    var items = $('input[name="{$param.name}"]').val();
+    items = items.split(',');
+    for(var i in items){
+      if(items[i] == id){
+        items.splice(i, 1);
+        continue;
+      }
+    }
+    $('input[name="{$param.name}"]').val(items.join(','));
+  },
+  checkLastShow: function(){
+    if($('input[name="{$param.name}"]').val() == ''){
+      $('.J_itemsel_tip{$param.name}').hide();
+    }else{
+      $('.J_itemsel_tip{$param.name}').show();
+    }
+  }
+
+};
+
+//绑定选择事件
+$('.J_item_select{$param.name}').click(function(){
+  itemSel{$param.name}.load();
+});
+//移除
+$(document).on("click", '.J_itemsel_tip{$param.name} .icon-close', function(){
+  var item_id = $(this).closest('li').data('item_id');
+  //移除当前li的item-id
+  itemSel{$param.name}.removeId(item_id);
+  $(this).closest('li').remove();
+  itemSel{$param.name}.checkLastShow();
+});
+//默认展示
+itemSel{$param.name}.checkLastShow();
+</script>

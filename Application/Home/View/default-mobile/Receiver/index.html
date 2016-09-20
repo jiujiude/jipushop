@@ -1,0 +1,53 @@
+<extend name="Base/common"/>
+
+<block name="body">
+ <style>.bar-tab{display: none;}</style>
+  <div class="receiver-list">
+    <volist name="lists" id="vo">
+      <div class="item" style="background:#fff;margin-top:10px;">
+        <a href="{:U('detail', array('id' => $vo['id']))}" class="addr-body">
+          <input type="hidden" name="address" class="addr-select" value="{$vo['id']}">
+          <h4 class="name">{$vo['name']} <span>{$vo['mobile']}</span></h4>
+          <p>{$vo['area']}</p>
+          <p><eq name="vo.is_default" value="1"><span class="text-danger">[默认] </span></eq>{$vo['address']}</p>
+          <notempty name="vo.phone"><p>{$vo['phone']}</p></notempty>
+        </a>
+        <a href="{:U('Receiver/edit', array('id' => $vo['id'], 'redirect' => 'receiver'))}" class="addr-act addr-edit only-edit"><i class="icon icon-edit editico"></i></a>
+      </div>
+    </volist>
+  </div>
+
+  <div class="content-padded">
+    <php>
+      $payment = C('WECHATPAY');
+    </php>
+    <if condition="is_weixin() AND is_numeric($payment['mch_id'])">
+      <a href="javascript:;" class="btn btn-block btn-positive J_selfrom_wechat">选择微信收货地址</a>
+    </if>
+    <a href="{:U('Receiver/add')}" class="btn btn-block">&plus;新增收货地址</a>
+  </div>
+</block>
+
+<block name="script">
+  <script>
+    seajs.use('address', function(address){
+      <if condition="is_numeric($payment['mch_id'])">
+        var tap_fun = function(){
+          var url = '{:U("Receiver/index", array("selectAddress" => 1))}';
+          var type = 0;
+          C.selectConfig = '{$wechatAddressConfig|default=""}';
+          if(url){
+            address.select(url, type);
+          }
+        };
+        //从微信选择按钮
+        $('.J_selfrom_wechat').tap(function(){
+          tap_fun();
+        });
+        <notempty name="code">
+          tap_fun();
+        </notempty>
+      </if>
+    });
+  </script>
+</block>

@@ -1,0 +1,157 @@
+<extend name="Public/base"/>
+
+<block name="style">
+  <link rel="stylesheet" type="text/css" href="__CSS__/order.css" media="all">
+</block>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>
+      
+      团购订单列表({$_total})
+    </h2>
+  </div>
+  <!-- 按钮工具栏 -->
+  <div class="cf">
+    <!-- <div class="fl">
+      <button class="btn ajax-post confirm" target-form="ids" url="{:U('Order/cancel')}">取 消</button>
+      <a href="javascript:order.bestmart();" class="btn">灵通打单</a>
+      <a class="btn" href="{:U('index')}">刷 新</a>
+    </div> -->
+    <!-- 高级搜索 -->
+   <!--  <form action="{:U()}" method="GET" id="J_search_form">
+      <div class="search-form fr cf">
+        <div class="fl">
+          <if condition="C('SDP_IS_OPEN')">
+            <select name="is_sdp">
+              <option value="0">全部订单</option>
+              <option value="1">分销订单</option>
+            </select>
+          </if>
+          <select id="o_status" name="o_status">
+            <option value="-2">订单状态</option>
+            <option value="0">待付款</option>
+            <option value="-3">已付款</option>
+            <option value="-1">交易取消</option>
+            <optgroup label="已付款">
+              <option value="200">待发货</option>
+              <option value="201">待买家收货</option>
+              <option value="202">交易成功</option>
+            </optgroup>
+            <optgroup label="退款">
+              <option value="300">待处理退款申请</option>
+              <option value="301">待买家退货</option>
+              <option value="302">待退款</option>
+              <option value="303">退款成功</option>
+              <option value="404">系统取消订单</option>
+              <option value="405">退款驳回</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="sleft">
+          <select id="time_type" name="time_type" class="fl">
+            <option value="create_time">下单时间</option>
+            <option value="payment_time">支付时间</option>
+          </select>
+          <input type="text" name="start_time" class="search-input w-100 date_select" value="{:I('get.start_time')}" placeholder="开始"/>
+          <span class="fl line-h">至</span>
+          <input type="text" name="end_time" class="search-input w-100 date_select" value="{:I('get.end_time')}" placeholder="结束"/>
+        </div>
+        <div class="sleft"> -->
+          <!--<input type="text" name="keywords" class="search-input input-2x" value="{:I('keywords')}" placeholder="订单编号">-->
+        <!--   <input type="text" name="ship" class="search-input input-2x" value="{:I('ship')}" placeholder="收货人姓名或收货人手机号">
+          <a class="sch-btn" href="javascript:;" id="J_search"><i class="btn-search"></i></a>
+        </div>
+      </div>
+      <notempty name="_GET.uid">
+        <input type="hidden" name="uid" value="{:I('get.uid')}" />
+      </notempty>
+      <notempty name="sdp_uid">
+        <input type="hidden" name="sdp_uid" value="{$sdp_uid}" />
+      </notempty>
+    </form> -->
+  </div>
+  <!-- 数据表格 -->
+  <table class="order-table-head">
+    <tr>
+      <th width="30">
+         <!-- <input class="checkbox check-all" type="checkbox"> -->
+      </th>
+      <th width="650">订单基本信息</th>
+      <th  class="text-center">开团要求</th>
+
+      <th width="93">参团人数</th>
+      <th width="153">操作</th>
+    </tr>
+  </table>
+  <notempty name="list">
+    <volist name="list" key='key' id="vo">
+      <table class="order-table">
+        <tr>
+          <th colspan="8">
+            <span class="text-cancel">下单时间：</span>
+            {$vo.stime|time_format}
+            <span class="split-tab"></span>
+            <span class="text-cancel">发起人：</span>
+            <a href="{:U('User/view?id='.$vo['reg_uid'])}">{$vo.reg_uid|get_nickname}</a>
+            <span class="split-tab"></span>
+          </th>
+        </tr>
+<!--         <volist name="vo.order" id="data"> -->
+        <tr>
+          <td width="20" >
+           <!--  <input name="ids[]" class="ids" type="checkbox" value="{$data['id']}">  -->
+          </td>
+          <td width="130" class="item-lists">
+              <a href="{:U('/Item/detail?id='.$vo['item_id'])}" target="_blank"><img src="{:get_image_thumb(get_cover(get_item_images($vo['item_id']), 'path'), 60, 60)}" title="{$vo['item_id']|get_item_name}"></a>
+          </td>
+          <td width="190">商品编号：{$vo.number}</td>
+          <td width="300" class="text-right">
+          <a href="{:U('/Item/detail?id='.$vo['item_id'])}" target="_blank">
+          {$vo.name}</td>
+          </a>
+          <td class="text-center">
+            开团要求：<span class="split-tab">{$vo.num}人以上</span>
+            
+          </td>
+          <td width="80" class="text-center">
+            {$vo.id|join_count}
+          </td>
+          <td width="140" class="text-center">
+             <a href="{:U('view?id='.$vo['id'])}" target="_blank">[查看详情]</a>
+             
+             <!-- <a href="{:U('setStatus?status=-1&ids='.$data['id'])}" class="confirm ajax-get">[退款]</a> -->
+            </td>
+          </td>
+        </tr>
+
+      </table>
+    </volist>
+    <div class="page">
+      {$_page}
+    </div>
+  <else/>
+  <div class="list-empty">
+    暂无订单！
+  </div>
+  </notempty>
+</block>
+
+<block name="script">
+  <script src="__PUBLIC__/Admin/js/My97Date/WdatePicker.js"></script>
+  <script type="text/javascript">
+    $(function(){
+      //设置单选，复选，下拉菜单的值
+      Core.setValue('is_sdp', '{:I("get.is_sdp")}');
+      Core.setValue('o_status', '{$o_status|default = ""}');
+      Core.setValue('time_type', '{$time_type|default = ""}');
+      //时间选择
+      $('.date_select').focus(function(){
+        WdatePicker({skin: 'twoer', dateFmt: 'yyyy-MM-dd', maxDate: '%y-%M-%d'});
+      });
+      //导航高亮
+      highlight_subnav("{:U('orderList')}");
+    });
+  </script>
+</block>

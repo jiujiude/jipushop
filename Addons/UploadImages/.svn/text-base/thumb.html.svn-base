@@ -1,0 +1,91 @@
+<script type="text/javascript" src="__JS__/uploadify/jquery.uploadify.min.js"></script>
+<script type="text/javascript" src="__JS__/jquery/jquery.dragsort-0.5.1.min.js"></script>
+<input type="file" id="upload_picture">
+<input name="item_id" id="item_id" type="hidden" value="{$param.item_id}">
+<div class="upload-img-box dragsort">
+	<div style="display: none;"></div><!-- 新增一个隐藏层，解决无图片的时候初始化图片拖拽排序插件失败的问题 -->
+  <notempty name="param.images">
+    <volist name="param.images" id="vo">
+      <div class="upload-pre-item" id="item_{$vo['id']}">
+        <input type="hidden" name="{$param.name}[]" value="{$vo['id']}" class="icon" />
+        <img src="__ROOT__{$vo['path']}" data-id="{$vo['id']}" title="点击显示大图，拖动图片可以对图片进行排序。" />
+        <span class='btn-close delPic' title='删除图片'></span>
+        <label class="set" for="default_{$vo['id']}"><input type="radio" name="thumb" class="thumb" value="{$vo['id']}" id="default_{$vo['id']}" <notempty name="param.thumb"><eq name="vo.id" value="$param.thumb">checked="checked"</eq><else/><eq name="key" value="0">checked="checked"</eq></notempty>> 设为封面</label>
+      </div>
+    </volist>
+  </notempty>
+</div>
+
+<script type="text/javascript">
+  //上传图片
+  /* 初始化上传插件 */
+  $("#upload_picture").uploadify({
+    "height": 36,
+    "swf": "__JS__/uploadify/uploadify.swf?ver=" + Math.random(),
+    "fileObjName": "download",
+    "buttonText": "上传图片",
+    "uploader": "{:U('File/uploadPicture',array('session_id'=>session_id()))}",
+    "width": 80,
+    'removeTimeout': 1,
+    'fileTypeExts': '*.jpg; *.png; *.gif;',
+    "onUploadSuccess": uploadPicture,
+    'uploadLimit': 8,
+    'onFallback':function(){
+      alert('未检测到兼容版本的Flash');
+    }
+  });
+
+  function uploadPicture(file, data){
+    var data = $.parseJSON(data);
+    var src = '';
+    if(data.status){
+      //创建<div class="upload-pre-item">
+      var upload_item = $("<div class='upload-pre-item' id='item_"+data.id+"'></div>");
+      //创建img input close-btn
+      var img_path = $("<input type='hidden' name='{$param.name}[]' class='icon' value='"+data.id+"'/>");
+      src = data.url || '__ROOT__' + data.path;
+      var upload_img = $("<img src=" + src +" title='点击显示大图，拖动图片可以对图片进行排序。' data-id="+data.id+">");
+      var img_del = $("<span class='btn-close delPic' title='删除图片'></span>");
+      var set_thumb = $('<label class="set" for="default_'+data.id+'"><input type="radio" name="thumb" class="thumb" value="'+data.id+'" id="default_'+data.id+'"> 设为封面</label>');
+
+      //加入到upload-img-box
+      upload_item.append(upload_img);
+      upload_item.append(img_del);
+      upload_item.append(img_path);
+      upload_item.append(set_thumb);
+      $('.upload-img-box').append(upload_item);
+			
+			// 设置默认封面图片
+			var obj_thumb = $('input.thumb:checked');
+			if(obj_thumb.length==0){
+				$(".upload-img-box > div:eq(1) > label > input.thumb").attr("checked",true)
+			}
+    }else{
+      updateAlert(data.info);
+      setTimeout(function(){
+        $('#top-alert').find('button').click();
+        $(that).removeClass('disabled').prop('disabled', false);
+      },1500);
+    }
+  }
+  
+	// 设置拖动排序后的第一张图片为封面图片
+	function setThumb(){
+		$(".upload-img-box > div> label > input.thumb").removeAttr("checked");
+		$(".upload-img-box > div:eq(1) > label > input.thumb").attr("checked",true);
+	}
+
+	//商品图片排序拖曳插件初始化
+	$(".dragsort").dragsort({
+		dragSelector : "div>img",  // 设置拖动的HTML标签
+		dragEnd : function(){ // 拖动完成的回调函数
+			setThumb();	// 设置封面图片
+		},
+		scrollSpeed:0,  // 默认为5，数值越大拖动的速度越快，为0则拖动时页面不会滚动
+	});
+  
+  // 删除图片
+  $(document).on("click",".delPic",function(){
+    $(this).parent().remove();
+  });
+</script>

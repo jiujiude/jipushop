@@ -1,0 +1,74 @@
+<extend name="Base/page"/>
+
+<block name="body">
+  <div class="row page-wrap">
+    <div class="login-form clearfix">
+      <legend>
+        用户登录
+        <small class="pull-right">还没有账号 <a href="{:U('User/register')}" class="btn btn-sm btn-positive">点此注册</a></small>
+      </legend>
+      <form class="col-xs-8 form-horizontal" action="__SELF__" method="post">
+        <fieldset>
+          <div class="form-group">
+            <label for="mobile" class="col-xs-3 control-label">手机</label>
+            <div class="col-xs-6">
+              <input type="text" name="username" id="mobile" class="form-control" placeholder="请输入注册手机" errormsg="请输入正确的手机号" nullmsg="请输入手机" datatype="e|m" value="">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="password" class="col-xs-3 control-label">密码</label>
+            <div class="col-xs-6">
+              <input type="password" name="password" id="password" class="form-control" placeholder="请输入密码" errormsg="密码为6-20位" nullmsg="请输入密码" datatype="*6-20">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="remember" value="1" checked="checked">{:C('USER_AUTO_LOGIN_DAYS')}天内自动登录
+                </label>
+                <a href="{:U('User/forgetpwd')}" class="pull-right">忘记密码？</a>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-xs-6 col-xs-offset-3">
+              <button class="btn btn-block btn-positive">登 录</button>
+            </div>
+          </div>
+          <div class="col-xs-6 col-xs-offset-3">
+            <!-- 第三方登录 -->
+            <div class="login-third">
+              <ul>
+                <li>
+                  <a href="{:U('User/thirdlogin?type=qq')}" class="item">
+                    <span class="icon"><i class="icon-qq"></i></span>
+                  </a>
+                </li>
+                <li>
+                  <a href="{:U('User/thirdlogin?type=sina')}" class="item">
+                    <span class="icon"><i class="icon-weibo"></i></span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+      <div class="col-xs-4">
+        <div class="wechat-login">
+          <div class="title">微信安全登录</div>
+          <div class="img">
+            <img src="{:U('User/wechatLoginPc','QRcode=1&type=middle')}" alt="微信安全登录"/>
+          </div>
+          <div class="tiptext">打开微信<span> 扫一扫 </span>即刻登录</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use('user', function(user){
+      //微信扫一扫登录
+      user.wechatLoginPc();
+    });
+  </script>
+</block>

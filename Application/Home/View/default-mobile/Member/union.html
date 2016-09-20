@@ -1,0 +1,126 @@
+<extend name="Base/common"/>
+<block name="header">
+{:hook('mobileTopNav',array('title'=>$meta_title))}
+</block>
+
+<block name="body">
+ <style>.bar-tab{display: none;}.wap_nav{position: static;margin-bottom:-44px;}</style>
+<if condition='$data_union.status eq 1'>
+      <div class="text-warning" style="display:none;">
+        推广二维码，关注就赚钱！
+        <div class="pull-right">每人返 <span class="text-danger">{:C('UNION_SUBSCRIBE_CASHBACK')}</span> 元</div>
+      </div>
+      
+      <include file="Union/head"/>
+      <!-- 统计概况 -->
+      <div class="union-info">
+        <ul class="flex-box">
+          <li>
+            <h4>本月关注人数</h4>
+            <p>{$data.this_month|default=0}</p>
+          </li>
+          <li>
+            <h4>上月关注人数</h4>
+            <p>{$data.last_month|default=0}</p>
+          </li>
+        </ul>
+        <ul class="flex-box">
+          <li>
+            <h4>总关注数</h4>
+            <p>{$data.total|default=0}</p>
+          </li>
+          <li>
+            <h4>客户数</h4>
+            <p><a href="{:U('unionerlist' ,array('type'=>1))}" >{$counts.one}</a></p>
+          </li>
+          <li style="display:none;">
+            <a href="#qrCode" class="qrcode-link">
+              <h4>推广二维码</h4>
+              <img src="__IMG__/qrcode-demo.png" width="24">
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="union-info" style="display:none;">
+        <ul class="flex-box">
+          <li>
+            <h4>一级代理</h4>
+            <p><a href="{:U('unionerlist' ,array('type'=>1))}" >{$counts.one}</a></p>
+          </li>
+        <if condition='C("DIS_CLASS") gt 1'>
+          <li>
+            <h4>二级代理</h4>
+            <p><a href="{:U('unionerlist' ,array('type'=>2))}" >{$counts.two}</a></p>
+          </li>
+        </if>
+        </ul>
+        <ul class="flex-box">
+        <if condition='C("DIS_CLASS") gt 2'>
+          <li>
+            <h4>三级代理</h4>
+            <p><a href="{:U('unionerlist' ,array('type'=>3))}" >{$counts.three}</a></p>
+          </li>
+          <li></li>
+        </if>
+        </ul>
+      </div>
+      <!-- 图表 -->
+      <div class="union-chart">
+        <div class="chart-title-pos">关注趋势</div>
+        <div class="chart-body" id="Z_charts">
+          <div class="waiting"><img src="__IMG__/loading.gif"> 正在加载图表插件...</div>
+        </div>
+      </div>
+      
+      <!-- 二维码 -->
+      <div id="qrCode" class="modal" style="background:#fff;">
+       
+        <div class="content" style="background:#fff;">
+          <p class="qrcode-showbox" style=" line-height:30px;max-width:80%;margin:20px auto; ">
+               
+                <img src="<notempty name="member.avatar">{$member['avatar']}<else/>__IMG__/avatar-default.png</notempty>" class="avatar" width="80" height="80" style="margin:0px auto;display:block;border: 1px solid #ddd;border-radius:50%;">
+                <span style="font-size: 18px;padding-top: 10px;font-weight: bold;color: #333;">
+                {:get_nickname()}</span>
+         
+            <img src="__ROOT__/Uploads/QRcode/WechatQrcode/{:md5($data_union['qrcode_url'])}.png" style="max-width:100%;border: 1px solid #ccc;border-radius:5%;margin:10px auto;"><br/>
+            长按二维码,保存二维码
+          </p>
+          <div style="margin:20px 30px 0 30px">
+          <a class="btn btn-block" style="border: 1px solid #333;color: #333;" href="#qrCode">关闭</a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 未开通提示 -->
+      <if condition="!$data_union">
+        <div class="modal active">
+          <header class="bar bar-nav">
+            <h1 class="title">推广联盟</h1>
+          </header>
+          <div class="union-msg">
+            <p class="hd"><i class="icon icon-info"></i> 推广二维码就能赚钱，还犹豫什么呢？</p>
+            <p class="bd">
+              <a href="javascript:;" class="btn btn-positive Z_open_union">立即开通</a>
+              <!--&nbsp;
+              <a href="javascript:;" class="btn">推广说明</a-->
+            </p>
+          </div>
+        </div>
+      </if>
+</if>
+
+<if condition='$data_union.status eq 0'>
+<!-- 开通代理，等待审核 -->
+  <div class="union-msg">
+     <p style="line-height:40px;"><i class="icon icon-chudianzijian" style="font-size:80px;display:block;"></i> 代理申请已提交<br>我们将会在1-3个工作日进行审核。</p>
+  </div>
+</if>
+</block>
+<block name="script">
+  <script>
+    seajs.use(['shop','union'], function(shop, union){
+     shop.statChart('Z_charts', {labels: {:json_encode($data['labels'])}, datas: {:json_encode($data['datas'])}});
+     union.open();
+  });
+  </script>
+</block>

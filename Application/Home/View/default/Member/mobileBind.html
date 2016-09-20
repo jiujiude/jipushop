@@ -1,0 +1,59 @@
+<extend name="Base/member"/>
+
+<block name="breadcrumb">
+  <ul class="breadcrumb">
+    <li><a href="{:U('/')}">首页</a></li>
+    <li class="active">绑定手机号</li>
+  </ul>
+</block>
+
+<block name="body">
+  <div class="user-box user-bind">
+    <h3>绑定手机号</h3>
+    <form action="__SELF__" id="J_bind_form" class="col-xs-8 form-horizontal J_bind-form" method="POST">
+      <div class="form-group">
+        <label class="col-xs-3 control-label">原手机号：</label>
+        <div class="col-xs-6">
+          <div class="form-info">{$user.mobile}</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-group">
+          <label for="J_input_mobile" id="J_mobile_text" class="col-xs-3 control-label">新手机号：</label>
+          <div class="col-xs-6">
+            <input type="tel" name="mobile" id="J_input_mobile" class="form-control J_mobile" maxlength="11" placeholder="新手机号">
+          </div>
+        </div>
+        <div class="form-group form-inline">
+          <label for="verify" class="col-xs-3 control-label">图形验证码</label>
+          <div class="col-xs-9">
+            <input type="text" name="verify" id="verify" class="form-control input-4x randcode J_mobile_randcode" placeholder="请输入验证码" maxlength="4" errormsg="请输入4位验证码" nullmsg="请输入验证码" datatype="*4-4">
+            <img style="margin-left: 4px; width: 138px; height: 42px;" class="verifyimg J_reload_verify" title="点击更换" src="{:U('User/verify')}">
+            <!--a href="javascript:;" class="J_reload_verify">看不清？换一个。</a-->
+          </div>
+        </div>
+        <div class="form-group form-inline">
+          <label for="J_input_password" class="col-xs-3 control-label">短信验证码：</label>
+          <div class="col-xs-9">
+             <input type="text" name="randcode" value="" class="form-control input-4x J_randcode" placeholder="验证码">
+             <a href="javascript:;" class="btn J_mobile_randcode_button">获取验证码</a>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-xs-6 col-xs-offset-3">
+            <button type="submit" class="btn btn-positive">立即绑定</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use('user', function(user){
+      //user.mobileBind();
+      user.getRandCode('setMobile');
+    });
+  </script>
+</block>

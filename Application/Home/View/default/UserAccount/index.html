@@ -1,0 +1,62 @@
+<extend name="Base/user"/>
+
+<block name="body">
+  <div class="user-box shop">
+    <include file="Withdraw/head" />
+    <notempty name="lists">
+      <div class="row list-info">
+        <div class="col-xs-12">
+          <div class="hd clearfix">
+            <span class="col-xs-2">账户类型</span>
+            <span class="col-xs-3">户名</span>
+            <span class="col-xs-3">账号</span>
+            <span class="col-xs-3">添加时间</span>
+            <span class="col-xs-1">操作</span>
+          </div>
+        </div>
+
+        <volist name="lists" id="vo">
+          <div class="col-xs-12 J_account_item_{$vo.id}">
+            <div class="bd clearfix">
+              <div class="col-xs-2">
+                <eq name="vo.type" value="alipay">
+                  {$vo.type|get_user_account_text}
+                <else />
+                  {:C('BANK_LISTS.'.$vo['bankname'])}
+                </eq>
+              </div>
+              <div class="col-xs-3">{$vo.name}</div>
+              <div class="col-xs-3">{$vo.account}</div>
+              <div class="col-xs-3">{$vo.create_time|time_format}</div>
+              <div class="col-xs-1">
+                <a href="javascript:;" class="J_account_remove" data-id="{$vo.id}">删除</a>
+              </div>
+            </div>
+          </div>
+        </volist>
+      </div>
+      <if condition="strlen($_page) gt 15"><div class="page">{$_page}</div></if>
+    <else/>
+      <p class="list-empty">
+        您暂时没有提现账户...
+      </p>
+    </notempty>
+    <form>
+      <a href="javascript:;" id="J_add_useraccount" class="btn btn-default">&plus;添加提现账户</a>
+    </form>
+  </div>
+</block>
+
+<block name="script">
+  <script>
+    seajs.use('userAccount', function(userAccount){
+      userAccount.listBind();
+      $('#J_add_useraccount').click(function(){
+        $.ui.load('{:U("UserAccount/add?type=alipay")}', '添加提现账户')
+      });
+      <eq name="_GET['add_now']" value="1">
+        $('#J_add_useraccount').click();
+      </eq>
+    });
+  </script>
+</block>

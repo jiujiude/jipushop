@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Jipushop项目结构</title>
+		<style>
+			/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+sup {
+   vertical-align: super;
+   font-size: smaller;
+}
+
+sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+
+/* Generic styles */
+body {
+	background: #f5f5f5;
+  color: #444;
+  font-family: 'Microsoft Yahei','Book Antiqua',Palatino,FreeSerif,serif;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6,
+code, pre,
+ul, ol,
+p,
+hr {
+  margin: 1.5em 0 0.5em 0;
+}
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.5em;
+}
+
+ul, ol,
+p,
+hr {
+	line-height: 2em;
+}
+
+code, pre {
+  line-height: 1.5em;
+}
+
+*:first-child {
+	margin-top: 0;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+	font-weight: bold;
+}
+
+h1 {
+	font-size: 3.5em;
+}
+
+h2 {
+	font-size: 2.5em;
+}
+
+h3 {
+	font-size: 2em;
+}
+
+h4 {
+	font-size: 1.5em
+}
+
+h5 {
+	font-size: 1.2em;
+}
+
+h6 {
+	font-size: 1em;
+}
+
+/* Lists */
+ul, ol {
+	padding-left: 2em;
+}
+
+ul {
+	list-style-type: disc;	
+}
+
+ol {
+	list-style-type: decimal;
+}
+
+/* Code and pre */
+code, pre {
+	font-family: "Bitstream Vera Sans Mono", "Courier", monospace;
+}
+code {
+	background: none repeat scroll 0 0 #F8F8FF;
+  border: 1px solid #DEDEDE;
+  border-radius: 3px 	;
+  padding: 0 0.2em;
+}
+pre {
+	border-left: 5px solid #eee;
+	margin-left: 2em;	
+	padding-left: 1em;
+}
+pre > code {
+	background: transparent;
+	border: none;
+	padding: 0;
+  word-wrap: break-word;
+}
+
+/* Links */
+a {
+  color: #e91e63;
+}
+
+a:visited {
+  color: #666;
+}
+
+/* Inlines */
+strong {
+	font-weight: bold;
+}
+
+em {
+	font-style: italic;
+}
+
+/* Container */
+.container {
+	background: #FFF;
+	padding: 30px 50px;
+	margin: 0 auto;
+	width: 700px;
+}
+
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h2 id="jipushop-">Jipushop项目结构</h2>
+<pre><code>├─ Addons ------------------插件目录
+│
+├─ Application -------------应用模块目录
+│   ├─ Admin ---------------后台模块
+│   │   ├─ Common ----------后台配置文件目录
+│   │   ├─ Conf ------------后台函数公共目录
+│   │   ├─ Controller ------后台控制器目录
+│   │   ├─ Event -----------后台事件目录
+│   │   ├─ Model -----------后台模型目录
+│   │   └─ View ------------后台视图文件目录
+│   │
+│   ├─ Common---------------公共模块目录（不能直接访问）
+│   │   ├─ Api -------------公共API目录
+│   │   ├─ Behavior --------行为目录
+│   │   ├─ Common ----------公共函数文件目录
+│   │   ├─ Conf ------------公共配置文件目录
+│   │   ├─ Controller ------模块访问控制器目录
+│   │   └─ Model -----------公共模型目录
+│   │
+│   └─ Home-----------------前台模块
+│   │   ├─ Common ----------前台函数公共目录
+│   │   ├─ Conf ------------前台配置文件目录
+│   │   ├─ Controller ------前台控制器目录
+│   │   ├─ Event -----------前台事件目录
+│   │   ├─ Model -----------前台模型目录
+│   │   ├─ View ------------前台视图文件目录
+│   │   └─ Widget ----------前台Widget目录
+│   │
+│   └─ Install--------------系统安装模块
+│       ├─ Common ----------系统安装公共目录
+│       ├─ Conf ------------系统安装配置文件目录
+│       ├─ Controller ------系统安装控制器目录
+│       └─ View ------------系统安装视图文件目录
+│
+├─ Public ------------------静态资源文件（JS、CSS、Fonts）
+│   ├─ Admin ---------------后台资源文件
+│   │   ├─ css -------------CSS文件目录
+│   │   ├─ fonts -----------字体图标文件目录
+│   │   ├─ images ----------图片目录
+│   │   └─ js --------------JavaScript目录
+│   │
+│   ├─ Home
+│   │   ├─ default ---------默认PC端静态文件
+│   │   │   ├─ css ---------CSS文件目录
+│   │   │   ├─ fonts -------字体图标文件目录
+│   │   │   ├─ images ------图片目录
+│   │   │   └─ js ----------JavaScript目录
+│   │   │
+│   │   └─ default-mobile --默认移动端静态文件
+│   │       ├─ css ---------CSS文件目录
+│   │       ├─ fonts -------字体图标文件目录
+│   │       ├─ images ------图片目录
+│   │       └─ js ----------JavaScript目录
+│   │
+│   ├─ Install -------------系统资源文件
+│   │   ├─ css -------------CSS文件目录
+│   │   ├─ fonts -----------字体图标文件目录
+│   │   ├─ images ----------图片目录
+│   │   └─ js --------------JavaScript目录
+│   │
+│   └─ src------------------scss源文件（基于bootstrap）
+│       └─ scss
+│
+├─ ThinkPHP-----------------ThinkPHP目录
+│   ├─ Common
+│   ├─ Conf
+│   ├─ Lang
+│   ├─ Library
+│   ├─ Mode
+│   └─ Tpl
+│
+├─ Data----------------------数据备份、日志目录
+│
+├─ Uploads-------------------附件
+│   ├─ Attachment
+│   ├─ Avatar
+│   ├─ Download
+│   ├─ Editor
+│   ├─ Picture
+│   └─ QRcode
+│
+├─ Runtime-------------------缓存目录
+│
+├─ package.json--------------前端构建配置文件
+├─ Gruntfile.js--------------Grunt配置文件
+├─ .htaccess-----------------Apache Rewrite
+├─ index.php-----------------入口文件
+├─ admin.php-----------------后台入口文件
+└─ install.php---------------系统安装入口文件
+</code></pre>
+		</div>
+
+		<script></script>
+	</body>
+</html>

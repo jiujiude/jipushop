@@ -1,0 +1,95 @@
+<style>
+  .height-itm{height:auto;}
+  .items-box .itm-table{width: 100%;}
+  .items-box .itm-table .itm-info{line-height:22px;border-bottom:1px solid #E9E9E9;}
+  .items-box .itm-table .itm-info td{padding:5px;}
+  .title_img{height: 30px;display:block;}
+  .itm-search{padding:5px 5px 10px;}
+  .submit_h0{height: 31px; line-height: 20px;}
+</style>
+<form action="{:addons_url('ImageTextMsg://ImageTextMsg/index')}" id="J-itmsearch-form" method="get">
+  <div class="itm-search">
+    <select name="cont_type" class="J_cont_type">
+      <option value="article">文章</option>
+      <option value="item">商品</option>
+    </select>
+    <input type="text" value="{$keywords}" class="text" name="keywords" placeholder="搜索关键词">
+    <input type="submit" value="查找" class="btn btn-mini btn-return J_itmsearch">
+  </div>
+</form>
+<div class="items-box height-itm">
+
+  <table id="J_itmtab" class="itm-table" data-pageurl="{$page_url}">
+    <thead class="items-tb-hd">
+      <tr>
+        <th class="col-title" width="40">选择</th>
+        <th></th>
+        <th class="col-title">标题/名称</th>
+        <th class="text-center" width="150">更新时间</th>
+      </tr>
+    </thead>
+    <tbody>
+    <notempty name="page.list">
+      <volist name="page.list" id="vo">
+        <tr class="itm-info J-itm-infotr">
+          <td class="col-title text-center">
+            <php> $checked = in_array($cont_type.':'.$vo['id'], $event_sel);</php>
+            <input type="checkbox" value="{$cont_type}:{$vo.id}" <if condition="$checked">checked</if>/>
+          </td>
+          <td><notempty name="vo.img.path"><img src="{$vo.img.path}" class="title_img"/></notempty></td>
+          <td class="title">
+            <a href="{:U($showurl, array('id'=>$vo['id']))}" target="_blank">{$vo.title}{$vo.name}</a></td>
+          <td class="text-center">{$vo.create_time|time_format}</td>
+        </tr>
+      </volist>
+      <else/>
+      <tr>
+        <td colspan="3">
+          <p class="text-center"> 暂无内容! </p>
+        </td>
+      </tr>
+    </notempty>
+    </tbody>
+  </table>
+</div>
+<div class="page J_ajax-page">
+  {$page.p}
+  <div class="fr">
+    <input type="button" value="确定选择" class="btn submit-btn btn-mini submit_h0" onclick="$('.J_modal_close').click()">
+  </div>
+</div>
+<script>
+  (function(){
+    //AJAX分页处理
+    $('.J_ajax-page a').click(function(){
+      UI.load($(this).attr('href'), '内容选择');
+      return false;
+    });
+    
+    $('.J_cont_type').change(function(){
+      var val = $(this).val();
+      var param = 'cont_type=' + val;
+      itm.managePage(param);
+    });
+    
+    //提交搜索
+    $('#J-itmsearch-form').submit(function(){
+      val = $(this).serialize();
+      itm.managePage(val);
+      return false;
+    });
+    
+    //选择、取消选择
+    $('.J-itm-infotr input[type="checkbox"]').change(function(){
+      url = "{:addons_url('ImageTextMsg://ImageTextMsg/sel', array('event' => $event))}";
+      $.post(url, {val:$(this).val(),checked: $(this).is(':checked')}, function(json){
+        if(json.status === 1){
+          itm.detailPage();
+        }
+      }, 'json');
+    });
+    
+    Core.setValue('cont_type', '{:I('get.cont_type', 'article')}');
+    
+  })();
+</script>

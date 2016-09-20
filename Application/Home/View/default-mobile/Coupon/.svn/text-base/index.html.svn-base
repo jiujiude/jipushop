@@ -1,0 +1,49 @@
+<extend name="Base/common"/>
+
+<block name="body">
+  <div class="content-padded">
+    <!-- 优惠券 -->
+    <notempty name="lists">
+      <notempty name="coupon_getall_ids">
+        <a href="javascript:;" class="btn btn-block btn-positive Z_get_coupon" data-id="{$coupon_getall_ids}">立即领券</a>
+      </notempty>
+      <div class="coupon-list">
+        <volist name="lists" id="vo" mod="4">
+          <div class="item item-bg-{$mod} <if condition="is_get_coupon(UID, $vo['id'])">has-get<else/>Z_get_coupon</if>" data-id="{$vo.id}">
+            <div class="bd">
+              <div class="name">{$vo.name}</div>
+              <div class="info">
+                <em class="yen">&yen;</em>
+                <strong>{$vo.amount}</strong>
+              </div>
+              <div class="time">
+                <p><eq name="vo.norm" value="0">单额不限<else/>订单满{$vo.norm}可使用</eq>（{$vo.expire_time|time_format} 前有效）</p>
+              </div>
+            </div>
+            <div class="fd Z_coupon_info">
+              <if condition="is_get_coupon(UID, $vo['id'])">
+                <em>已经领取</em>
+                <i class="icon icon-round-check-fill"></i>
+              <else/>
+                <em>立即领取</em>
+                <i class="icon icon-round-check"></i>
+              </if>
+            </div>
+          </div>
+        </volist>
+      </div>
+    <else />
+      <div class="cart-empty">
+        <p class="tips">暂无可用优惠券</p>
+      </div>
+    </notempty> 
+  </div>
+</block>
+<block name="script">
+  <script type="text/javascript">
+    seajs.use(['coupon', 'wechat'], function(coupon, wechat){
+      coupon.init();
+      wechat.init();
+    });
+  </script>
+</block>

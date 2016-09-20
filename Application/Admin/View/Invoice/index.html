@@ -1,0 +1,135 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>发票申请记录</h2>
+  </div>
+
+  <!-- 按钮工具栏 -->
+  <div class="cf">
+    <div class="fl">
+      <button class="btn ajax-post confirm" url="{:U('del')}" target-form="ids">删 除</button>
+      <a class="btn" href="{:U('index')}">刷 新</a>（点击"刷新"按钮清除搜索条件，显示全部信息。）
+    </div>
+
+    <!-- 高级搜索 -->
+    <div class="search-form fr cf">
+      <div style="float:left; margin-right: 5px;">
+      <select id="invoice_status" name="invoice_status">
+        <option value="">发票状态</option>
+        <option value="0">未出票</option>
+        <option value="1">已出票</option>
+      </select>
+      <select id="express_status" name="express_status">
+        <option value="">发件状态</option>>
+        <option value="0">未发件</option>
+        <option value="1">已发件</option>
+        <option value="2">已收件</option>
+      </select>
+      </div>
+      <div class="sleft">
+        <input type="text" name="keywords" class="search-input" value="{:I('keywords')}" placeholder="请输入发票编号或抬头">
+        <a class="sch-btn" href="javascript:;" id="search" url="{:U('')}"><i class="btn-search"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 数据表格 -->
+  <div class="data-table table-striped">
+    <form class="ids">
+      <table>
+        <thead>
+          <tr>
+            <th class="row-selected">
+              <input class="checkbox check-all" type="checkbox">
+            </th>
+            <th>发票申请编号</th>
+            <th>发票抬头</th>
+            <th>发票类型</th>
+            <th>发票金额</th>
+            <th>发票状态</th>
+            <th>发件状态</th>
+            <th>申请时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <notempty name="list">
+            <volist name="list" id="vo">
+              <tr>
+                <td><input class="ids row-selected" type="checkbox" name="ids[]" value="{$vo.id}"></td>
+                <td><a title="查看" href="{:U('view?id='.$vo['id'])}">{$vo.invoice_sn}</a></td>
+                <td>{$vo.invoice_title}</td>
+                <td>{$vo.invoice_type}</td>
+                <td>￥{$vo.invoice_amount}</td>
+                <td>{$vo.invoice_status_text}</td>
+                <td>{$vo.express_status_text}</td>
+                <td>{$vo.create_time|time_format}</td>
+                <td>
+                  <eq name="vo.invoice_status" value="0">
+                    <a href="{:U('view?id='.$vo['id'])}#2">[发票处理]</a>
+                  <else/>
+                    <font color="#ccc">[发票处理]</font>
+                  </eq>
+                  <a class="confirm ajax-get" title="删除" href="{:U('del?ids='.$vo['id'])}">[删除]</a>
+                </td>
+              </tr>
+            </volist>
+          <else/>
+            <tr><td colspan="10" class="text-center"> aOh! 暂时还没有内容! </td></tr>
+          </notempty>
+        </tbody>
+      </table>
+    </form>
+
+    <!-- 分页 -->
+    <div class="page">{$_page}</div>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    $(function(){
+      //搜索功能
+      $("#search").click(function(){
+        var url = $(this).attr('url');
+        var query  = $('.search-form').find('input').serialize();
+        
+        var invoice_status = $("#invoice_status").val();
+        var express_status = $("#express_status").val();
+        
+        query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g,'');
+        query = query.replace(/^&/g,'');
+        
+        if(invoice_status != ''){
+          query += '&invoice_status=' + invoice_status;
+        }
+
+        if(express_status != ''){
+          query += '&express_status=' + express_status;
+        }
+        
+        if(url.indexOf('?')>0){
+          url += '&' + query;
+        }else{
+          url += '?' + query;
+        }
+        window.location.href = url;
+      });
+
+      //回车自动提交
+      $('.search-form').find('input').keyup(function(event){
+        if(event.keyCode===13){
+          $("#search").click();
+        }
+      });
+
+      //设置单选，复选，下拉菜单的值
+      Core.setValue('invoice_status', '{$invoice_status|default = ""}');
+      Core.setValue('express_status', '{$express_status|default = ""}');
+      
+      //导航高亮
+      highlight_subnav("{:U('index')}");
+    });
+  </script>
+</block>

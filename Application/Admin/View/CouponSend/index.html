@@ -1,0 +1,69 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>优惠券发放记录({$_total})</h2>
+  </div>
+
+  <!-- 按钮工具栏 -->
+  <div class="cf">
+    <div class="fl">
+      <a class="btn" href="{:U('Coupon/add')}">新 增</a>
+      <button class="btn ajax-post confirm" url="{:U('del')}" target-form="ids">删 除</button>
+    </div>
+  </div>
+  
+  <!-- 数据表格 -->
+  <div class="data-table">
+    <table>
+      <thead>
+        <tr>
+          <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+          <th width="120">优惠券编号</th>
+          <th width="80">接受用户</th>
+          <th width="200">优惠券名称</th>
+          <th width="80">优惠券金额</th>
+          <th width="100">适用商品ID</th>
+          <th width="65">适用限额</th>
+          <th width="60">是否使用</th>
+          <th width="180">发放时间</th>
+          <th width="180">使用时间</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <notempty name="list">
+          <volist name="list" id="vo">
+            <tr>
+              <td><input class="ids" type="checkbox" name="ids[]" value="{$vo.id}" /></td>
+              <td>{$vo['coupon']['number']}</td>
+              <td>{$vo['uid']|get_nickname}</td>
+              <td>{$vo['coupon']['name']}</td>
+              <td class="text-center">{$vo['coupon']['amount']}</td>
+              <td><notempty name="vo.coupon.items">{$vo['coupon']['items']}<else/>全场通用</notempty></td>
+              <td class="text-center">{$vo['coupon']['norm']}</td>
+              <td>{$vo['status_text']}</td>
+              <td>{$vo['create_time']|time_format}</td>
+              <td><notempty name="vo.use_time">{$vo['use_time']|time_format}<else/>尚未使用</notempty></td>
+              <td>
+                <a href="{:U('del?ids='.$vo['id'])}" class="confirm ajax-get">[删除]</a>
+              </td>
+            </tr>
+          </volist>
+        <else/>
+          <tr><td colspan="9" class="text-center"> 尚未给任何用户发放优惠券!  <a href="{:U('Coupon/index')}" class="btn btn-mini">&plus;立即发放</a></td></tr>
+        </notempty>
+      </tbody>
+    </table> 
+  </div>
+
+  <!-- 分页 -->
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+
+</block>

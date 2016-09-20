@@ -1,0 +1,30 @@
+/**
+ * 站内消息模块
+ */
+.message-ctrl {
+  
+  .btn {
+    padding: 5px 10px;
+    margin: 10px 0;
+    border-radius: 0px;
+    font-size: 14px;
+  }
+}
+
+.message-li {
+  line-height: 38px;
+  
+  a {
+    color: #d47c6e;
+  }
+}
+
+.message-info {
+  clear: both;
+  line-height: 33px;
+  border-bottom: 1px solid #eee;
+  padding: 8px 10px;
+  background: #f7fbfc;
+  margin:0 7.5px;
+  color: #333;
+}

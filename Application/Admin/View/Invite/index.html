@@ -1,0 +1,52 @@
+<extend name="Public/base" />
+
+<block name="body">
+  <!-- 标题栏 -->
+  <div class="main-title">
+    <h2>邀请列表({$_total})</h2>
+  </div>
+  <!-- 数据列表 -->
+  <div class="data-table table-striped">
+    <table class="">
+      <thead>
+        <tr>
+          <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+          <th>UID</th>
+          <th>用户名</th>
+          <th>邀请总数</th>
+          <th>奖励总额</th>
+          <th width="200">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <notempty name="_list">
+          <volist name="_list" id="vo">
+            <tr>
+              <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}" /></td>
+              <td>{$vo.invite_uid}</td>
+              <td><a href="{:U('User/view?id='.$vo['invite_uid'])}">{$vo.invite_uid|get_nickname}</a></td>
+              <td>{$vo.count} 人</td>
+              <td>{$vo.reward} 元</td>
+              <td>
+                <a href="{:U('Invite/view?&invite_uid='.$vo['invite_uid'])}">[邀请详情]</a>
+                <a href="{:U('Order/index?&uid='.$vo['invite_uid'])}">[查看订单]</a>
+              </td>
+            </tr>
+          </volist>
+        <else/>
+          <tr><td colspan="9" class="text-center"> aOh! 暂时还没有内容! </td></tr>
+        </notempty>
+      </tbody>
+    </table>
+  </div>
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //导航高亮
+    highlight_subnav("{:U('User/index')}");
+  </script>
+</block>

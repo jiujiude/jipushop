@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>后端开发中的命名约定</title>
+		<style>
+			/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+sup {
+   vertical-align: super;
+   font-size: smaller;
+}
+
+sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+
+/* Generic styles */
+body {
+	background: #f5f5f5;
+  color: #444;
+  font-family: 'Microsoft Yahei','Book Antiqua',Palatino,FreeSerif,serif;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6,
+code, pre,
+ul, ol,
+p,
+hr {
+  margin: 1.5em 0 0.5em 0;
+}
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.5em;
+}
+
+ul, ol,
+p,
+hr {
+	line-height: 2em;
+}
+
+code, pre {
+  line-height: 1.5em;
+}
+
+*:first-child {
+	margin-top: 0;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+	font-weight: bold;
+}
+
+h1 {
+	font-size: 3.5em;
+}
+
+h2 {
+	font-size: 2.5em;
+}
+
+h3 {
+	font-size: 2em;
+}
+
+h4 {
+	font-size: 1.5em
+}
+
+h5 {
+	font-size: 1.2em;
+}
+
+h6 {
+	font-size: 1em;
+}
+
+/* Lists */
+ul, ol {
+	padding-left: 2em;
+}
+
+ul {
+	list-style-type: disc;	
+}
+
+ol {
+	list-style-type: decimal;
+}
+
+/* Code and pre */
+code, pre {
+	font-family: "Bitstream Vera Sans Mono", "Courier", monospace;
+}
+code {
+	background: none repeat scroll 0 0 #F8F8FF;
+  border: 1px solid #DEDEDE;
+  border-radius: 3px 	;
+  padding: 0 0.2em;
+}
+pre {
+	border-left: 5px solid #eee;
+	margin-left: 2em;	
+	padding-left: 1em;
+}
+pre > code {
+	background: transparent;
+	border: none;
+	padding: 0;
+  word-wrap: break-word;
+}
+
+/* Links */
+a {
+  color: #e91e63;
+}
+
+a:visited {
+  color: #666;
+}
+
+/* Inlines */
+strong {
+	font-weight: bold;
+}
+
+em {
+	font-style: italic;
+}
+
+/* Container */
+.container {
+	background: #FFF;
+	padding: 30px 50px;
+	margin: 0 auto;
+	width: 700px;
+}
+
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h2 id="-">后端开发中的命名约定</h2>
+<h3 id="-">方法命名</h3>
+<p>方法命名遵循：【动作+操作名称】的命名约定，基本的CURD操作（创建、更新、读取和删除）直接使用动作名称。</p>
+<h5 id="1-controller-model-">1.Controller &amp; Model方法命名</h5>
+<p>根据后端开发约定，控制器中的方法在项目中主要实现路由功能，因此应带有指向性和行动性。</p>
+<ul>
+<li>首页：index</li>
+<li>列表：lists</li>
+<li>列表片段：listsItem （主要用于移动端ajax分页中）</li>
+<li>详情：detail</li>
+<li>数据添加：add</li>
+<li>数据修改：edit</li>
+<li>数据更新：update</li>
+<li>数据删除：remove</li>
+<li>获取数据：getActionName</li>
+<li>设置/重置：setActionName / resetActionName</li>
+<li>判断/检测：checkActionName</li>
+</ul>
+<h5 id="2-event-">2.Event方法命名</h5>
+<ul>
+<li>添加数据：addActionName</li>
+<li>编辑数据：editActionName</li>
+<li>更新数据：updateActionName</li>
+<li>删除数据：removeActionName</li>
+<li>获取数据：getActionName</li>
+<li>设置数据：setActionName</li>
+<li>格式化数据：formatActionName</li>
+<li>判断/检测数据：checkActionName</li>
+<li>处理数据：dealActionName</li>
+</ul>
+<p>总之，命名的原则就是：【能（shuo）看（ren）懂（hua）】<br>下面附上著名博客软件wordpress部分函数的命名：</p>
+<h5 id="1-tag">1.基本条件判断Tag</h5>
+<p>is_home() : 是否为主页<br>is_single() : 是否为内容页(Post)<br>is_page() : 是否为内容页(Page)<br>is_category() : 是否为Category/Archive页<br>is_tag() : 是否为Tag存档页<br>is_date() : 是否为指定日期存档页<br>is_year() : 是否为指定年份存档页<br>is_month() : 是否为指定月份存档页<br>is_day() : 是否为指定日存档页<br>is_time() : 是否为指定时间存档页<br>is_archive() : 是否为存档页<br>is_search() : 是否为搜索结果页<br>is_404() : 是否为 “HTTP 404: Not Found” 错误页<br>is_paged() : 主页/Category/Archive页是否以多页显示  </p>
+<h5 id="2-php-">2.模板常用的PHP函数及命令</h5>
+<p>&lt;?php get_header(); ?&gt; : 调用Header模板<br>&lt;?php get_sidebar(); ?&gt; : 调用Sidebar模板<br>&lt;?php get_footer(); ?&gt; : 调用Footer模板<br>&lt;?php the_content(); ?&gt; : 显示内容(Post/Page)<br>&lt;?php if(have_posts()) : ?&gt; : 检查是否存在Post/Page<br>&lt;?php the_title(); ?&gt; : 内容页(Post/Page)标题<br>&lt;?php the_permalink() ?&gt; : 内容页(Post/Page) Url<br>&lt;?php the_category(’, ‘) ?&gt; : 特定内容页(Post/Page)所属Category<br>&lt;?php the_author(); ?&gt; : 作者<br>&lt;?php edit_post_link(); ?&gt; : 如果用户已登录并具有权限，显示编辑链接<br>&lt;?php get_links_list(); ?&gt; : 显示Blogroll中的链接<br>&lt;?php wp_list_pages(); ?&gt; : 显示Page列表<br>&lt;?php wp_list_categories(); ?&gt; : 显示Categories列表<br>&lt;?php next_post_link(’ %link ‘); ?&gt; : 下一篇文章链接<br>&lt;?php prev_post_link(’%link’); ?&gt; : 上一篇文章链接<br>&lt;?php get_calendar(); ?&gt; : 日历<br>&lt;?php wp_register(); ?&gt; : 显示注册链接<br>&lt;?php wp_loginout(); ?&gt; : 显示登录/注销链接<br>&lt;?php timer_stop(1); ?&gt; : 网页加载时间(秒)  </p>
+
+		</div>
+
+		<script></script>
+	</body>
+</html>

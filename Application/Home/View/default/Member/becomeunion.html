@@ -1,0 +1,36 @@
+<extend name="Base/member"/>
+
+<block name="body">
+  <div class="user-box shop">
+    <h3 class="title">
+      成为代理
+    </h3>
+  
+  <div class="sdp text-center">
+    <br/>
+    <h3>{$mess}</h3>
+    <p><br/>
+  
+<if condition='C("DIS_CONDITION.TYPE") eq 1 || $status eq 1'>
+  <form method="post" class='myform'>
+      <a class="btn btn-positive J_open_union sure">
+       我要申请加入代理联盟</a>
+  </form>
+  </if>
+     
+    </p>
+  </div>
+
+</div>
+  
+</block>
+
+<block name="script">
+  <script>
+    seajs.use('common', function(loadtype){
+      $('.sure').bind('click',function(){
+          $('.myform').submit();
+      });
+    });
+  </script>
+</block>

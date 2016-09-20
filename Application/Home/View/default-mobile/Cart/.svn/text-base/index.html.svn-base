@@ -1,0 +1,89 @@
+<extend name="Base/common"/>
+<block name="header">
+{:hook('mobileTopNav',array('title'=>'购物车'))}
+</block>
+<block name="body">
+  <gt name="cart_count.total_quantity" value="0">
+    <volist name="list" id="supp">
+    <div class="supplier-box">
+      <div class="supplier-title">
+        <a href="javascript:;" class="active Z_cart_supplier" data-supplier_id="{$supp.supplier_id}"><i class="icon icon-round-check"></i>
+        <gt name="supp.supplier_id" value="0">{$supp.supplier_name} <else /> <span class="is-self">{:C('WEB_SITE_TITLE')}自营</span></gt>
+        </a>
+      </div>
+      <volist name="supp.item" id="vo">
+        <div class="cart-group Z_cart_{$vo['item_id']}" id="cart-group-{$vo.item_code}" data-code="{$vo['item_code']}" data-id="{$vo['item_id']}">
+          <div class="item">
+            <div class="check">
+              <a href="javascript:;" class="active Z_cart_checkitem" data-supplier_id="{$vo.supplier_id}" data-id="{$vo.item_id}" data-code="{$vo.item_code}"><i class="icon icon-round-check"></i></a>
+              <input type="checkbox" name="item_ids" class="hide" checked="checked">
+            </div>
+            <div class="pic">
+              <a href="{:U('Item/detail', array('id' => $vo['item_id']))}">
+                <img src="__ROOT__{:get_image_thumb($vo['cover_path'], 220, 220)}" alt="{$vo.name}" />
+              </a>
+            </div>
+            <div class="name"><a href="{:U('Item/detail', array('id' => $vo['item_id']))}">{$vo['item_id']|get_item_name}</a></div>
+            <if condition="$vo['stock'] lt $vo['quantity']"><em class="text-danger">此商品所购买数量大于库存</em></if>
+            <notempty name="vo.spec">
+              <div class="spec">
+                <volist name="vo.spec" id="spec">
+                  <span class="prp">{$spec['key']}：{$spec['val']}</span>
+                </volist>
+              </div>
+            </notempty>
+            <div class="price">
+              <strong id="Z_item_price_{$vo['item_code']}" class="text-danger">&yen; <em class="Z_item_price">{$vo['subAmount']}</em></strong>
+              <if condition="$vo.dis_price gt 0"><span class="price-tip">老客户立减</span></if>
+              <span id="Z_second_pieces_{$vo['item_code']}" class="price-tip hide">第二件折扣</span>
+            </div>
+
+            <php>$vo['stock'] = get_quota_num($vo['item_id']);$vo['quantity'] = min($vo['quantity'], $vo['stock']);</php>
+            <if condition="get_quota_status($vo['item_id'])">
+              <div class="spec">最多购买 <span class="J_quota_num text-danger">{$vo.stock}</span> 件</div>
+            </if>
+            <div class="num" id="Z_item_box_{$vo['item_code']}">
+              <a href="javascript:;" class="minus <eq name="vo.quantity" value="1">disabled</eq> Z_cart_update" data-option="minus" data-item_code="{$vo.item_code}" data-price="{$vo.price}" data-stock="{$vo.stock}">-</a>
+              <input type="text" readonly id="Z_item_num_{$vo['item_code']}" data-item_code="{$vo.item_code}" data-price="{$vo.price}" class="num-input Z_cart_change" value="{$vo['quantity']}" min="1" pattern="[0-9]*"/>
+              <a href="javascript:;" class="plus <eq name="vo.quantity" value="$vo['stock']">disabled</eq> Z_cart_update" data-option="plus" data-item_code="{$vo.item_code}" data-price="{$vo.price}" data-stock="{$vo.stock}">+</a>
+            </div>
+            
+            <div class="remove">
+              <a href="javascript:;" class="Z_cart_remove" data-item_code="{$vo['item_code']}"><i class="icon icon-remove"></i></a>
+            </div>
+          </div>
+        </div>
+      </volist>
+      <div class="send-items Z_send_supp_{$supp.supplier_id}"></div>
+      </div>
+    </volist>
+  <else />
+    <div class="content-padded cart-empty">
+      <a href="{:U('/')}" class="img"><i class="icon icon-cart"></i></a>
+      <p class="tips">您的购物车内没有任何商品</p>
+      <p><a class="btn btn-block btn-positive" href="{:U('/')}"><span class="ui-btn-text">马上去选购</span></a></p>
+    </div>
+  </gt>
+</block>
+
+<block name="footer">
+  <if condition="$cart_count['total_quantity'] gt 0">
+    <div class="bar bar-tab cart-checkout">
+      <a href="javascript:;" class="cart-check-all active" id="Z_cart_checkall"><i class="icon icon-round-check"></i> 全选</a>
+      <span class="total">总价：<em class="text-danger"><i class="yen">&yen;</i> <span id="Z_cart_total">{$cart_count.total_amount}</span></em></span>
+      <a href="javascript:;" class="pull-right btn btn-negative btn-tab" id="Z_cart_checkout">我要结账</a>
+      <!--<a href="javascript:;" class="pull-right btn" id="Z_cart_clear">清空购物车</a>-->
+    </div>
+  <else />
+    <include file="Public/tab"/>
+  </if>
+</block>
+
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use('cart', function(cart){
+      cart.init({$second_pieces_item});
+    });
+  </script>
+</block>

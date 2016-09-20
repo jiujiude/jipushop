@@ -1,0 +1,30 @@
+<extend name="Base/common"/>
+<block name="body">
+  <div class="segmented-control">
+    <a class="control-item {:I('get.type') ? '' : 'active'}" href="{:U('Supplier/index', array('key' => I('get.key')))}">全部订单</a>
+    <a class="control-item {:I('get.type') == 'unship' ? 'active' : ''}"  href="{:U('Supplier/index', array('type' => 'unship', 'key' => I('get.key')))}">待发货</a>
+    <a class="control-item {:I('get.type') == 'unreceive' ? 'active' : ''}" href="{:U('Supplier/index', array('type' => 'unreceive', 'key' => I('get.key')))}">已发货</a>
+  </div>
+
+  <div class="list-bg" id="Z_load_itemlist">
+    <notempty name="lists">
+      <div class="list-bg">
+        <include file="orderList"/>
+      </div>
+    <else/>
+      <p class="list-empty">您暂时没有相关订单。</p>
+    </notempty>
+  </div>
+</block>
+<block name="footer">
+  
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use(['common'], function(common){
+      var url = window.location.href;
+      common.loadmore(url);
+    });
+  </script>
+</block>

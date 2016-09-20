@@ -1,0 +1,21 @@
+<extend name="Base/common" />
+<block name="header">
+{:hook('mobileTopNav',array('title'=>$meta_title))}
+</block>
+
+<block name="body">
+  <form action="__SELF__" method="post">
+    <div class="control-group">
+      <input name="old" type="password" id="inputPassword"  class="first" placeholder="请输入原密码"  errormsg="密码为6-20位" nullmsg="请输入原密码" datatype="*6-20">
+    </div>
+    <div class="control-group">
+      <input name="password" type="password" id="inputPassword" placeholder="请输入新密码"  errormsg="密码为6-20位" nullmsg="请输入新密码" datatype="*6-20">
+    </div>
+    <div class="control-group">
+      <input name="repassword" type="password" id="inputPassword" placeholder="请再次输入新密码" recheck="password" errormsg="您两次输入的密码不一致" nullmsg="请再次输入新密码" datatype="*">
+    </div>
+    <div class="control-action">
+      <button type="submit" class="btn btn-block btn-positive">提 交</button>
+    </div>
+  </form>
+</block>

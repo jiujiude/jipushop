@@ -1,0 +1,17 @@
+<notempty name="data.list">
+
+  <volist name="data.list" id="vo">
+  <option value="{$vo.id}" <eq name="vo.id" value="$data['select_id']">selected="selected"</eq>>{$vo.name}</option>
+  </volist>
+<else/>
+</notempty>
+<div id="J_delivery_field" class="delivery-type hidden">
+  <div class="item J_express_item">
+    <div class="default">
+      运费：
+      <span class="J_express_start"></span><span class="J_express_unit"></span>内<span class="J_express_postage"></span>元，
+      每增加<span class="J_express_plus"></span><span class="J_express_unit"></span>，
+      增加运费<span class="J_express_postageplus"></span>元
+    </div>
+  </div>
+</div>

@@ -1,0 +1,75 @@
+<extend name="Base/member"/>
+
+<block name="breadcrumb">
+
+</block>
+
+<block name="body">
+  <div class="user-box">
+    <div class="user-order">
+      <h3>
+        站内消息
+        <small>
+          <ul class="box-nav clearfix">
+            <li {$tab_active['all']}><a href="{:U('Member/message')}">全部</a></li>
+            <li {$tab_active['unread']}><a href="{:U('Member/message', array('type' => 'unread'))}">未读</a></li>
+            <li {$tab_active['read']}><a href="{:U('Member/message', array('type' => 'read'))}">已读</a></li>
+          </ul>
+        </small>
+      </h3>
+      <div class="row message-ctrl">
+        <span class="col-xs-3">
+          <input type="button" value="设为已读" class="btn btn-positive J_set_readed disabled">
+          &nbsp;
+          <input type="button" value="删除" class="btn btn-positive J_set_delete disabled">
+        </span>
+      </div>
+      <div class="row list-info">
+        <div class="col-xs-12">
+          <div class="hd clearfix">
+            <span class="col-xs-1 text-center">
+              <input type="checkbox" class="J_checkall">
+            </span>
+            <span class="col-xs-1">状态</span>
+            <span class="col-xs-7">标题</span>
+            <span class="col-xs-3 text-center">时间</span>
+          </div>
+        </div>
+        <notempty name="lists">
+          <volist name="lists" id="vo">
+          <div class="col-xs-12 message-li" id="J_message_li_{$vo.id}">
+            <div class="bd clearfix">
+              <span class="col-xs-1 text-center">
+                <input type="checkbox" class="J_check" value="{$vo.id}">
+              </span>
+              <span class="col-xs-1 J_message_status_{$vo.id}">
+                <eq name="vo.is_read" value="1">
+                  已读
+                  <else/>
+                  <span class="text-danger">未读</span>
+                </eq>
+              </span>
+              <span class="col-xs-7">
+                <a href="javascript:;" class="J_message_title" data-id="{$vo.id}">{$vo.title}</a>
+              </span>
+              <span class="col-xs-3 text-center">
+                {$vo.create_time|time_format}
+              </span>
+            </div>
+          </div>
+          </volist>
+        </div>
+        <div class="page">{$_page}</div>
+        <else/>
+          <p class="list-empty">暂无消息记录</p>
+        </notempty>
+    </div>
+  </div>
+</block>
+<block name="script">
+  <script>
+    seajs.use('message', function(message){
+      message.init();
+    });
+  </script>
+</block>

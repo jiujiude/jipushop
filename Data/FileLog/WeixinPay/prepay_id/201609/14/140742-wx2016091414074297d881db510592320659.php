@@ -1,0 +1,1 @@
+a:9:{s:11:"return_code";s:7:"SUCCESS";s:10:"return_msg";s:2:"OK";s:5:"appid";s:18:"wx8f44da9c14af1a98";s:6:"mch_id";s:10:"1363341002";s:9:"nonce_str";s:16:"9Xvw92zJckVTJbOz";s:4:"sign";s:32:"00D5473E848FA3E75C178BE6ED8E9D44";s:11:"result_code";s:7:"SUCCESS";s:9:"prepay_id";s:36:"wx2016091414074297d881db510592320659";s:10:"trade_type";s:5:"JSAPI";}

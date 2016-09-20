@@ -1,0 +1,75 @@
+<extend name="Base/member"/>
+
+<block name="breadcrumb">
+  <ul class="breadcrumb">
+    <li><a href="{:U('/')}">首页</a></li>
+    <li class="active">我的礼品卡</li>
+  </ul>
+</block>
+
+<block name="body">
+  <div class="user-box">
+    <h3>我的礼品卡</h3>
+    <form class="form-inline">
+      <div class="form-group">
+        <label for="J_card_number">礼品卡卡号：</label>
+        <input type="text" name="number" id="J_card_number" class="form-control"  placeholder="礼品卡卡号" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label for="J_card_password">密码：</label>
+        <input type="password" name="password" id="J_card_password" class="form-control" placeholder="礼品卡密码" maxlength="6" autocomplete="off">
+      </div>
+      <button type="submit" id="J_card_bind" class="btn btn-positive">绑定</button>
+    </form>
+
+    <!-- 已绑定的礼品卡 -->
+    <h3>已绑定的礼品卡</h3>
+    <div class="box-bd">
+      <div class="row list-info">
+        <div id="J_card_list" class="col-xs-12">
+          <div class="hd clearfix">
+            <span class="col-xs-3">卡号</span>
+            <span class="col-xs-2">名称</span>
+            <span class="col-xs-1">面值</span>
+            <span class="col-xs-1">余额</span>
+            <span class="col-xs-2">绑定时间</span>
+            <span class="col-xs-2">过期日期</span>
+            <span class="col-xs-1">是否使用</span>
+          </div>
+        </div>
+        <notempty name="lists">
+          <volist name="lists" id="vo">
+            <div class="col-xs-12">
+              <div class="bd <eq name="vo.status" value="1">disabled</eq> clearfix">
+                <div class="col-xs-3"><a href="{:U('Member/cardlog', array('card_id' => $vo['id']))}">{$vo.number}</a></div>
+                <div class="col-xs-2"><a href="{:U('Member/cardlog', array('card_id' => $vo['id']))}">{$vo.name}</a></div>
+                <div class="col-xs-1">{$vo.amount}</div>
+                <div class="col-xs-1">{$vo.balance}</div>
+                <div class="col-xs-2">{$vo.bind_time|time_format}</div>
+                <div class="col-xs-2">{$vo.expire_time|time_format='Y-m-d'}</div>
+                <div class="col-xs-1">
+                  <eq name="vo.is_use" value="1">已使用<else/>未使用</eq>
+                </div>
+              </div>
+            </div>
+          </volist>
+          <div class="col-xs-12">
+            <div class="page">{$_page}</div>
+          </div>
+        <else/>
+          <div class="col-xs-12">
+            <p class="list-empty">您暂时没有绑定的礼品卡...</p>
+          </div>
+        </notempty>
+      </div>
+    </div>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use('user', function(user){
+      user.cardBind();
+    });
+  </script>
+</block>

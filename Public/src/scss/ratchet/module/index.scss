@@ -1,0 +1,121 @@
+/**********首页模块**********/
+.nav-invite {
+  float: right;
+
+  .icon {
+    color: #d06c5c
+  }
+}
+
+/*首页商品分类*/
+.index-category {
+  padding-bottom: 10px;
+  border-bottom: $border-default;
+
+  > .flex-box {
+    
+    &:first-child {
+      margin-bottom: 10px;
+    }
+
+    li {
+      text-align: center;
+
+      a {
+        display: block;
+        color: #666;
+
+        > .item {
+          display: inline-block;
+          margin: .5em 0;
+          width: 4em;
+          height: 4em;
+          border-radius: 50%;
+
+          > .icon {
+            width: 2em;
+            height: 2em;
+            font-size: 2em;
+            line-height: 2em;
+            color: #fff;
+          }
+        }
+
+        > .name {
+          display: block;
+          padding: 0 15px;
+          line-height: 1.2em;
+          font-size: 12px;
+        }
+      }
+    }
+  }      
+}
+
+/* 幻灯 */
+.swipeSlide {
+  position: relative;
+  max-width: 640px;
+  overflow: hidden;
+
+  &:after {
+    content: '';
+    display: block;
+    width: 100%;
+    padding-top: 50%;
+  }
+
+  ul {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    
+    li {
+      list-style: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+
+      img {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+
+      &:first-child{
+        z-index: 1;
+      }
+    }
+  }
+
+  .dot {
+    position: absolute;
+    left: 50%;
+    bottom: 5px;
+    z-index: 5;
+    text-align: center;
+    width: 60%;
+    margin-left: -30%;
+
+    span {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin-left: 5px;
+      background-color: #ccc;
+      border-radius: 50%;
+    }
+
+    .cur{
+      background-color: #2d8701;
+    }
+  }
+}
+

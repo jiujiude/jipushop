@@ -1,0 +1,114 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>
+      <a href="{:U('index')}">导航管理</a>
+      <notempty name="pid">
+        <i class="ca"></i>
+        <a href="{:U('index','pid='.$pid)}">{$parent.title}</a>
+      </notempty>
+    </h2>
+  </div>
+
+  <!-- 按钮工具栏 -->
+  <div class="cf">
+    <div class="fl">
+      <div class="btn-group">
+        <a class="btn" href="{:U('add','pid='.$pid)}">新 增</a>
+      </div>
+      <button class="btn ajax-post confirm" url="{:U('del')}" target-form="ids">删 除</button>
+      <button class="btn list_sort" url="{:U('sort',array('pid'=>I('get.pid',0)),'')}">排序</button>
+      <a class="btn" href="{:U('index')}">刷 新</a>（点击"刷新"按钮显示全部信息。）
+    </div>
+
+    <!-- 高级搜索 -->
+    <form id="J_search_form" action="{:U('index')}" method="GET">
+    <div class="search-form fr cf">
+      <div style="float:left; margin-right: 5px;">
+        <select id="position" name="position">
+          <option value="">导航分类</option>
+          <volist name="Think.config.CHANNEL_POSITION" id="position">
+            <option value="{$key}">{$position}</option>
+          </volist>
+        </select>
+      </div>
+      <div class="sleft">
+        <input type="text" name="keywords" class="search-input" value="{:I('keywords')}" placeholder="请输入导航名称">
+        <a class="sch-btn" href="javascript:;" id="J_search"><i class="btn-search"></i></a>
+      </div>
+    </div>
+    </form>
+  </div>
+
+  <!-- 数据表格 -->
+  <div class="data-table table-striped">
+    <table>
+      <thead>
+        <tr>
+          <th class="row-selected">
+            <input class="checkbox check-all" type="checkbox">
+          </th>
+          <th>ID</th>
+          <th>导航名称</th>
+          <th>导航分类</th>
+          <th>是否新窗口打开</th>
+          <th>是否显示</th>
+          <th>排序</th>
+          <th width="140">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+      <notempty name="list">
+        <volist name="list" id="channel">
+          <tr class="status_trclass_{$channel.status}">
+            <td><input class="ids row-selected" type="checkbox" name="id[]" value="{$channel['id']}"> </td>
+            <td>{$channel.id}</td>
+            <td><a href="{:U('index?pid='.$channel['id'])}">{$channel.title}</a></td>
+            <td>{$channel.position_text}</td>
+            <td>{$channel.target_text}</td>
+            <td>{$channel.status_text}</td>
+            <td>{$channel.sort}</td>
+            <td>
+              <a title="编辑" href="{:U('edit?id='.$channel['id'].'&pid='.$pid)}">[编辑]</a>
+              <a href="{:U('setStatus?ids='.$channel['id'].'&status='.abs(1-$channel['status']))}" class="ajax-get">[{$channel.status|show_status_op}]</a>
+              <a class="confirm ajax-get" title="删除" href="{:U('del?id='.$channel['id'])}">[删除]</a>
+            </td>
+          </tr>
+        </volist>
+        <else/>
+        <td colspan="9" class="text-center"> aOh! 暂时还没有内容! </td>
+      </notempty>
+      </tbody>
+    </table>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    $(function(){
+      //点击排序
+      $('.list_sort').click(function(){
+        var url = $(this).attr('url');
+        var ids = $('.ids:checked');
+        var param = '';
+        if(ids.length > 0){
+          var str = new Array();
+          ids.each(function(){
+            str.push($(this).val());
+          });
+          param = str.join(',');
+        }
+
+        if(url != undefined && url != ''){
+          window.location.href = url + '/ids/' + param;
+        }
+      });
+
+      //设置单选，复选，下拉菜单的值
+      Core.setValue('position', '{$position_|default = ""}');
+      //导航高亮
+      highlight_subnav("{:U('index')}");
+    });
+  </script>
+</block>

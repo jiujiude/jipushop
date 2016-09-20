@@ -1,0 +1,116 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>查看礼品卡</h2>
+  </div>
+  <form action="{:U()}" method="post" class="form-horizontal">
+    <div class="form-item">
+      <label class="item-label">卡名称<span class="check-tips"></span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="name" value="{$info.name|default=''}">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">卡号<span class="check-tips"></span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="number" value="{$info.number|default=''}">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">面值<span class="check-tips"></span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="amount" value="{$info.amount|default=''}"> 元
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">余额<span class="check-tips"></span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="balance" value="{$info.balance|default=''}"> 元
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">开卡日期<span class="check-tips"></span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="create_time" value="{$info.create_time|time_format='Y-m-d'}">
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">有效日期<span class="check-tips"></span></label>
+      <div class="controls">
+        <input type="text" class="text input-large" name="expire_time" value="{$info.expire_time|time_format='Y-m-d'}">
+      </div>
+    </div>
+    <eq name="info.is_bind" value="1">
+      <div class="form-item">
+        <label class="item-label">绑定时间<span class="check-tips"></span></label>
+        <div class="controls">
+          <input type="text" class="text input-large" name="bind_time" value="{$info.bind_time|time_format}">
+        </div>
+      </div>
+    </eq>
+    <div class="form-item">
+      <label class="item-label">是否绑定<span class="check-tips"></span></label>
+      <div class="controls">
+        <label class="radio">
+          <input type="radio" name="is_bind" value="1"> 是
+        </label>
+        <label class="radio">
+          <input type="radio" name="is_bind" value="0"> 否
+        </label>
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label">是否过期<span class="check-tips"></span></label>
+      <div class="controls">
+        <label class="radio">
+          <input type="radio" name="is_expire" value="1"> 是
+        </label>
+        <label class="radio">
+          <input type="radio" name="is_expire" value="0"> 否
+        </label>
+      </div>
+    </div>
+    <!-- 礼品卡使用日志 -->
+    <notempty name="cardlog">
+      <div class="sub-title">
+        <h4>使用日志</h4>
+      </div>
+      <table class="dynamic-table">
+        <thead>
+          <tr>
+            <th>订单编号</th>
+            <th>使用金额</th>
+            <th>使用时间</th>
+          </tr>
+        </thead>
+        <tbody>
+          <volist name="cardlog" id="vo">
+            <tr>
+              <td><a href="{:U('Order/view', array('id' => $vo['order_id']))}">{$vo.order_sn}</a></td>
+              <td>&yen;{$vo.amount}</td>
+              <td>{$vo.create_time|time_format}</td>
+            </tr>
+          </volist>
+        </tbody>
+      </table>
+    </notempty>
+    <div class="form-item">
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+  </form>
+</block>
+
+<block name="script"> 
+  <script type="text/javascript">
+    // 设置表单元素为不可编辑
+    $("form input").attr("disabled", "disabled");
+
+    //设置单选，复选，下拉菜单的值
+    Core.setValue('is_bind', '{$info.is_bind|default = 0}');
+    Core.setValue('is_expire', '{$info.is_expire|default = 0}');
+
+    //导航高亮
+    highlight_subnav("{:U('index')}");
+  </script> 
+</block>

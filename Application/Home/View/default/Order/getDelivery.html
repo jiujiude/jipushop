@@ -1,0 +1,11 @@
+<dl class="delivery-info">
+  <dd>快递公司：{$data.delivery_name}</dd>
+  <dd>快递单号：{$data.delivery_sn}</dd>
+  <dd class="delivery-log hide J_delivery_log"></dd>
+</dl>
+
+<script>
+  seajs.use('delivery', function(delivery){
+    delivery.getDeliveryInfo('{$data.delivery_name}', '{$data.delivery_sn}');
+  });
+</script>

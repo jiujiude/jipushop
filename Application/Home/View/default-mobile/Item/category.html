@@ -1,0 +1,78 @@
+<extend name="Base/common"/>
+<block name="body">
+  <form action="{:U('Item/search')}" class="content-padded" method="get">
+    <div class="control-group search">
+      <i class="icon icon-search"></i>
+      <input type="search" name="keyword" placeholder="请输入关键词">
+    </div>
+  </form>
+  <div class="category">
+    <ul>
+      <eq name="category.tpl" value="index">
+        <li>
+          <a href="{:U('Item/search', array('cid' => $vo['id']))}">
+            <span class="item item-{$vo.ename}" style="background-color:#46ba0d"><i class="icon icon-category"></i></span>
+            <h4 class="name">所有商品</h4>
+            <i url="{:U('Item/search', array('cid' => $vo['id']))}" class="icon arrow icon-arrow-right"></i>
+          </a>
+          <div class="sub"></div>
+        </li>
+        <volist name="category.info" id="vo">
+          <li>
+            <a <neq name="vo._" value="">class="cateTree"<else/>href="{:U('Item/search', array('cid' => $vo['id']))}"</neq>>
+              <span class="item item-{$vo.ename}" style="background-color: {$vo['iconbgc']}"><i class="icon icon-{$vo.ename}"></i></span>
+              <h4 class="name">{$vo['name']}</h4>
+              <i url="{:U('Item/search', array('cid' => $vo['id']))}" class="icon arrow icon-arrow-right"></i>
+            </a>
+            <div class="sub">
+            	<div>
+                <a class="btn btn-sm btn-default" href="{:U('Item/search', array('cid' => $vo['id']))}"><span>全部</span></a>
+                  <php>$i=1;$three='<p></p>';</php>
+                <foreach name="vo._" item="sub">
+                <a class="btn btn-sm btn-default"  <neq name="sub._" value="">cid="{$i}"<else/>href="{:U('Item/search', array('cid' => $sub['id']))}"</neq>><span>{$sub['name']}</span><neq name="sub._" value=""><i class="icon arrow icon-arrow-bottom"></i></neq></a>
+                  <php>
+                    $three.='<p cid-'.$i.'="1">';
+                    if(!empty($sub['_']))$three.='<a href="'.U('Item/search', array('cid' => $sub['id'])).'"><span>全部</span></a>';
+                  </php>
+                  <foreach name="sub._" item="thr">
+                    <php>
+                      $three.='<a href="'.U('Item/search', array('cid' => $thr['id'])).'"><span>'.$thr['name'].'</span></a>';
+                    </php>
+                  </foreach>
+                  <php>
+                    $three.='</p>';
+                    $i++;
+                    if($i%3 == 0){
+                    echo '<div>'.$three.'</div>';
+                    $three='';
+                    }
+                  </php>
+                </foreach>
+                  <php>
+                    if($i%3 != 0){
+                    echo '<div>'.$three.'</div>';
+                    }
+                  </php>
+                </div>
+            </div>
+          </li>
+        </volist>
+      <else/>
+        <volist name="category.info._" id="vo">
+          <li>
+            <a href="<neq name="vo._" value="">{:U('Item/category', array('cid' => $vo['id']))}<else/>{:U('Item/search', array('cid' => $vo['id']))}</neq>">
+              <span class="item item-{$vo.ename}" style="background-color: {$vo['iconbgc']}"><i class="icon icon-{$vo.ename}"></i></span>
+              <h4 class="name">{$vo['name']}</h4>
+              <i class="icon arrow icon-arrow-right"></i>
+            </a>
+          </li>
+        </volist>
+      </eq>
+    </ul>
+  </div>
+  <script>
+  seajs.use('module/category',function(category){
+	category.all_init();
+  });
+  </script>
+</block>

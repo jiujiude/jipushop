@@ -1,0 +1,83 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>红包管理({$quantity})</h2>
+  </div>
+  <!-- 按钮工具栏 -->
+  <div class="cf">
+    <!-- 按钮工具栏 -->
+    <div class="fl">
+      <a class="btn" href="{:U('add')}">发红包</a>
+      <button class="btn ajax-post confirm" url="{:U('del')}" target-form="ids">删 除</button>（红包总金额：{$amount}）
+    </div>
+  </div>
+  <!-- 数据表格 -->
+  <div class="data-table">
+    <table>
+      <thead>
+        <tr>
+          <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+          <th>红包编号</th>
+          <th>发送人</th>
+          <th>红包数量</th>
+          <th>红包金额</th>
+          <th>最大领取金额</th>
+          <th>领取情况</th>
+          <th>红包类型</th>
+          <th>祝福语</th>
+          <th>支付时间</th>
+          <th>支付方式</th>
+          <th width="185">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <notempty name="lists">
+          <volist name="lists" id="vo">
+            <tr>
+              <td><input class="ids" type="checkbox" name="ids[]" value="{$vo.id}" /></td>
+              <td>{$vo.id}</td>
+              <td>
+                <a href="{:U('index', array('id'=>$vo['id'], 'uid'=>$vo['uid']))}" title="查看TA的所有红包">{:get_nickname($vo['uid'])}</a>
+              </td>
+              <td>{$vo.quantity}</td>
+              <td>{$vo.amount}</td>
+              <td>
+                <eq name="vo.limit_money" value="0.00">不限制
+                <else/><span class="text-danger">{$vo.limit_money}</span>
+                </eq>
+              </td>
+              <td>已领取<span class="text-danger">{$vo.received_quantity}</span>个，累计<span class="text-danger">{$vo.received_amount}</span>元</td>
+              <td><eq name="vo.type" value="multi"><span class="text-success">{$vo.type_text}</span><else/>{$vo.type_text}</eq></td>
+              <td>{$vo.msg}</td>
+              <td>{:time_format($vo['payment_time'])}</td>
+              <td>{$vo.payment_type_text}</td>
+              <td>
+                <a href="{:U('receive', array('id'=>$vo['id'], 'type'=>'receive'))}">[领取详情]</a>
+                <eq name="vo.payment_type" value="admin"><a href="javascript:redpacket.qrcode({$vo.id});">[分享]</a></eq>
+                <a href="{:U('del?ids='.$vo['id'])}" class="confirm ajax-get">[删除]</a>
+              </td>
+            </tr>
+          </volist>
+        <else/>
+          <tr><td colspan="9" class="text-center"> 暂无红包数据! </td></tr>
+        </notempty>
+      </tbody>
+    </table> 
+  </div>
+
+  <!-- 分页 -->
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    $(function(){
+      //导航高亮
+      highlight_subnav("{:U('Redpacket/index')}");
+    });
+  </script>
+</block>

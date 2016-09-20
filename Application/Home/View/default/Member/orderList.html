@@ -1,0 +1,115 @@
+<volist name="lists" id="vo">
+  <div class="item">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="hd clearfix">
+          <span class="col-xs-11">
+            下单时间：{$vo.create_time|time_format}
+            <span class="split"></span>
+            配送至：{$vo.ship.ship_area}{$vo.ship.ship_address}
+            <span class="split"></span>
+            订单号：{$vo.order_sn}
+          </span>
+          <span class="text-right col-xs-1">
+            <if condition="I('type') eq 'recycle'">
+              <a href="javascript:;" class="btn-cancel J_order_delete" data-id="{$vo.id}" title="删除订单"><i class="icon icon-remove"></i></a>
+            <else/>
+            <switch name="vo.o_status">
+              <case value="-1|303|404">
+                <if condition="I('type') neq 'recycle'">
+                  <a href="javascript:;" class="btn-cancel J_order_recycle" data-id="{$vo.id}" title="删除到回收站"><i class="icon icon-remove"></i></a>
+                </if>
+              </case>
+            </switch>
+            </if>
+          </span>
+        </div>
+      </div>
+      <div class="col-xs-12 bd clearfix">
+        <div class="col-xs-4">
+          <php>$show_comment_btn = 0;$item_ids = array();</php>
+          <volist name="vo.OrderItem" id="vl">
+            <elt name="key" value="3">
+              <a href="{:U('Item/detail', array('id' => $vl['item_id']))}" class="pic" title="{$vl.name}" alt="{$vl.name}" target="_blank"><img src="{:get_image_thumb($vl['cover_path'], 60, 60)}" width="58" /></a>
+            </elt>
+            <php>
+              if(!in_array($vl['item_id'], $item_ids)){
+                $item_ids[] = $vl['item_id'];
+                $show_comment_btn += $vl['is_comment'];
+              }
+            </php>
+          </volist>
+          <if condition="count($vo['OrderItem']) gt 4">
+            <i class="item-more" title="订单中还有其他商品...">···</i>
+          </if>
+        </div>
+        <div class="col-xs-3 text-center">
+          <span class="text-danger text-amount">{:sprintf('%.2f', $vo['total_amount']+$vo['finance_amount'])} 元</span>
+        </div>
+        <div class="col-xs-3 text-center">
+          <div class="text-rows">
+            <em class="msg">{:get_order_status_text($vo['o_status'])}</em>
+            <a href="{:U('Order/detail', array('order_sn' => $vo['order_sn']))}" class="btn" target="_blank">订单详情</a>
+             <!--物流-->
+            <if condition="in_array($vo['o_status'], array(201, 202))">
+              <br/>
+              <a href="javascript:$.ui.load('{:U('Order/getDelivery?order_id='.$vo['id'])}', '物流配送信息');" class="btn">查看物流</a>
+            </if>
+          </div>
+        </div> 
+        <div class="col-xs-2 text-center">
+          <div class="text-rows">
+          <notempty name='vo.refuse_message' >
+              {$vo.refuse_message}
+          </notempty>
+            <!-- 状态操作 -->
+            <switch name="vo.o_status">
+              <case value="200">
+              <empty name='vo.refuse_message' >
+                <em class="msg"><a href="javascript:;" class="btn J_order_refund" data-id="{$vo.id}">申请退货/退款</a></em>
+              </empty>
+              </case>
+              <case value="201">
+              <empty name='vo.refuse_message' >
+                <em class="msg"><a href="javascript:;" class="btn J_order_refund" data-id="{$vo.id}">申请退货/退款</a></em>
+              </empty>
+                <em class="msg" style="margin-top: 10px;"><a href="javascript:;" class="btn btn-positive J_order_confirm" data-id="{$vo.id}">确认收货</a></em>
+              </case>
+              <case value="202">
+              <empty name='vo.refuse_message' >
+                <if condition="$vo.complete_time gt time()-7*24*3600">
+                  <em class="msg"> <a href="javascript:;" class="btn J_order_refund" data-id="{$vo.id}">申请退货/退款</a></em>
+                </if>
+              </empty>
+                <if condition="$show_comment_btn != count($item_ids)">
+                <a href="{:U('Order/detail', array('order_sn' => $vo['order_sn']))}" class="btn btn-positive" target="_blank"><i class="icon icon-appreciate"></i> 立即评价</a>
+                </if>
+              </case>
+              <case value="300">
+                <em class="msg"> <a href="javascript:;" class="btn J_order_unrefund" data-id="{$vo.id}">撤销退款申请</a></em>
+              </case>
+              <case value="301">
+                <a href="javascript:;" class="btn btn-sm btn-positive J_order_reship" data-id="{$vo.id}">立即退货</a>
+              </case>
+              <case value="302">
+                <a href="javascript:$.ui.load('{:U('Order/reShip',array('order_id' => $vo['id']))}','退货物流信息');">退货物流</a>
+              </case>
+              <case value="0">
+                <!-- 众筹订单跳转至众筹页面 -->
+                <eq name="vo.order_type.name" value="crowdfunding">
+                  <eq name="vo.order_type.data.has_finish" value="1"><span class="btn btn-sm btn-default">众筹完成</span><else/><span class="btn btn-sm btn-default J_crowdfunding_pay">正在众筹…</span></eq></span>
+                <else/>
+                <em class="msg"><a href="javascript:;" class="J_order_cancel" data-id="{$vo.id}" title="取消订单">取消订单</a></em>
+                <a href="{:U('Order/preview', array('order_sn' => $vo['order_sn']))}" class="btn btn-positive"><i class="icon icon-recharge"></i> 立即支付</a>
+                </eq>
+              </case>
+            </switch>
+            <if condition="I('type') eq 'recycle' ">
+              <a href="javascript:;" class="btn-cancel J_order_restore" data-id="{$vo.id}" title="还原订单">还原订单</a>
+            </if>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</volist>

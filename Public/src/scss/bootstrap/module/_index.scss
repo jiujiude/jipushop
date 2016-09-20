@@ -1,0 +1,133 @@
+/**
+ * 首页模块
+ */
+
+/*首页焦点图*/
+.home-slider {
+  position: relative;
+  display: block;
+  margin-bottom: 10px;
+  height: 450px;
+  overflow: hidden;
+
+  > .item {
+
+    > li {
+
+      > a {
+        display: block;
+        height: 450px;
+        background-position: center center;
+        background-repeat: no-repeat;
+
+        img {
+          display: block;
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .nav {
+    margin-top: -40px;
+    margin-left: 190px;
+    height: 40px;
+    text-align: center;
+    zoom: 1;
+    z-index: 3;
+
+    li {
+      float: left;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      font-weight: 100;
+      color: #fff;
+      border-left: 2px solid #fff;
+      background-color: rgba(153,153,153,.6);
+      cursor: pointer;
+      @include opacity(0.8);
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99999999,endColorstr=#99999999);
+
+      &:first-child {
+        border-left: none;
+      }
+
+      &:last-child {
+        border-right: none;
+      }
+
+      &.on {
+        background: rgba(0,0,0,.6);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000,endColorstr=#99000000);
+      }
+
+      a {
+        padding: 0;
+        color: #fff;
+      }
+    }
+  }
+}
+.home-ads-mid {
+  margin: 30px 0;
+}
+
+/*首页商品列表*/
+.item-title {
+
+  h3 {
+    padding-top: 18px;
+    line-height: 28px;
+
+    > a {
+      display: block;
+
+      &:hover {
+        color: #333;
+      }
+    }
+
+    .more {
+      margin-top: 6px;
+      padding: 5px 10px;
+      background-color: $brand-primary;
+      font-size: 12px;
+      color: #fff;
+    }
+
+    .icon-box {
+      float: left;
+      margin-right: 10px;
+      width: 28px;
+      height: 28px;
+      border: 1px solid $brand-primary;
+      border-radius: 50%;
+
+      > .icon {
+        display: block;
+        padding: 5px;
+        line-height: 1;
+        color: $brand-primary;
+      }
+    }
+  }
+}
+
+/*商品分类广告*/
+.item-ad {
+  float: left;
+  display: block;
+  width: 60%;
+  height: 320px;
+  line-height: 320px;
+  text-align: center;
+  background-color: $border-color;
+  border-left: 1px solid $border-color;
+  overflow: hidden;
+
+  img {
+    max-width: none;
+    max-height: 100%;
+  }
+}

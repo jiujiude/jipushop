@@ -1,0 +1,50 @@
+<extend name="Base/common"/>
+<block name="header">
+{:hook('mobileTopNav',array('title'=>$meta_title))}
+</block>
+
+<block name="body">
+  <div class="withdraw">
+      <ul class="table-view user-account-list">
+        <volist name="lists" id="vo">
+          <li class="table-view-cell media Z_account_item_{$vo.id}">
+            <img class="media-object pull-left" src="__IMG__/bank/{$vo.bankname|default='ALIPAY'}.png" width="50">
+            <div class="media-body">
+              <notempty name="vo.bankname">
+                {:C('BANK_LISTS.'.$vo['bankname'])}
+                <p>尾号：{:substr($vo['account'], -4)} 【{$vo.name}】</p>
+                <else/> 
+                支付宝 
+                <p>{$vo.account} 【{$vo.name}】</p>
+              </notempty>
+            </div>
+            <div class="media-todo">
+              <a href="javascript:;" class="remove Z_account_remove" data-id="{$vo.id}"><i class="icon icon-remove"></i></a>
+            </div>
+          </li>
+        </volist>
+      </ul>
+      
+    <div class="content-padded">
+      <a href="javascript:;" class="btn btn-block Z_user_account_add"><i class="icon icon-add"></i>添加提现账户</a>
+    </div>
+  </div>
+  
+  <div id="Z_choose_bindtype">
+    <div class="modal-select">
+      <ul>
+        <li><a href="{:U('UserAccount/add?type=alipay')}">添加支付宝</a></li>
+        <li><a href="{:U('UserAccount/add?type=bankcard')}">添加银行卡</a></li>
+      </ul>
+    </div>
+  </div>
+  
+</block>
+
+<block name="script">
+  <script>
+    seajs.use('userAccount', function(userAccount){
+      userAccount.init();
+    });
+  </script>
+</block>

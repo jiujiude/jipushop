@@ -1,0 +1,113 @@
+<extend name="Public/base"/>
+
+<block name="body">
+	<div class="main-title">
+		<h2>代理配置管理</h2>
+	</div>
+	<form action="{:U()}" method="post" class="form-horizontal">
+		<div class="form-item">
+			<label class="item-label">是否开启代理联盟 </label>
+			<div class="controls">
+				<input type='radio'  name="DIS_START" value="1" <if condition='$data.DIS_START eq 1 || $data.DIS_START eq null'> checked </if>>开启&nbsp&nbsp&nbsp
+				<input type='radio'  name="DIS_START" value="0" <if condition='$data.DIS_START eq 0'> checked </if>>关闭
+			</div>
+		</div>
+		<div class="form-item">
+			<label class="item-label">成为代理条件</label>
+			<div class="controls">
+				<input type='radio'  name="DIS_CONDITION[TYPE]" value="1" <if condition='$data["DIS_CONDITION"]["TYPE"] eq 1 || $data["DIS_CONDITION"]["TYPE"] eq null'> checked </if>>无条件&nbsp&nbsp&nbsp
+				<input type='radio'  name="DIS_CONDITION[TYPE]" value="2" <if condition='$data["DIS_CONDITION"]["TYPE"] eq 2'> checked </if>>购买一单&nbsp&nbsp&nbsp
+				<input type='radio'  name="DIS_CONDITION[TYPE]" value="3" <if condition='$data["DIS_CONDITION"]["TYPE"] eq 3'> checked </if>>购买订单数
+				<input type="text" name="DIS_CONDITION[REQUEST3]" class="text input-small" <if condition='$data["DIS_CONDITION"]["TYPE"] eq 3 '> value='{$data.DIS_CONDITION.REQUEST3}' </if>>单
+				&nbsp&nbsp&nbsp
+				<input type='radio'  name="DIS_CONDITION[TYPE]" value="4" <if condition='$data["DIS_CONDITION"]["TYPE"] eq 4'> checked </if>>达到金额
+				<input type="text" name="DIS_CONDITION[REQUEST4]" class="text input-small" <if condition='$data["DIS_CONDITION"]["TYPE"] eq 4 '> value='{$data.DIS_CONDITION.REQUEST4}' </if>>元
+			</div>
+		</div>
+		<div class="form-item">
+			<label class="item-label">代理返现时间</label>
+			<div class="controls">
+				<input type='radio'  name="DIS_ORDERSTATUS" value="1" <if condition='$data.DIS_ORDERSTATUS eq 1 || $data.DIS_ORDERSTATUS eq null'> checked </if>>支付完成&nbsp&nbsp&nbsp
+				<input type='radio'  name="DIS_ORDERSTATUS" value="0" <if condition='$data.DIS_ORDERSTATUS eq 0 '> checked </if>>订单完成
+			</div>
+		</div>
+		<div class="form-item">
+			<label class="item-label">代理返现可提现时间</label>
+			<div class="controls">
+				<input type="text" name="DIS_TIME" class="text input-small" <if condition='$data.DIS_TIME eq null '> value='15' <else />value='{$data.DIS_TIME}' </if> >天
+			</div>
+		</div>
+		<div class="form-item">
+			<label class="item-label">代理等级</label>
+			<div class="controls">
+				<select name="DIS_CLASS" class='my' onchange="showconf()">
+						<option value="3" <if condition='$data.DIS_CLASS eq 3 || $data.DIS_CLASS eq null'> selected </if> >三级代理</option>
+						<option value="2" <if condition='$data.DIS_CLASS eq 2 '> selected </if>>二级代理</option>
+						<option value="1" <if condition='$data.DIS_CLASS eq 1 '> selected </if>>一级代理</option>
+				</select>
+			</div>
+		</div>
+		<!-- <div class="form-item">
+			<label class="item-label">商品默认分成总比例</label>
+			<div class="controls">
+				<input type="text" class="text input-small" name="ALL" <if condition='$data.ALL eq ""'> value='30' <else /> value='{$data.ALL}' </if> >%
+			</div>
+		</div> -->
+		<div class="form-item">
+			<label class="item-label">一级代理整站佣金</label>
+			<div class="controls">
+				<input type="text" class="text input-small" name="FIRISTNAME" <if condition='$data.FIRISTNAME eq ""'> value='50' <else /> value='{$data.FIRISTNAME}' </if> >%
+			</div>
+		</div>
+		<div class="form-item no2">
+			<label class="item-label">二级代理整站佣金</label>
+			<div class="controls">
+				<input type="text" class="text input-small" name="SECONDNAME" <if condition='$data.SECONDNAME eq ""'>value='30' <else /> value='{$data.SECONDNAME}' </if>>%
+			</div>
+		</div>
+		<div class="form-item no3">
+			<label class="item-label">三级代理整站佣金</label>
+			<div class="controls">
+				<input type="text" class="text input-small" name="THIRDNAME" <if condition='$data.THIRDNAME eq "" '>value='15' <else /> value='{$data.THIRDNAME}' </if> >%
+			</div>
+		</div>
+		
+		<div class="form-item">
+			<button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+			<button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+		</div>
+	</form>
+</block>
+
+<block name="script">
+	<script type="text/javascript">
+		Core.setValue("type", {$info.type|default=0});
+		Core.setValue("group", {$info.group|default=0});
+		//导航高亮
+		highlight_subnav('{:U('Union/Config')}');
+		$(function(){
+			var zhi = $('.my').val();
+			if(zhi == 1){
+				$('.no2').hide();
+				$('.no3').hide();
+			}else if(zhi==2){
+				$('.no3').hide();
+			}else{
+				return false;
+			}
+		});
+		function showconf(){
+			var zhi = $('.my').val();
+			if(zhi == 1){
+				$('.no2').hide();
+				$('.no3').hide();
+			}else if(zhi==2){
+				$('.no2').show();
+				$('.no3').hide();
+			}else{
+				$('.no2').show();
+				$('.no3').show();
+			}
+		}
+	</script>
+</block>

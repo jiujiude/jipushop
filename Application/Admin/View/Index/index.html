@@ -1,0 +1,22 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 插件块 -->
+  <div class="container-span">{:hook('adminIndex')}</div>
+</block>
+
+<block name="script">
+<script type="text/javascript">
+  /* 插件块关闭操作 */
+  $('.title-opt .wm-slide').each(function(){
+    $(this).click(function(){
+      $(this).closest('.columns-mod').find('.bd').toggle();
+      $(this).find('i').toggleClass('mod-up');
+    });
+  });
+  $(function(){
+    //导航高亮
+    highlight_subnav("{:U('index')}");
+  });
+  </script>
+</block>

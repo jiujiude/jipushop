@@ -1,0 +1,85 @@
+<extend name="Public/base" />
+
+<block name="body">
+  <!-- 标题栏 -->
+  <div class="main-title">
+    <h2>用户回收站({$_total})</h2>
+  </div>
+  <!-- 数据列表 -->
+  <div class="data-table table-striped">
+    <table>
+      <thead>
+        <tr>
+          <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+          <th><a href="{:U('index?_field=uid&_order='.$_order)}" title="按UID排序">UID{$_order_icon.uid}{$_order_icon_show}</a></th>
+          <!-- <th>用户名</th>
+          <th>会员等级</th>-->
+          <th width="40">头像</th>
+          <th>昵称</th>
+          <th>手机</th>
+          <th>注册时间</th>
+          <!-- <th>登录次数</th>
+          <th><a href="{:U('index?_field=last_login_time&_order='.$_order)}" title="按最后登录时间排序">最后登录时间{$_order_icon.last_login_time}{$_order_icon_show}</a></th>-->
+          <!--<th>最后登录IP</th>-->
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <notempty name="list">
+          <volist name="list" id="vo">
+            <tr class="status_trclass_{$vo.status}">
+              <td><input class="ids" type="checkbox" name="id[]" value="{$vo.id}" /></td>
+              <td>{$vo.id}</td>
+              <td>
+                <notempty name="vo.avatar"><img src="{$vo.avatar}" width="22" height="22" style="border-radius: 11px"></notempty>
+              </td>
+              <td>
+                <a href="{:U('User/view?id='.$vo['id'])}" target="_blank">{$vo.id|get_nickname}</a>               
+              </td>
+              <td><a href="http://www.ip138.com:8080/search.asp?action=mobile&mobile={$vo.mobile}" title="查看手机号码来源" target="_blank">{$vo.mobile}</a></td>
+              <!-- <td>{$vo.login}</td>-->
+              <!-- <td><span>{$vo.last_login_time|time_format}</span></td>-->
+              <!--<td><span><a href="http://www.ip138.com/ips138.asp?ip={:long2ip($vo['last_login_ip'])}&action=2" title="查看IP地理位置" target="_blank">{:long2ip($vo['last_login_ip'])}</a></span></td>-->
+              <td>{$vo.reg_time|time_format}</td>
+              <td>
+              <a href="{:U('User/changeStatus?method=resumeuser&id='.$vo['id'])}" class="confirm ajax-get">[恢复]</a>
+              </td>
+            </tr>
+          </volist>
+        <else/>
+          <tr><td colspan="12" class="text-center"> aOh! 暂时还没有内容! </td></tr>
+        </notempty>
+      </tbody>
+    </table>
+  </div>
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //搜索功能
+    $("#search").click(function(){
+      var url = $(this).attr('url');
+        var query  = $('.search-form').find('input').serialize();
+        query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g,'');
+        query = query.replace(/^&/g,'');
+        if(url.indexOf('?')>0){
+          url += '&' + query;
+        }else{
+          url += '?' + query;
+        }
+      window.location.href = url;
+    });
+    //回车搜索
+    $(".search-input").keyup(function(e){
+      if(e.keyCode === 13){
+        $("#search").click();
+        return false;
+      }
+    });
+    //导航高亮
+    highlight_subnav("{:U('User/recycle')}");
+  </script>
+</block>

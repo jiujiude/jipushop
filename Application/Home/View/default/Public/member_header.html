@@ -1,0 +1,56 @@
+<block name="header">
+  <div class="header">
+    <!-- 顶部logo & 搜索 -->
+    <div class="container">
+      <div class="row header-top">
+        <div class="col-xs-4">
+          <a href="{:U('/')}" class="logo"><img src="{:get_cover(C('LOGO'),'path')}"></a>
+        </div>
+        <div class="col-xs-8">
+          <ul class="right">
+          	<li><a href="{:U('Index/index')}" >首页</a></li>
+          	<li><a href="{:U('Item/search')}" >浏览全部商品</a></li>
+            <li><a href="{:U('Api/loginRedirect/host/sns_jipushop_com')}">极铺社区</a></li>
+            <li><a href="{:U('User/logout')}">[ 退出 ]</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="user-info">
+  	<div class="container">
+        <div class="clearfix">
+          <div class="avatar col-xs-2">
+          	<div>
+              <span class="headpic">
+                <img src="<notempty name="member.avatar">{$member['avatar']}<else/>__IMG__/avatar-default.png</notempty>">
+                <a class="edit_btn" href="{:U('Member/editProfile')}">编辑资料</a>
+              </span>
+            </div>
+          </div>
+          <div class="detail col-xs-10">
+            <h3 class="name">
+              <notempty name="member.nickname">
+                {$member.nickname}
+              <else/>
+                {$user.username|get_hidden_mobile}
+              </notempty>
+              <small>
+                <if condition="session('user_auth.group_id') gt 0">
+                  会员等级：{:get_group_name(session('user_auth.group_id'))}({:get_group_description(session('user_auth.group_id'))})
+                </if>
+                <if condition="date('H') lt 12 ">上午<elseif condition="(date('H') egt 12) AND (date('H') elt 18)"/>下午<else />晚上</if>好～
+              </small>
+            </h3>
+            <p class="info">{$member.reg_time|time_format='Y年m月d日 H:i'} 加入{:C('WEB_SITE_TITLE')}
+              <a href="{:U('Member/score')}">积分：{$member.score}分</a><em class="space"></em>
+              <!-- <a href="">优惠券：</a><em class="space"></em> -->
+              <!-- <a href="">礼品卡：</a><em class="space"></em> -->
+              <a href="{:U('Member/finance')}">余额：<em class="yen">&yen;</em>{$member.finance}</a><em class="space"></em>
+              <a href="{:U('Member/message')}">站内消息 <gt name="message_unread" value="0"><i class="text-danger">({$message_unread})</i></gt></a>
+            </p>
+          </div>
+        </div>
+    </div>
+  </div>
+</block>

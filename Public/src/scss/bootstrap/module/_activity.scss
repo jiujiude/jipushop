@@ -1,0 +1,15 @@
+/**
+ * 专题模块
+ */
+.activity {
+  > .banner {
+    text-align: center;
+  }
+  
+  .item-list {
+    margin-top: $grid-gutter-width;
+  }
+  .content {
+    padding: 0;
+  }
+}

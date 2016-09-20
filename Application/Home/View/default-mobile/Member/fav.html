@@ -1,0 +1,38 @@
+<extend name="Base/common"/>
+<block name="header">
+{:hook('mobileTopNav',array('title'=>$meta_title))}
+</block>
+
+<block name="body">
+  <div class="item-list clearfix" id="Z_load_itemlist">
+    <notempty name="lists">
+      <volist name="lists" id="vo">
+        <div id="Z_favitem_{$vo.id}" class="item Z_item">
+          <div class="inner">
+            <a href="{:U('Item/detail', array('id' => $vo['id']))}"><img src="{:get_image_thumb($vo['cover_path'], 300, 300)}" class="lazy" alt="{$vo.name}"></a>
+            <div class="info">
+              <a href="{:U('Item/detail', array('id' => $vo['id']))}" class="name">{$vo.name}</a>
+              <div class="price">
+                <span class="text-danger"><em class="yen">&yen;</em>{$vo.price}</span>
+                <del><em class="yen">&yen;</em>{$vo.mprice}</del>
+                <if condition="C('IS_SHOW_BUYNUM')"><em class="buynum">{$vo.buynum}人已购买</em></if>
+              </div>
+              <a href="javascript:;" data-id="{$vo.id}" class="remove Z_remove_nav"><i class="icon icon-remove"></i></a>
+            </div>
+          </div>  
+        </div>
+      </volist>
+    <else />
+      <p class="list-empty">您暂时没有收藏商品！</p>
+    </notempty>
+  </div>
+</block>
+<block name="script">
+  <script>
+    seajs.use('item', function(item){
+      $('.Z_remove_nav').on('tap', function(){
+        item.removeFav($(this).data('id'));
+      });
+    });
+  </script>
+</block>

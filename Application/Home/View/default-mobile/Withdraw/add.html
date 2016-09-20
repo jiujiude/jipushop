@@ -1,0 +1,41 @@
+<extend name="Base/common"/>
+
+<block name="body">
+<style>
+    .bar-tab{display: none;   }
+</style>
+  <include file="head" />
+  <form action="{:U('Withdraw/update')}" method="post" style="margin-top: 10px;background-color: #fff;padding-bottom: 5px;">
+    
+    
+    <div class="input-row" style="height:50px;line-height:50px;font-size:16px;word-spacing:8px; letter-spacing: 1px; ">
+      <label class="text-right" style="font-size:16px;width:auto; ">可提现金额：<span class="text-danger" style="font-size:16px;">{$withdraw_finance}</span> 元</label>
+    </div>
+    <div class="control-group" style=" border-bottom: 1px solid #eee;margin-top: -1px;">
+          <select name="account_id"  id="account_id" style="background: #fff;font-size:16px;word-spacing:8px; letter-spacing: 1px;height:50px;line-height:50px;">
+            <option value="">请选择提现账户</option>
+            <volist name="lists" id="vo">
+              <option value="{$vo.id}">
+                <eq name="vo.type" value="alipay">
+                  {$vo.type|get_user_account_text}
+                <else />
+                  {:C('BANK_LISTS.'.$vo['bankname'])}
+                </eq>
+                {$vo.name} {$vo.account}
+              </option>
+            </volist>
+          </select>
+  </div>
+    <div class="input-row" style="height:50px;line-height:50px;font-size:16px;word-spacing:8px; letter-spacing: 1px; ">
+      <label class="text-right" style="font-size:16px;width:auto; ">提现金额：</label>
+      <input type="tel" name="amount" id="amount" value="{$withdraw_finance}" class="amount" style="height: 52px;line-height:35px;font-size:24px;word-spacing:8px;letter-spacing: 1px;margin-top: -2px;border-bottom: 0;border-top: 0;border-left-width: 1px;width: 100px;">
+      <div class="div-text" style="font-size:16px;width:auto; ">元</div>
+    </div>
+    <div class="control-action">
+      <button class="btn btn-positive btn-block" <if condition="C('SDP_WITHDRAW_LIMIT') gt $withdraw_finance">disabled</if>>申请提现</button>
+    </div>
+    <p class="content-padded text-info">
+      提现条件：最少{:C('SDP_WITHDRAW_LIMIT')}元
+    </p>
+  </form>
+</block>

@@ -1,0 +1,47 @@
+<!-- 回复评价 -->
+<form action="{:U('update')}" method="POST" class="comment-reply-form">
+  <div class="boxpage-div">
+    <if condition="IS_ADMIN">
+      <div class="boxpage-line">
+        <label class="fl">评价商品：</label>
+        <div class="fl">{$data.item_id|get_item_name}</div>
+      </div>
+    </if>
+    <div class="boxpage-line">
+      <label class="fl">评价内容：</label>
+      <div class="fl">{$data.content}</div>
+    </div>
+    
+    <div class="boxpage-line">
+      <label class="fl">回复时间：</label>
+      <div class="fl">
+        <input type="text" name="create_time" class="text input-large date_select" value="{:time_format($data_reply['create_time'], 'Y-m-d H:i:s')}" placeholder="请选择时间"/>
+      </div>
+    </div>
+    
+    <div class="boxpage-line">
+      <label class="fl">回复内容：</label>
+      <div class="fl">
+        <input type="text" name="content" class="text input-large" value="{$data_reply.content}">
+      </div>
+    </div>
+  
+    <div class="boxpage-line boxpage-menu">
+      <input type="hidden" value="{$data.id}" name="pid"/>
+      <input type="hidden" value="{$data_reply.id}" name="id"/>
+      <button class="btn ajax-post" data-target-form="comment-reply-form">提交回复</button>
+    </div>
+  </div>
+</form>
+<script language="javascript" type="text/javascript" src="__PUBLIC__/Admin/js/My97Date/WdatePicker.js"></script>
+<script type="text/javascript" charset="utf-8">
+  $(function(){
+    //导航高亮
+    highlight_subnav('{:U('index')}');
+    //时间选择
+    $('.date_select').focus(function(){
+      WdatePicker({skin: 'twoer', dateFmt: 'yyyy-MM-dd HH:mm:ss', maxDate: '%y-%M-%d'});
+    });
+  });
+  ajaxpost.init('.comment-reply-form');
+</script>

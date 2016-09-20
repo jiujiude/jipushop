@@ -1,0 +1,39 @@
+<extend name="Base/member"/>
+<block name="header">
+  <div class="container breadcrumb">
+    <strong><a href="{:U('/')}" target="_self">首页</a></strong> &gt;
+    <span class="det-cur">绑定邮箱</span>
+  </div>
+</block>
+
+<block name="body">
+  <div class="xm-line-box uc-box">
+    <div class="box-hd">
+      <h3 class="title">绑定邮箱</h3>
+    </div>
+    <div class="box-bd">
+      <div class="form-field">
+        <notempty name="user.email">
+          <div class="control-group">
+            <label class="control-label">
+              <eq name="member.is_email_bind" value="1">已绑定<else/>已设置</eq>邮箱：</label>
+            <div class="controls">
+              <p class="info">{$user.email}</p>
+            </div>
+          </div>
+        </notempty>
+        <div class="control-group">
+          <label class="control-label" for="email"><notempty name="user.email"><eq name="member.is_email_bind" value="1">更换</eq>绑定</notempty>邮箱：</label>
+          <div class="controls">
+            <i class="iconfont">&#xe626;</i>
+            <input name="email" type="text" class="text-inline input-md J_bind_email" value="{$user.email}" placeholder="请填写邮箱" errormsg="邮箱格式不正确" nullmsg="请填写邮箱">
+            <a href="javascript:member.send_email_code();" class="btn btn-positive send-code J_send_email_code">发送验证邮件</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block>
+<block name="script">
+  <script src="__JS__/module.js" type="text/javascript"></script>
+</block>

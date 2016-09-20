@@ -1,0 +1,76 @@
+<extend name="Public/base" />
+
+<block name="body">
+  <!-- 标题栏 -->
+  <div class="main-title">
+    <h2>第二件折扣管理</h2>
+  </div>
+  
+  <div class="cf">
+    <div class="fl">
+      <a id="add-group" class="btn" href="{:U('add')}">新 增</a>
+      <a url="{:U('setStatus', array('status' => 1))}" class="btn ajax-post" target-form="ids" >启 用</a>
+      <a url="{:U('setStatus', array('status' => 0))}" class="btn ajax-post" target-form="ids" >禁 用</a>
+      <button class="btn ajax-post confirm" target-form="ids" url="{:U('setStatus', array('status' => -1))}">删 除</button>
+      <a class="btn" href="{:U('index')}">刷 新 <span style="font-size:12px;font-weight:normal">(清空搜索条件)</span></a>
+    </div>
+  </div>
+  <!-- 数据列表 -->
+  <div class="data-table table-striped">
+    <table class="">
+      <thead>
+        <tr>
+          <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+          <th>活动名称</th>
+          <th>活动时间</th>
+          <th>活动商品</th>
+          <th>活动折扣</th>
+          <th>活动状态</th>
+          <th width="140" class="text-center">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+      <notempty name="lists">
+        <volist name="lists" id="vo">
+          <tr class="status_trclass_{$vo.status}">
+            <td><input class="ids" type="checkbox" name="ids[]" value="{$vo.id}" /></td>
+            <td><a href="{:U('edit?id='.$vo['id'])}">{$vo.name}</a> </td>
+            <td>{:time_format($vo['start_time'], 'Y-m-d')} 至 {:time_format($vo['expire_time'], 'Y-m-d')} 23:59:59</td>
+            <td><a href="{:U('/Item/detail?id='.$vo['item_id'])}"  target="_blank">{$vo.item_id|get_item_name}</a></td>
+            <td>{$vo.discount}</td>
+            <td>{$vo.status_text}</td>
+            <td class="text-center">
+              <eq name="vo.status" value="1">
+                <a href="{:U('setStatus?status=0&ids='.$vo['id'])}" class="ajax-get">[禁用]</a>
+              <else/>
+                <a href="{:U('setStatus?status=1&ids='.$vo['id'])}" class="ajax-get">[启用]</a>
+              </eq>
+              <a href="{:U('edit?id='.$vo['id'])}">[编辑]</a>
+              <a href="{:U('setStatus?status=-1&ids='.$vo['id'])}" class="confirm ajax-get">[删除]</a>
+            </td>
+          </tr>
+        </volist>
+        <else/>
+        <td colspan="12" class="text-center"> aOh! 暂时还没有内容! </td>
+      </notempty>
+      </tbody>
+    </table>
+
+  </div>
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script language="javascript" type="text/javascript" src="__PUBLIC__/Admin/js/My97Date/WdatePicker.js"></script>
+  <script type="text/javascript" charset="utf-8">
+    //导航高亮
+    highlight_subnav('{:U('index')}');
+    Core.setValue('type', '{:I('get.type', '')}');
+    //时间选择
+    $('.date_select').focus(function(){
+      WdatePicker({skin: 'twoer', dateFmt: 'yyyy-MM-dd', maxDate: '%y-%M-%d'});
+    });
+  </script>
+</block>

@@ -1,0 +1,57 @@
+<!-- 移动商品分类 -->
+<form action="{:U('itemmove')}" method="POST" class="namecard-tpl-form">
+  <div class="boxpage-div">
+    <div class="boxpage-line">
+      <label class="fl">商品分类：</label>
+      <div class="fl">
+          <div class="controls" id="J_itemCategory">加载中...</div>
+          <input type="hidden" value="" name="category" id="J_category">
+          <input name="ids" id="ids" type="hidden">
+      </div>
+    </div>
+    
+    <div class="boxpage-line boxpage-menu">
+     <button id="a" class="btn ajax-post" data-target-form="namecard-tpl-form">移动分类</button>
+    </div>
+  </div>
+</form>
+
+<script src="__JS__/jquery/jquery.loadtype.js"></script>
+<script type="text/javascript">
+  (function(){
+    item.init();
+    //商品分类
+    $('#J_itemCategory').loadtype({
+      type: 'itemCategory',
+      name1: 'cid_1',
+      name2: 'cid_2',
+      name3: 'cid_3',
+      value1: "",
+      value2: "",
+      value3: "",
+      changed: function(c1, c2, c3){
+        var c_array = [];
+        c1 && c_array.push($('.controls select[name="cid_1"] option:selected').text());
+        c2 && c_array.push($('.controls select[name="cid_2"] option:selected').text());
+        c3 && c_array.push($('.controls select[name="cid_3"] option:selected').text());
+        $('#J_category').val(c_array.join('/'));
+      }
+    });
+    
+    //移动商品分类获取ids
+    var itemMove = {
+      init : function(){
+        var ids = new Array();
+        $("input[class='ids']:checked").each(function(){
+          ids.push($(this).attr('value'));
+        });
+        if(ids.length >0){
+          ids = ids.join(',');
+          $('#ids').val(ids);
+        }
+      }
+    }
+    itemMove.init();
+  })();
+</script> 
+

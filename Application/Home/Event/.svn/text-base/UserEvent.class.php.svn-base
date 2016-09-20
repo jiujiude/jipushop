@@ -1,0 +1,258 @@
+<?php
+/**
+ * 订单事件模型
+ * @author Max.Yu <max@winhu.com>
+ */
+
+namespace Home\Event;
+
+class UserEvent{
+
+  /**
+   * 获取微信登录 二维码
+   * @author Max.Yu <max@winhu.com>
+   */
+  public function getWechatLoginQrSrc(){
+    $qr_url = '';
+    $ip = get_ip();
+    $session_id = session_id();
+    if($session_id){
+      $loginpc = M('WechatLoginpc')->where(array('session_id' => $session_id, 'ip' => $ip, 'status' => 0))->find();
+      $in_data = array(
+          'session_id' => session_id(),
+          'ip' => get_ip(),
+          'create_time' => NOW_TIME
+      );
+      if($loginpc){
+        $in_data['id'] = $loginpc['id'];
+        $res = M('WechatLoginpc')->save($in_data);
+      }else{
+        $res = M('WechatLoginpc')->add($in_data);
+      }
+      if($res){
+        $callback_url = SITE_URL.U('wechatLoginPc', array('loginId' => $session_id));
+        vendor('Qrcode.Phpqrcode');
+        $QRcode = new \Vendor\QRcode();
+        if(I('type') == 'middle'){
+          $QRcode->png($callback_url, false, 'D', 5, 1);
+        }else{
+          $QRcode->png($callback_url, false, 'H', 6, 1);
+        }
+        exit();
+      }
+    }
+    return $qr_url;
+  }
+
+  /**
+   * 微信登录pc检测
+   * @author Max.Yu <max@winhu.com>
+   */
+  public function wechatLoginCheck(){
+    $return_data = array('code' => 300, 'msg' => '');
+    $ip = get_ip();
+    $session_id = session_id();
+    if($session_id){
+      $map = array(
+          'ip' => $ip,
+          'session_id' => $session_id
+      );
+      $find_line = M('WechatLoginpc')->where($map)->find();
+      if($find_line){
+        if($find_line['status'] == 1){
+          D('Member')->login($find_line['login_uid']);
+          M('WechatLoginpc')->where('id='.$find_line['id'])->delete();
+          $return_data = array('code' => 200, 'msg' => '微信登录成功！', 'url' => COOKIE('__forward__'));
+        }
+      }else{
+        $return_data['msg'] = '错误的数据请求！';
+      }
+    }else{
+      $return_data['msg'] = '错误的数据请求！';
+    }
+    return $return_data;
+  }
+
+  /**
+   * 扫描处理
+   * @param string $loginId 登录用户的sessionid
+   * @author Max.Yu <max@winhu.com>
+   */
+  public function wechatLoginPc($loginId = ''){
+    $return_data = array('code' => 300, 'msg' => '');
+    session('wechatLoginPcCrontab', null);
+    $findline = M('WechatLoginpc')->where(array('session_id' => $loginId))->find();
+    if($findline){
+      $openid = A('Pay', 'Event')->getOpenId();
+      if($openid){
+        $login = M('Login')->where(array('type_uid' => $openid, 'type' => 'wechat'))->find();
+        if($login['uid'] > 0){
+          $save_data = array(
+              'login_uid' => $login['uid'],
+              'login_time' => NOW_TIME,
+              'status' => 1,
+          );
+          $res = M('WechatLoginpc')->where(array('session_id' => $loginId))->save($save_data);
+          if($res){
+            $return_data = array(
+                'code' => 200,
+                'msg' => '电脑端登录成功！',
+            );
+          }else{
+            $return_data['msg'] = '登录失败！';
+          }
+        }else{
+          D('Member')->logout();
+          $return_data['msg'] = '尚未注册或绑定账号！';
+          $return_data['no_reg'] = 1;
+        }
+      }else{
+        $return_data['msg'] = '未获取到您的信息！';
+      }
+    }else{
+      $return_data['msg'] = '非正常的登录请求！';
+    }
+    return $return_data;
+  }
+
+  /**
+   * 通过接口获取Openid
+   * @author Max.Yu <max@winhu.com>
+   */
+  public function getOpenIdByApi(){
+    //OpenId接口地址
+    $API_URL = C('WEXIN_API_AUTH_URL');
+    if(strlen($API_URL) < 8){
+      return '';
+    }
+    $openid_url = $API_URL.'Api/openId.html';
+    $return_data = I('get.return_data', '');
+    if(empty($return_data)){
+      redirect($openid_url.'?call_url='.urlencode("http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
+    }else{
+      $return_data = json_decode($return_data, true);
+      $openid = $return_data['open_id'];
+      if($return_data['status'] == 'success' && $openid){
+        $pwd = substr(md5($openid.md5('winhu_2015_uhniw')), 10, 26);
+        $openid = $pwd != $return_data['authkey'] ? '' : $openid;
+      }else{
+        $openid = '';
+      }
+      return $openid;
+    }
+  }
+
+  /**
+   * 通过接口获取授权accessToken
+   * @author Max.Yu <max@winhu.com>
+   */
+  public function getAuthAccessTokenByApi(){
+    //OpenId接口地址
+    $API_URL = C('WEXIN_API_AUTH_URL');
+    $return = '';
+    $s_token = session('accessToken_code');
+    if(empty($s_token) && strlen($API_URL) > 8){
+      $openid_url = $API_URL.'Api/authAccessToken.html';
+      $return_data = I('get.return_data', '');
+      if($return_data){
+        $return_data_arr = json_decode($return_data, true);
+        if(empty($return_data_arr['access_token'])){
+          $return_data = '';
+        }
+      }
+      if(empty($return_data)){
+        redirect($openid_url.'?call_url='.urlencode("http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']));
+      }else{
+        $return_data_arr;
+        if($return_data_arr['status'] == 'success'){
+          $authkey = $return_data_arr['authkey'];
+          unset($return_data_arr['authkey']);
+          $pwd = substr(md5('winhu_2015_uhniw'.md5(http_build_query($return_data_arr))), 5, 18);
+          if($pwd == $authkey){
+            $return = $return_data_arr['access_token'];
+          }
+        }
+      }
+    }
+    return $return;
+  }
+
+  /**
+   * 短信验证码请求业务处理 (云片)
+   * @author Max.Yu <max@winhu.com>
+   */
+  public function getRandCode($type = ''){
+    $mobile = I('post.mobile');
+    $res_data = array('status' => 1, 'info' => '');
+    $param = array();
+    $map['mobile'] = array('eq',$mobile);
+    $map['status'] = array('egt',0);
+    $user = M('User')->where($map)->find();
+    //匹配检测规则
+    switch($type){
+      case 'register': //用户注册
+        if(!empty($user)){
+          $res_data = array('status' => 0 ,'info' => '手机号已被占用');
+        }else{
+          $param = array('app' => C('WEB_SITE_TITLE'));
+          $tpl_id = 5;
+        }
+        break;
+      case 'forgetpwd': //忘记密码
+        if(empty($user)){
+          $res_data = array('status' => 0 ,'info' => '用户不存在');
+        }else if($user['status'] == 0){
+          $res_data = array('status' => 0 ,'info' => '该用户已被禁止登录');
+        }
+        $tpl_id = 7;
+        break;
+      case 'setMobile': //绑定手机
+        if($user && $user['id'] == UID){
+          $res_data = array('status' => 0 ,'info' => '手机号不能与原号码相同');
+        }elseif($user){
+          $res_data = array('status' => 0 ,'info' => '该号码已被占用');
+        }else{
+          $param = array('app' => C('WEB_SITE_TITLE'));
+          $tpl_id = 9;
+        }
+        break;
+      case 'wechatbind': //微信绑定新用户
+        if(!empty($user)){
+          $res_data = array('status' => 0 ,'info' => '手机号已被占用');
+        }
+        $tpl_id = 2;
+        break;
+      case 'quickPay': //快速支付
+        if(empty($user)){
+          $res_data = array('status' => 0 ,'info' => '用户不存在');
+        }else if($user['status'] == 0){
+          $res_data = array('status' => 0 ,'info' => '该用户已被禁止登录');
+        }
+        $param = array('app' => C('WEB_SITE_TITLE'));
+        $tpl_id = 9;
+        break;
+      case 'withdrawbind': //提现绑定
+        $tpl_id = 2;
+        break;
+      default: //默认
+        $res_data = array('status' => 0 ,'info' => '请指定验证码类型');
+    }
+    if($res_data['status'] == 1){
+      $res = send_ypcode_sms($mobile, $tpl_id, $param);
+      if($res['code'] == 200){
+        $res_data = array(
+            'status' => 1,
+            'info' => '请输入短信验证码',
+            'endtime' => $res['create_time'] + C('RAND_CODE_INTERVEL')
+        );
+      }else{
+        $res_data = array(
+            'status' => 0,
+            'info' => $res['msg']
+        );
+      }
+    }
+    return $res_data;
+  }
+
+}

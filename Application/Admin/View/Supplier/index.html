@@ -1,0 +1,75 @@
+<extend name="Public/base" />
+
+<block name="body">
+  <!-- 标题栏 -->
+  <div class="main-title">
+    <h2>供应商管理</h2>
+  </div>
+
+  <div class="tools auth-botton">
+    <a id="add-group" class="btn" href="{:U('add')}">新 增</a>
+  </div>
+  <!-- 数据列表 -->
+  <div class="data-table table-striped">
+    <table class="">
+      <thead>
+        <tr>
+          <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+          <th>所属用户</th>
+          <th>供应商名称</th>
+          <th>联系人</th>
+          <th>联系方式</th>
+          <th>商品数量</th>
+          <th>免运费限额</th>
+          <th>状态</th>
+          <th>二维码</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <notempty name="lists">
+          <volist name="lists" id="vo">
+            <tr class="status_trclass_{$vo.status}">
+              <td><input class="ids" type="checkbox" name="ids[]" value="{$vo.id}" /></td>
+              <td>
+                <if condition="$vo['supplier_id'] eq 0">
+                  自营
+                <else />
+                  <a href="{:U('User/view', array('id' => $vo['supplier_id']))}">
+                    <if condition="get_nickname($vo['supplier_id']) neq ''">
+                      {$vo.supplier_id|get_nickname}
+                    <else/>
+                      {$vo.supplier_id|get_username}
+                    </if>
+                  </a>
+                </if>
+              </td>
+              <td><a href="{:U('edit?id='.$vo['id'])}">{$vo.name}</a> </td>
+              <td>{$vo.link_name}</td>
+              <td>{$vo.link_mobile}</td>
+              <td><a href="{:U('Item/index?supplier_id='.$vo['supplier_id'])}">{$vo.supplier_id|get_supplier_item_count}</a></td>
+              <td><input class="J_ajax_updatefield text input-mini" type="text" data-action="{:U('setFieldValue')}" data-id="{$vo.id}" name="free_amount" value="{$vo['free_amount']}"></td>
+              <td>{$vo.status_text}</td>
+              <td><a href="javascript:;" onclick="UI.load('{:U('detail',array('key'=>$vo['key']))}','扫描二维码查看')">[查看]</a></td>
+              <td>
+                <a href="{:U('edit?id='.$vo['id'])}">[编辑]</a>
+              </td>
+            </tr>
+          </volist>
+        <else/>
+          <td colspan="10" class="text-center"> aOh! 暂时还没有内容! </td>
+        </notempty>
+      </tbody>
+    </table>
+  </div>
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript" charset="utf-8">
+    //导航高亮
+    highlight_subnav('{:U('UserGroup/index')}');
+  </script>
+</block>

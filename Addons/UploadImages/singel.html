@@ -1,0 +1,79 @@
+<script type="text/javascript" src="__JS__/uploadify/jquery.uploadify.min.js"></script>
+<input type="file" id="{$param.fileid}">
+<div class="upload-img-box">
+  <notempty name="param.images">
+    <volist name="param.images" id="vo">
+      <div class="upload-pre-item">
+      	<input type="hidden" name="{$param.name}" value="{$vo['id']}" class="J_pid" />
+        <img src="__ROOT__{$vo['path']}" title="点击显示大图"  data-id="{$vo['id']}" />
+        <span class="btn-close delPic" title="删除图片"></span>
+      </div>
+    </volist>
+  </notempty>
+</div>
+<script type="text/javascript">
+//上传图片
+/* 初始化上传插件 */
+$("#{$param.fileid}").uploadify({
+  "height"          : 36,
+  "swf"             : "__JS__/uploadify/uploadify.swf?ver=" + Math.random(),
+  "fileObjName"     : "download",
+  "buttonText"      : "上传图片",
+  "uploader"        : "{:U('File/uploadPicture',array('session_id'=>session_id()))}",
+  "width"           : 80,
+  'removeTimeout'	  : 1,
+  'fileTypeExts'	  : '*.jpg; *.png; *.gif;',
+  "onUploadSuccess" : uploadPicture,
+  'onFallback' : function() {
+    alert('未检测到兼容版本的Flash.');
+  }
+});
+
+function uploadPicture(file, data){
+  var data = $.parseJSON(data);
+
+  console.log(data);
+  if(data.status){
+    var img_src = data.url || '__ROOT__' + data.path;
+		var img_input = "<input type='hidden' name='{$param.name}' value='" + data.id + "' class='J_pid' />";
+		var img_show = "<img src='" + img_src +"' title='点击显示大图' data-id='" + data.id + "'>";
+		var img_del = "<span class='btn-close delPic' title='删除图片'></span>";
+
+	  $('.upload-img-box').html(
+      "<div class='upload-pre-item'>" + img_input + img_show + img_del + "</div>"
+    );
+  }
+}
+
+$().ready(function(){
+	// 删除图片
+	$(document).on("click",".delPic",function(){
+    $(this).parent().children("input.J_pid").val(0);
+		$(this).parent().children("input.J_pid").nextAll().remove();	//移除当前行
+    
+		/* 注：以下注释代码为物理删除图片的功能代码，可根据业务需要取消注释代码开启图片物理删除功能 */
+		// 要删除的图片ID
+		//var pid = $(this).parent().children("input.J_pid").val();
+		
+		// 获取图片删除URL
+		//var delPicUrl = "{:U('Picture/delPic')}";
+		//<notempty name="param.delPicUrl">
+		//	delPicUrl = "{$param.delPicUrl}";
+		//</notempty>
+
+		//var url = delPicUrl + '?pid=' + pid;
+		//$.get(url, function(data){
+		//	if(data != null){
+		//		if(data.status){
+		//			//alert(data.info);
+		//		}else{
+		//			//alert('图片删除失败！');
+		//		}
+		//	}else{
+		//		//alert('图片删除失败！');
+		//	}
+		//});
+		/* 注：以上注释代码为物理删除图片的功能代码，可根据业务需要取消注释代码开启图片物理删除功能 */
+	});
+});
+</script>

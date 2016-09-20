@@ -1,0 +1,68 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>商品{$type_name}</h2>
+  </div>
+
+  <div class="cf">
+    <eq name="type" value="attribute">
+      <a class="btn" href="{:U('add?type=attribute')}">新 增</a>
+      <button class="btn ajax-post confirm" url="{:U('del?type=attribute')}" target-form="ids">删 除</button>
+    </eq>
+    <eq name="type" value="specification">
+      <a class="btn" href="{:U('add?type=specification')}">新 增</a>
+      <button class="btn ajax-post confirm" url="{:U('del?type=specification')}" target-form="ids">删 除</button>
+    </eq>
+  </div>
+
+  <div class="data-table table-striped">
+    <form class="ids">
+      <table>
+        <thead>
+          <tr>
+            <th class="row-selected" width="50">
+              <input class="checkbox check-all" type="checkbox">
+            </th>
+            <th width="150">绑定分类</th>
+            <th width="150">{$type_name}名称</th>
+            <th width="150">{$type_name}标识</th>
+            <th>表单类型</th>
+            <th width="80">排序</th>
+            <th width="90">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        <notempty name="list">
+        <volist name="list" id="vo">
+          <tr>
+            <td><input class="ids row-selected" type="checkbox" name="ids[]" value="{$vo.id}"></td>
+            <td>{:getCategoryNameById($vo['cid'])}</td>
+            <td><a title="查看与编辑" href="{:U('edit?id='.$vo['id'].'&type='.$type)}">{$vo.cname}</a></td>
+            <td>{$vo.ename}</td>
+            <td>{$vo.formtype_text}</td>
+            <!-- <td><input name="valuestore" value="{$vo.valuestore|default='暂无'}" size="60" class="list-input" /></td> -->
+            <td>{$vo.displayorder}</td>
+            <td>
+              <a title="编辑" href="{:U('edit?id='.$vo['id'].'&type='.$type)}">[编辑]</a>
+              <a class="confirm ajax-get" title="删除" href="{:U('del?ids='.$vo['id'])}">[删除]</a>
+            </td>
+          </tr>
+        </volist>
+        <else/>
+        <tr><td colspan="10" class="text-center"> aOh! 暂时还没有内容! </td></tr>
+        </notempty>
+        </tbody>
+      </table>
+    </form>
+    <!-- 分页 -->
+    <div class="page">{$_page}</div>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //导航高亮
+    highlight_subnav("{:U('index?type='.$type)}");
+  </script>
+</block>

@@ -1,0 +1,78 @@
+<extend name="Base/common"/>
+<block name="header">
+{:hook('mobileTopNav',array('title'=>"我的客户"))}
+</block>
+
+<block name="body">
+<style>
+    .bar-tab{display: none;}
+.content-padded{
+  margin:0px;
+  }
+  .invite {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    padding:10px;
+    border-bottom: 1px solid #eee;
+
+}
+
+    .invite .img {
+        width: 60px;
+        height: 60px;
+        border-radius: 100%;
+        float: left;
+    }
+
+    .invite .invite-t {
+        margin: 6px 0 5px 75px;
+        color: #000000;
+        font-size: 16px;
+    }
+
+    .invite .invite-b {
+        color: #777;
+        margin-left: 75px;
+    }
+</style>
+  <!-- <div class="text-warning">
+   目前支持<em class="text-danger">{:C('DIS_CLASS')}级代理</em>。一级代理<em class="text-danger">{:C('FIRISTNAME')}%</em> <if condition='C("DIS_CLASS") gt 1'>二级代理<em class="text-danger">{:C('SECONDNAME')}%&nbsp&nbsp</em> </if><if condition='C("DIS_CLASS") gt 2'>二级代理<em class="text-danger">{:C('THIRDNAME')}% &nbsp&nbsp</em> </if>。
+  </div> -->
+  <!----代理人数-->
+  <div class="unioner-nmb" style="background:white;">
+  <h1 style="display:none"></h1>
+  <p style="display:none">{$type}级代理</p>
+
+  <p>{$count}名客户</p>
+  </div>
+  <br />
+
+ <div class="table-view" style="border-bottom:0px">
+  <div class="content-padded" style="background:#ffffff">
+    <notempty name="data.0.user_id">
+      <volist name="data" id="vo">
+        <div class="mb invite text-lists">
+        <img class="img" src="{$vo.user_id|getAvatar}" >
+          <div class="invite-t">  
+            <span class="pull-left">
+              {$vo.user_id|get_nickname}
+            </span>
+            <em class="pull-right">{$vo.user_id|regtime}</em>
+          </div>
+          <div class="invite-b">          
+            <span class="pull-left" style="margin-top:5px;">
+              电话：{$vo.mobile} &nbsp;&nbsp;&nbsp;&nbsp;订单：{$vo.user_id|get_unionorder}  <p style="display:none;">&nbsp;&nbsp;&nbsp;&nbsp;下线：{$vo.user_id|myflowers} </p>
+            </span>
+        </div>
+        </div>
+        
+      </volist>
+    <else />
+      <p class="list-empty">暂无代理记录...</p>
+    </notempty>
+  </div>
+ </div>
+</block>
+<block name="script">
+
+</block>

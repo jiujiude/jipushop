@@ -1,0 +1,83 @@
+<extend name="Public/base" />
+<block name="body">
+  <!-- 标题栏 -->
+  <div class="main-title">
+    <h2>站内消息管理</h2>
+  </div>
+  
+  <div class="cf">
+    <div class="fl">
+      <a id="add-group" class="btn" href="{:U('add')}">新 增</a>
+      <button class="btn ajax-post confirm" target-form="ids" url="{:U('setStatus', array('status' => -1))}">删 除</button>
+      <a class="btn" href="{:U('index')}">刷 新 <span style="font-size:12px;font-weight:normal">(清空搜索条件)</span></a>
+    </div>
+    <!-- 高级搜索 -->
+    <form id="J_search_form" action="{:U('index')}" method="GET">
+      <div class="search-form fr cf">
+        <div class="sleft">
+          <input type="text" name="keywords" class="search-input" value="{:I('keywords')}" placeholder="请输入关键词">
+          <a class="sch-btn" href="javascript:;" id="J_search"><i class="btn-search"></i></a>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!-- 数据列表 -->
+  <div class="data-table table-striped">
+    <table class="">
+      <thead>
+        <tr>
+          <th class="row-selected row-selected"><input class="check-all" type="checkbox"/></th>
+          <th width="40">ID</th>
+          <th width="110">发送人</th>
+          <th width="120">接收对象</th>
+          <th>标题</th>
+          <th>内容</th>
+          <th width="120">发送时间</th>
+          <th width="90" class="text-center">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+      <notempty name="lists">
+        <volist name="lists" id="vo">
+          <tr class="status_trclass_{$vo.status}">
+            <td><input class="ids" type="checkbox" name="ids[]" value="{$vo.id}" /></td>
+            <td>{$vo.id}</td>
+            <td><a href="{:U('User/view?id='.$vo['id'])}">{$vo.uid|get_nickname}</a> </td>
+            <td>
+              <if condition="$vo['to_uid'] eq 0">
+                全站用户
+                <elseif condition="is_numeric($vo['to_uid']) eq true"/>
+                <a href="{:U('User/view?id='.$vo['to_uid'])}" target="_blank">{$vo.to_uid|get_nickname}</a>
+                <else/>
+                指定用户 (<a href="javascript:showUsers('{$vo.to_uid}');">查看</a>)
+              </if>
+            </td>
+            <td>
+              <a href="{:U('detail?id='.$vo['id'])}">{:get_short($vo['title'], 30)}</a>
+            </td>
+            <td>{:get_short($vo['content'], 60)}</td>
+            <td>{$vo.create_time|time_format}</td>
+            <td class="text-center">
+              <a href="{:U('detail?id='.$vo['id'])}">[查看]</a>
+              <a href="{:U('setStatus?status=-1&ids='.$vo['id'])}" class="confirm ajax-get">[删除]</a>
+            </td>
+          </tr>
+        </volist>
+        <else/>
+        <td colspan="12" class="text-center"> aOh! 暂时还没有内容! </td>
+      </notempty>
+      </tbody>
+    </table>
+
+  </div>
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+<script type="text/javascript" charset="utf-8">
+  //导航高亮
+  highlight_subnav('{:U("index")}');
+</script>
+</block>

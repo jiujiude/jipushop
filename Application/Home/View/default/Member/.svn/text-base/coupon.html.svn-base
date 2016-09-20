@@ -1,0 +1,68 @@
+<extend name="Base/member"/>
+
+<block name="breadcrumb">
+  <ul class="breadcrumb">
+    <li><a href="{:U('/')}">首页</a></li>
+    <li class="active">我的优惠券</li>
+  </ul>
+</block>
+
+<block name="body">
+  <div class="user-box">
+    <h3>我的优惠券</h3>
+    <form class="form-inline">
+      <div class="form-group">
+        <label for="J_card_number">优惠卷卡号：</label>
+        <input type="text" name="number" id="J_card_number" class="form-control"  placeholder="优惠卷卡号" autocomplete="off">
+      </div>
+    
+      <button type="submit" id="J_card_bind" class="btn btn-positive">领取</button>
+    </form>
+    <h3>已拥有的优惠卷</h3>
+      <div class="row list-info">
+        <div class="col-xs-12 counpon_list">
+          <div class="hd clearfix">
+            <span class="col-xs-2">编号</span>
+            <span class="col-xs-2">名称</span>
+            <span class="col-xs-1">金额<small>(元)</small></span>
+            <span class="col-xs-2">使用条件</span>
+            <span class="col-xs-2">领取时间</span>
+            <span class="col-xs-2">过期日期</span>
+            <span class="col-xs-1">是否使用</span>
+          </div>
+        </div>
+        <notempty name="lists">
+        <volist name="lists" id="vo">
+          <div class="col-xs-12">
+            <div class="bd <eq name="vo.status" value="1">disabled</eq> clearfix">
+              <div class="col-xs-2">{$vo.number}</div>
+              <div class="col-xs-2"><a href="{:U('Item/search/coupon/'.$vo['id'])}" title="查看可用商品">{$vo.name}</a></div>
+              <div class="col-xs-1 np"><strong class="text-danger">{$vo.amount}元</strong></div>
+              <div class="col-xs-2"><gt name="vo.norm" value="0">满{$vo.norm}元使用<else/>全场不限制</gt></div>
+              <div class="col-xs-2">{$vo.create_time|time_format}</div>
+              <div class="col-xs-2">{$vo.expire_time|time_format}</div>
+              <div class="col-xs-1">
+                <switch name="vo.status">
+                  <case value="0">未使用</case>
+                  <case value="1">已使用</case>
+                  <case value="1">已锁定</case>
+                </switch>
+              </div>
+            </div>
+          </div>
+        </volist>
+        <else/>
+          <div class="col-xs-12">
+            <p class="list-empty">您暂时没有可用优惠券...</p>
+          </div>
+        </notempty>
+      </div>
+      <div class="page">{$_page}</div>
+    
+  </div>
+  <script type="text/javascript">
+    seajs.use('user', function(user){
+      user.couponBind();
+    });
+  </script>
+</block>

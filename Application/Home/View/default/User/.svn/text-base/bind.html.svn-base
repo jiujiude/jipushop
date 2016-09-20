@@ -1,0 +1,100 @@
+<extend name="Base/page"/>
+<block name="body">
+<div class="page-wrap">
+  <div class="title">
+    <h2>第三方登录</h2>
+  </div>
+  <div class="login-sns">
+    <dl class="tips">
+      <dt><img src="{$user.userface}" width="50" height="50" /></dt>
+      <dd>欢迎您，{$user.uname}，您的{$typeName}帐号授权成功！简单设置即可直接登录。</dd>
+    </dl>
+
+    <div class="field" id="account">
+      <ul class="tabs">
+        <li class="current" data-args="create"><a href="javascript:;">创建新帐号</a></li>
+        <li data-args="bind"><a href="javascript:;">绑定已有帐号</a></li>
+      </ul>
+      <div class="tab-pane in" id="create">
+        <div class="form-field">
+          <form class="login-form" action="{:U('User/doCreate')}" method="post">
+            <input type="hidden" name="other_type" value="{$type}" >
+            <input type="hidden" name="oauth_token" value="{$oauth_token}" >
+            <input type="hidden" name="oauth_token_secret" value="{$oauth_token_secret}" >
+            <input type="hidden" name="other_uid" value="{$user.id}" >
+            <input type="hidden" name="other_face" value="{$user.userface}" >
+            <input type="hidden" name="other_signature" value="{$user.signature}" >
+            <div class="control-group">
+              <label class="control-label" for="inputEmail">邮箱：</label>
+              <div class="controls">
+                <input type="text" name="username" id="inputEmail" class="span3" placeholder="请输入电子邮件" ajaxurl="/member/checkUserEmailUnique.html" errormsg="请填写正确格式的邮箱" nullmsg="请填写邮箱" datatype="e" value="">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="inputPassword">密码：</label>
+              <div class="controls">
+                <input type="password" id="inputPassword"  class="span3" placeholder="请输入密码"  errormsg="密码为6-20位" nullmsg="请填写密码" datatype="*6-20" name="password">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="inputPassword">确认密码：</label>
+              <div class="controls">
+                <input type="password" id="inputPassword" class="span3" placeholder="请再次输入密码" recheck="password" errormsg="您两次输入的密码不一致" nullmsg="请填确认密码" datatype="*" name="repassword">
+              </div>
+            </div>
+            <div class="control-group Validform_checktip text-warning"></div>
+            <div class="control-group">
+              <div class="controls">
+                <button type="submit" class="btn btn-large btn-primary">创建账号</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="tab-pane" id="bind">
+        <div class="form-field">
+          <form class="login-form" action="{:U('User/doBind')}" method="post">
+            <input type="hidden" name="other_type" value="{$type}" >
+            <input type="hidden" name="oauth_token" value="{$oauth_token}" >
+            <input type="hidden" name="oauth_token_secret" value="{$oauth_token_secret}" >
+            <input type="hidden" name="other_uid" value="{$user.id}" >
+            <input type="hidden" name="other_face" value="{$user.userface}" >
+            <input type="hidden" name="other_signature" value="{$user.signature}" >
+            <div class="control-group">
+              <label class="control-label" for="inputEmail">邮箱：</label>
+              <div class="controls">
+                <input type="text" name="username" id="inputEmail" class="span3" placeholder="请输入电子邮件" ajaxurl="/member/checkUserNameUnique.html" errormsg="请填写正确格式的邮箱" nullmsg="请填写邮箱" datatype="*1-16" value="">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="inputPassword">密码：</label>
+              <div class="controls">
+                <input type="password" id="inputPassword" class="span3" placeholder="请输入密码" errormsg="密码为6-20位" nullmsg="请填写密码" datatype="*6-20" name="password">
+              </div>
+            </div>
+            <div class="control-group Validform_checktip text-warning"></div>
+            <div class="control-group">
+              <div class="controls">
+                <button type="submit" class="btn btn-large btn-primary">登 录</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    $('#account .tabs li').click(function(){
+      var self = $(this);
+      self.addClass("current").siblings(".current").removeClass("current");
+      var args = self.attr('data-args');
+      $("#account .in").removeClass("in");
+      $('#' + args).addClass("in");
+    });
+  </script>
+</block>

@@ -1,0 +1,97 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>查看分销店铺详情</h2>
+  </div>    
+
+  <!-- 订单信息 -->
+  <div class="order-box">
+    <p>
+      <strong><span class="text-success">管理员资质信息</span></strong>
+    </p>
+    <p>
+      <strong>姓名：</strong>{$data.audit_data.name}
+      <span class="sep"></span>
+      <strong>手机：</strong>{$data.audit_data.mobile}
+      <span class="sep"></span>
+      <strong>电子邮箱：</strong>{$data.audit_data.email}
+      <span class="sep"></span>
+      <strong>身份证号：</strong>{$data.audit_data.person_id}
+      <span class="sep"></span>
+      <strong>地区：</strong>
+      {$data['audit_data']['prov']? get_field($data['audit_data']['prov'], 'Area', 'title'):''}
+      {$data['audit_data']['city']? get_field($data['audit_data']['city'], 'Area', 'title'):''}
+      {$data['audit_data']['area']? get_field($data['audit_data']['area'], 'Area', 'title'):''}
+    </p>
+    <p>
+      <strong>申请理由：</strong>
+      {$data.audit_data.intro}
+    </p>
+  </div>
+  <form id="form" action="{:U('update')}" method="post" class="form-horizontal form-detail">
+    <div class="form-item cf">
+      <label class="item-label">绑定用户</label>
+      <div class="controls">
+        <a href="{:U('User/view?id='.$data['uid'])}" target="_blank">{$data.uid|get_nickname}</a>
+      </div>
+    </div>
+    <div class="form-item cf">
+      <label class="item-label">店铺名称</label>
+      <div class="controls">
+        <notempty name="data.name">
+        {$data.name} <a href="{:U('/Shop/detail?uid='.$data['uid'])}" target="_blank">[预览]</a>
+        <else/>
+        -
+        </notempty>
+      </div>
+    </div>
+    <div class="form-item cf">
+      <label class="item-label">店铺头像</label>
+      <div class="controls">
+        <notempty name="data.logo">
+        <img src="{:get_image_thumb($data['logo'], 100, 100, 1)}" width="100"/>
+        <else/>
+        -
+        </notempty>
+      </div>
+    </div>
+    <div class="form-item cf">
+      <label class="item-label">累计收入</label>
+      <div class="controls text-danger">
+        {$data.total_revenue} 元
+      </div>
+    </div>
+    <div class="form-item cf">
+      <label class="item-label">分销订单</label>
+      <div class="controls">
+        <gt name="data.stat_info.order_count" value="0">
+          <a href="{:U('Order/index?sdp_uid='.$data['uid'].'&time_type=payment_time&o_status=-3')}">{$data.stat_info.order_count} 笔</a>
+          <else/>
+          <span class="text-cancel">暂无</span>
+        </gt>
+      </div>
+    </div>
+    
+    <div class="form-item cf">
+      <label class="item-label">状态</label>
+      <div class="controls">
+        <label class="radio text-danger"><input type="radio" value="0" name="status" {$data['status']==0?' checked':''}>待审核</label>
+        <label class="radio text-success"><input type="radio" value="1" name="status" {$data['status']==1?' checked':''}>已审核</label>
+        <label class="radio text-cancel"><input type="radio" value="-1" name="status" {$data['status']==-1?' checked':''}>拒绝审核</label>
+      </div>
+    </div>
+    <div class="form-item">
+      <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">保存</button>
+      <a class="btn btn-return" href="javascript:window.history.back();">返 回</a>
+      <input type="hidden" name="id" value="{$data.id|default=''}"/>
+    </div>
+  </form>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //导航高亮
+    highlight_subnav("{:U('index')}");
+  </script>
+</block>

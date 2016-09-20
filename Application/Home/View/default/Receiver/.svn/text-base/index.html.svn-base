@@ -1,0 +1,37 @@
+<extend name="Base/common"/>
+<block name="style">
+	<link rel="stylesheet" type="text/css" href="__CSS__/app.receiver.css">
+</block>
+
+<block name="header">
+  <div class="ui-toolbar-wrap titleHead">
+    <div class="ui-toolbar-left">
+      <a href="javascript:window.history.back(-1);" class="button ui-btn ui-btn-icon-left" data-icon="arrow-l"><span class="ui-btn-text">返回</span><span class="ui-icon white ui-icon-arrow-l"></span></a>
+    </div>
+    <h2 class="ui-toolbar-title">{$meta_title}</h2>
+    <div class="ui-toolbar-right">
+      <a href="{:U('Receiver/add')}" class="button ui-btn"><span class="ui-btn-text">新增地址</span></a>
+    </div>
+  </div>
+</block>
+
+<block name="body">
+	<div class="receiver-list">
+		<volist name="lists" id="vo">
+			<div class="box">
+				<input type="radio" name="address" id="receiver-{$vo['id']}" class="addr-select" <eq name="vo.is_default" value="1">checked="checked"</eq> value="{$vo['id']}">
+				<label class="addr-body" for="receiver-{$vo['id']}" args="rid={$vo['id']}">
+          <p>{$vo['name']}</p>
+          <p>{$vo['area']}</p>
+          <p>{$vo['address']}</p>
+          <p>{$vo['mobile']}</p>
+          <ins class="none">{$vo['phone']}</ins>
+        </label>
+        <a href="{:U('Receiver/edit', array('id' => $vo['id']))}" class="addr-edit"><i class="editico"></i></a>
+			</div>
+		</volist>
+	</div>
+</block>
+<block name="script">
+	<script src="__JS__/app/home.receiver.js"></script>
+</block>

@@ -1,0 +1,60 @@
+<script type="text/javascript" src="__JS__/uploadify/jquery.uploadify.min.js"></script>
+<input type="file" id="upload_picture">
+<div class="upload-img-box">
+  <notempty name="param.images">
+    <volist name="param.images" id="vo">
+      <div class="upload-pre-item" id="item_{$vo['id']}">
+        <input type="hidden" name="{$param.name}[]" value="{$vo['id']}" class="icon" />
+        <img src="__ROOT__{$vo['path']}" data-id="{$vo['id']}"/>
+        <span class='btn-close' title='删除图片'></span>
+      </div>
+    </volist>
+  </notempty>
+</div>
+
+<script type="text/javascript">
+  //上传图片
+  /* 初始化上传插件 */
+  $("#upload_picture").uploadify({
+    "height": 36,
+    "swf": "__JS__/uploadify/uploadify.swf?ver=" + Math.random(),
+    "fileObjName": "download",
+    "buttonText": "上传图片",
+    "uploader": "{:U('File/uploadPicture',array('session_id'=>session_id()))}",
+    "width": 80,
+    'removeTimeout': 1,
+    'fileTypeExts': '*.jpg; *.png; *.gif;',
+    "onUploadSuccess": uploadPicture,
+    'onFallback':function(){
+      alert('未检测到兼容版本的Flash');
+    }
+  });
+
+  function uploadPicture(file, data){
+    var data = $.parseJSON(data);
+    var src = '';
+    if(data.status){
+      //创建<div class="upload-pre-item">
+      var upload_item = $("<div class='upload-pre-item' id='item_"+data.id+"'></div>");
+      //创建img input close-btn
+      var img_path = $("<input type='hidden' name='{$param.name}[]' class='icon' value='"+data.id+"'/>");
+      src = data.url || '__ROOT__' + data.path;
+      var upload_img = $("<img src=" + src +" title='点击显示大图' data-id="+data.id+">");
+      var img_del = $("<span class='btn-close' title='删除图片'></span>");
+
+      // img_path.val(data.id);
+
+      //加入到upload-img-box
+      upload_item.append(upload_img);
+      upload_item.append(img_del);
+      upload_item.append(img_path);
+      $('.upload-img-box').append(upload_item);
+    }else{
+      updateAlert(data.info);
+      setTimeout(function(){
+        $('#top-alert').find('button').click();
+        $(that).removeClass('disabled').prop('disabled', false);
+      },1500);
+    }
+  }
+</script>

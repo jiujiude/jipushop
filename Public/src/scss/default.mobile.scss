@@ -1,0 +1,57 @@
+$primary-color: #e91e63 !default;
+$link-color: #777;
+$chrome-color:  #fff;
+
+$default-color:  #fff;
+$positive-color: #e91e63;
+$negative-color: #2d8701;
+
+// Variables
+@import "ratchet/variables.scss";
+
+// Mixins
+@import "ratchet/mixins.scss";
+
+// Normalize & Base CSS
+@import "ratchet/normalize.scss";
+@import "ratchet/base.scss";
+@import "ratchet/type.scss";
+
+// Components
+@import "ratchet/buttons.scss";
+@import "ratchet/bars.scss";
+@import "ratchet/badges.scss";
+@import "ratchet/cards.scss";
+@import "ratchet/table-views.scss";
+@import "ratchet/forms.scss";
+@import "ratchet/segmented-controls.scss";
+@import "ratchet/popovers.scss";
+
+// Javascript components
+@import "ratchet/modals.scss";
+@import "ratchet/sliders.scss";
+@import "ratchet/toggles.scss";
+@import "ratchet/push.scss";
+
+// Module
+@import "ratchet/module/base.scss"; //基础
+@import "ratchet/module/common.scss"; //公用
+@import "ratchet/module/iconfont.scss"; //icon
+@import "ratchet/module/index.scss"; //首页
+@import "ratchet/module/article.scss"; //文章
+@import "ratchet/module/item.scss"; //商品
+@import "ratchet/module/cart.scss"; //购物车
+@import "ratchet/module/order.scss"; //订单
+@import "ratchet/module/member.scss"; //个人中心
+@import "ratchet/module/user.scss"; //用户
+@import "ratchet/module/activity.scss"; //专题
+@import "ratchet/module/card.scss"; //礼品卡
+@import "ratchet/module/coupon.scss"; //优惠券
+@import "ratchet/module/redpackage.scss"; //站内消息
+@import "ratchet/module/sdp.scss"; //分销
+@import "ratchet/module/withdraw.scss"; //提现
+@import "ratchet/module/shop.scss"; //分销店铺
+@import "ratchet/module/union.scss"; //分销店铺
+@import "ratchet/module/message.scss"; //站内消息
+
+@import "ratchet/style/default.scss"; //模板自有样式

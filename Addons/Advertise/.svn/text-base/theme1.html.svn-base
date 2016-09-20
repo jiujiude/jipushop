@@ -1,0 +1,28 @@
+<notempty name="data">
+  <switch name="modality">
+    <case value="slide">
+      <div id="slider" class="home-slider">
+        <ul class="item">
+          <volist name="data" id="vo">
+            <li><a href="{$vo.link}" style="background-image: url({$vo.image_src})" title="{$vo.title}" target="_blank"></a></li>
+          </volist>
+        </ul>
+        <div class="container">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="nav">
+                <php>$precent = (10/count($data)*10);</php>
+                <volist name="data" id="vo">
+                  <li style="width: {$precent}%">{$vo.title}</li>
+                </volist>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </case>
+    <case value="image">
+      <div class="text-center"><a href="{$data.link}"><img src="{$data.image_src}" alt=""></a></div>
+    </case>
+  </switch>
+</notempty>

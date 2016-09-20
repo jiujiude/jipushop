@@ -1,0 +1,81 @@
+<extend name="Base/user"/>
+
+<block name="body">
+  <div class="user-box shop">
+    <h3 class="title">
+      推广联盟
+      <small>
+        <ul class="box-nav clearfix">
+          <li <if condition="(CONTROLLER_NAME eq 'Member') And (ACTION_NAME eq 'union')">class="active"</if>>
+            <a href="{:U('Member/union')}">人数统计</a>
+          </li>
+          <li <if condition="(CONTROLLER_NAME eq 'Union') And (ACTION_NAME eq 'order')">class="active"</if>>
+            <a href="{:U('Union/order')}">订单统计</a>
+          </li>
+        </ul>
+      </small>
+      <span class="title-right-tip">
+        推广二维码，扫码关注就能赚钱哦！
+      </span>
+    </h3>
+    <div class="union_box J_union_box">
+      <div class="union-info">
+        <div class="info-hd">
+          订单关键指标
+          <div class="pull-right">每单返现 <span class="text-danger">{:C('UNION_ORDER_CASHBACK')}</span> 元</div>
+        </div>
+        <div class="info-bd row">
+          <div class="col-xs-9">
+            <div class="col-xs-3">
+              <p>本月订单总数</p>
+              <h4>{$data.this_month|default=0}</h4>
+            </div>
+            <div class="col-xs-3">
+              <p>上月订单总数</p>
+              <h4>{$data.last_month|default=0}</h4>
+            </div>
+            <div class="col-xs-3">
+              <p>总订单数</p>
+              <h4>{$data.total|default=0}</h4>
+            </div>
+            <div class="col-xs-3">
+              <p>总返现（元）</p>
+              <h4><a href="{:U('Member/finance/type/union_order')}" class="text-danger">{$data.order_cashback}</a></h4>
+            </div>
+          </div>
+          <div class="col-xs-3">
+            <p>我的二维码</p>
+            <a onclick="$.ui.load('{:U('Union/detail',array('qrcode_url'=>md5($data_union['qrcode_url'])))}','扫描二维码查看')" href="javascript:;">
+              <img src="__IMG__/qrcode-demo.png" width="24">
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="union-info-tip">
+        订单数趋势<span class="text-error">（时间段内共：{$data['sum']} 单）</span>
+        <form action="{:U()}" method="GET">
+          <input type="text" name="start_time" value="{:I('get.start_time')}" class="input" placeholder="起始日期">
+          <span class="pull-left">~</span>
+          <input type="text" name="end_time" value="{:I('get.end_time')}" class="input" placeholder="截止日期">
+          <input type="submit" value="确定" class="btn btn-positive pull-left btn-submit">
+        </form>
+      </div>
+      <div class="chart-body">
+        <div id="amount_canvas" style="height:400px"></div>
+      </div>
+    </div>
+  </div>
+</block>
+
+<block name="script">
+  <script src="__JS__/lib/My97Date/WdatePicker.js"></script>
+  <script>
+    seajs.use(['shop', 'union'], function(shop, union){
+      shop.statChart('amount_canvas', {labels: {:json_encode($data['labels'])}, datas: {:json_encode($data['datas'])}});
+      //时间选择
+      $('.union-info-tip .input').focus(function(){
+        WdatePicker({doubleCalendar: true, dateFmt: 'yyyy-MM-dd', maxDate: '%y-%M-%d'});
+      });
+    });
+  </script>
+</block>

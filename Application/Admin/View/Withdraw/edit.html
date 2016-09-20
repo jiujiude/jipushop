@@ -1,0 +1,82 @@
+<form action="{:U('update')}" method="POST" class="withdraw-update-form">
+  <div class="boxpage-div">
+    <div class="boxpage-line">
+      <label class="fl">账户类型：</label>
+      <div class="fl">
+        <eq name="data.type" value="alipay">
+        {$data.type|get_user_account_text}
+        <else />
+          {:C('BANK_LISTS.'.$data['bankname'])}
+        </eq>
+      </div>
+    </div>
+    <div class="boxpage-line">
+      <label class="fl">提现名称：</label>
+      <div class="fl">{$data.name}</div>
+    </div>
+    <div class="boxpage-line">
+      <label class="fl">提现账户：</label>
+      <div class="fl">{$data.account}</div>
+    </div>
+    <div class="boxpage-line">
+      <label class="fl">提现金额：</label>
+      <div class="fl">{$data.amount}</div>
+    </div>
+    <div class="boxpage-line">
+      <label class="fl">申请时间：</label>
+      <div class="fl">{$data.create_time|time_format}</div>
+    </div>
+    <div class="boxpage-line">
+      <label class="fl">当前状态：</label>
+      <div class="fl">{$data.status||get_withdraw_text}</div>
+    </div>
+    <div class="boxpage-line">
+      <label class="fl">新的状态：</label>
+      <div class="fl">
+        <select name="status">
+          <option value="">请选择状态</option>
+          <switch name="data.status">
+            <case value="100">
+              <option value="101">管理员拒绝</option>
+              <option value="200">已提交银行处理</option>
+              <option value="201">银行拒绝</option>
+              <option value="300">提现成功</option>
+            </case>
+            <case value="101">
+            </case>
+            <case value="200">
+              <option value="201">银行拒绝</option>
+              <option value="300">提现成功</option>
+            </case>
+            <default />
+              <volist name="status" id="vo">
+                <option value="{$key}">{$vo}</option>
+              </volist>
+          </switch>
+        </select>
+      </div>
+    </div>
+    <div class="boxpage-line hidden J_memo">
+      <label class="fl">拒绝原因：</label>
+      <div class="fl">
+        <input type="text" name="memo" class="text input-large" value="{$data.memo}">
+      </div>
+    </div>
+    <div class="boxpage-line hidden J_fee">
+      <label class="fl">手续费：</label>
+      <div class="fl">
+        <input type="text" name="fee" class="text input-large" value="{$data.fee}">
+      </div>
+    </div>
+    <div class="boxpage-line boxpage-menu">
+      <input type="hidden" value="{$data.id}" name="id"/>
+      <button class="btn ajax-post" data-target-form="withdraw-update-form">提交</button>
+    </div>
+  </div>
+</form>
+<script>
+  ajaxpost.init('.withdraw-update-form');
+  //Core.setValue('status', '{$data.status|default=""}');
+  withdraw.init();
+</script>
+

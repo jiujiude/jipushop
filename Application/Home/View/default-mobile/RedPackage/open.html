@@ -1,0 +1,45 @@
+<extend name="Base/common"/>
+
+<block name="header"></block>
+
+<block name="body">
+  <div class="redpackage-open">
+    <div class="bd">
+      <p class="avatar"><a href="/"><img src="__IMG__/logo-avatar.png"></a></p>
+      <h3>现金红包</h3>
+      <p class="info">{$data.info}</p>
+      <notempty name="data.self_record">
+        <p class="amount"><span>{$data.self_record.amount}</span>元</p>
+        <p class="amount-info">已存入现金账户，可用于 <a href="/" class="text-danger">商城</a> 购物</p>
+        <else/>
+        <p class="no-record">&nbsp;</p>
+      </notempty>
+    </div>
+    <div class="fd">
+      <if condition="$data['is_finished'] eq true">
+        <h6>共{$data.number}个红包，全部被抢完</h6>
+      <else/>
+        <h6>已领取{$data.send_number}/{$data.number}个，共{$data.send_amount}/{$data.amount}元</h6>
+      </if>
+      <ul id="Z_load_itemlist">
+        <include file="recordList" />
+      </ul>
+    </div>
+  </div>
+</block>
+<block name="footer">
+  <div class="bar bar-tab item-act">
+    <a href="{:U('/')}" class="btn btn-block btn-negative btn-tab"><i class="icon icon-cart"></i> 去购物</a>
+  </div>  
+</block>
+<block name="script">
+  <script type="text/javascript">
+    seajs.use(['wechat', 'common'], function(wechat, common){
+      //微信分享
+      wechat.init();
+      //加载更多
+      url = window.location.href;
+      common.loadmore(url);
+    });
+  </script>
+</block>

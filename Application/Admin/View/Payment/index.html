@@ -1,0 +1,88 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>收款单({$_total})</h2>
+  </div>
+
+  <!-- 按钮工具栏 -->
+  <div class="cf">
+    <div class="fl">
+      <!--<button class="btn ajax-post confirm" url="{:U('del')}" target-form="ids">删 除</button>-->
+      <button class="btn ajax-post confirm" target-form="ids" url="{:U('setStatus',array('status'=>-1))}">删 除</button>
+      <a class="btn" href="{:U('index')}">刷 新</a>（点击"刷新"按钮清除搜索条件，显示全部信息。）
+    </div>
+
+    <!-- 高级搜索 -->
+    <form action="{:U()}" method="GET" id="J_search_form">
+    <div class="search-form fr cf">
+      <div class="fl">
+        <select name="payment_type">
+          <option value="">付款方式</option>
+          <foreach name="payment_type" item="vo">
+            <option value="{$key}">{$vo}</option>
+          </foreach>
+        </select>
+      </div>
+      <div class="sleft">
+        <input type="text" name="keywords" class="search-input" value="{:I('keywords')}" placeholder="请输入支付编号或订单编号">
+        <a class="sch-btn" href="javascript:;" id="J_search"><i class="btn-search"></i></a>
+      </div>
+    </div>
+    </form>
+  </div>
+
+  <!-- 数据表格 -->
+  <div class="data-table table-striped">
+    <form class="ids">
+      <table>
+        <thead>
+          <tr>
+            <th class="row-selected">
+              <input class="checkbox check-all" type="checkbox">
+            </th>
+            <th>支付编号</th>
+            <th>付款方式</th>
+            <th>付款金额</th>
+            <th>付款用户</th>
+            <th>付款时间</th>
+            <th width="80">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        <notempty name="list">
+        <volist name="list" id="vo">
+          <tr>
+            <td><input class="ids row-selected" type="checkbox" name="ids[]" value="{$vo.id}"></td>
+            <td><a title="查看" href="{:U('view?id='.$vo['id'])}">{$vo.payment_sn}</a></td>
+            <!--td>{$vo['payment_type_text'] ? $vo['payment_type_text'] : '余额支付'}</td-->
+            <td>{$vo['is_use_finance']?'余额支付':($vo['payment_type_text']?$vo['payment_type_text']:'余额支付')}</td>
+            <td><span class="text-danger" style="display: inline-block;width: 60px;text-align: right;">{:sprintf('%.2f', $vo['payment_amount'] + $vo['finance_amount'])}</span> 元</td>
+            <td><a href="{:U('User/view', array('id' => $vo['uid']))}">{$vo.uid|get_nickname}</a></td>
+            <td>{$vo.create_time|time_format}</td>
+            <td>
+              <a title="查看" href="{:U('view?id='.$vo['id'])}">[查看]</a>
+              <a class="confirm ajax-get" title="删除" href="{:U('setStatus?status=-1&ids='.$vo['id'])}">[删除]</a>
+            </td>
+          </tr>
+        </volist>
+        <else/>
+        <tr><td colspan="10" class="text-center"> aOh! 暂时还没有内容! </td></tr>
+        </notempty>
+        </tbody>
+      </table>
+    </form>
+    <!-- 分页 -->
+    <div class="page">{$_page}</div>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    $(function(){
+      Core.setValue('payment_type', '{:I("payment_type")}');
+      //导航高亮
+      highlight_subnav("{:U('index')}");
+    });
+  </script>
+</block>

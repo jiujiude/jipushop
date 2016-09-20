@@ -1,0 +1,93 @@
+<extend name="Public/base" />
+
+<block name="body">
+  <div class="main-title cf">
+    <h2>修改广告</h2>
+  </div>
+  <!-- 标签页导航 -->
+  <div class="tab-wrap">
+    <div class="tab-content">
+      <form id="form" action="{:U('update')}" method="post" class="form-horizontal">
+        <div class="tab-pane in">
+          <div class="form-item cf">
+            <label class="item-label">广告位置</label>
+            <div class="controls">
+              <select name="tid" id="J_type_list">
+                <volist name="type_list" id="vo">
+                  <option value="{$vo.tid}" <eq name="vo.tid" value="$data.tid">selected="selected"</eq> data-info="{$vo.info}">{$vo.name}</option>
+                </volist>
+              </select>
+            </div>
+          </div>
+          <div class="form-item cf">
+            <label class="item-label">广告标题</label>
+            <div class="controls">
+              <input type="text" class="text input-large" name="title" value="{$data['title']}">
+            </div>
+          </div>
+          <div class="form-item cf">
+            <label class="item-label">广告图片
+              <span class="check-tips">（<span id="J_ad_size">{$size_conversion[$data['tid']]}</span>，手机版会自动压缩适配）</span>
+            </label>
+            <div class="controls">
+              {:hook('uploadImages', array('fileid' => 'upload_picture', 'name' => 'image', 'value' => array($data['image']), 'delPicUrl' => U('Advertise/delPic'), 'tpl' => 'one'))}
+            </div>
+          </div>
+          <div class="form-item cf">
+            <label class="item-label">链接地址</label>
+            <div class="controls">
+              <input type="text" class="text input-large" name="link" value="{$data['link']}" placeholder="http://">
+            </div>
+          </div>
+          <div class="form-item cf">
+            <label class="item-label">广告排序
+              <span class="check-tips">（数字越小越靠前）</span>
+            </label>
+            <div class="controls">
+              <input type="text" class="text input-small" name="sort" value="{$data['sort']}">
+            </div>
+          </div>
+          <div class="form-item cf">
+            <label class="item-label">状态</label>
+            <div class="controls">
+              <label for="status_1"><input type="radio" class="" id="status_1" name="status" value="1" <eq name="data.status" value="1">checked="checked"</eq> > 启用</label>
+              <label for="status_0"><input type="radio" class="" id="status_0" name="status" value="0" <eq name="data.status" value="0">checked="checked"</eq> > 禁用</label>
+            </div>
+          </div>
+          <div class="form-item cf">
+            <label class="item-label">备注</label>
+            <div class="controls">
+              <input type="text" class="text input-large" name="remark" value="{$data['remark']}">
+            </div>
+          </div>
+        </div>
+        <div class="form-item form-action cf">
+          <button class="btn submit-btn ajax-post" id="submit" type="submit" target-form="form-horizontal">提交</button>
+          <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+          <input type="hidden" name="id" value="{$data.id|default=''}">
+        </div>
+      </form>
+    </div>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //导航高亮
+    highlight_subnav('{:U("Advertise/index")}');
+
+    /*设置专场链接地址*/
+    $('#activity').change(function(){
+      var link = $(this).val();
+      if(link){
+        $('input[name=link]').val(link);
+      }
+    });
+
+    $('#J_type_list').change(function(){
+      var tid = $(this).val(),
+          info = $(this).find("option:selected").data('info');
+      $('#J_ad_size').html(info);
+    });
+  </script> 
+</block>

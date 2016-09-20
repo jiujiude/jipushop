@@ -1,0 +1,58 @@
+<extend name="Base/common"/>
+<block name="header">
+{:hook('mobileTopNav',array('title'=>$meta_title))}
+</block>
+
+<block name="body">
+ <style>.bar-tab{display: none;}</style>
+  <div class="receiver-list">
+    <volist name="lists" id="vo">
+      <div class="item" style="background:#fff;margin-top:10px;">
+        <div class="addr-body">
+          <h5 class="name">{$vo['name']}</h5>
+          <p><eq name="vo.is_default" value="1"><em class="text-danger">[默认]</em></eq>{$vo['area']}</p>
+          <p>{$vo['address']}</p>
+          <p>{$vo['mobile']}</p>
+          <p>{$vo['phone']}</p>
+        </div>
+        <a href="{:U('Receiver/edit', array('id' => $vo['id'], 'redirect' => 'member'))}" class="addr-act addr-edit"><i class="icon icon-edit editico"></i></a>
+        <a href="javascript:;" data-id="{$vo.id}" class="addr-act addr-remove Z_addr_remove"><i class="icon icon-remove removeico"></i></a>
+      </div>
+    </volist>
+  </div>
+  <php>
+    $payment = C('WECHATPAY');
+  </php>
+  <div class="content-padded">
+    <a href="{:U('Receiver/add')}" class="btn btn-block">&plus; 新增收货地址</a>
+  </div>
+  <if condition="is_weixin()">
+  <div class="content-padded">
+    <a href="javascript:;" class="btn btn-block btn-positive J_selfrom_wechat">从微信收货地址导入</a>
+  </div>
+  </if>
+</block>
+<block name="script">
+  <script>
+    seajs.use('address', function(address){
+      <if condition="is_weixin()">
+        var tap_fun = function(){
+          var url = '{:U("Member/receiver", array("selectAddress" => 1))}',
+              type = 0;
+          C.selectConfig = '{$wechatAddressConfig|default=""}';
+          if(url){
+            address.select(url, type);
+          }
+        };
+        //从微信选择按钮
+        $('.J_selfrom_wechat').tap(function(){
+          tap_fun();
+        });
+        <notempty name="code">
+          tap_fun();
+        </notempty>
+      </if>
+      address.addrRemove();
+    });
+  </script>
+</block>

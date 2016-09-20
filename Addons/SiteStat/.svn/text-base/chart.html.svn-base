@@ -1,0 +1,119 @@
+<style>
+  .index-stat {
+    margin-bottom: 20px;
+  }
+  .index-stat .item {
+    display: inline-block;
+    margin-right: 50px;
+    width: 180px;
+  }
+  .index-stat .item.item-lg {
+    width: 300px;
+  }
+  .index-stat .item .title {
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+  }
+</style>
+<script type="text/javascript" src="__JS__/chart/chart.js"></script>
+<div class="index-stat">
+  <ul>
+    <li class="item">
+      <canvas id="J_chart_item" width="200" height="200"></canvas>
+      <h4 class="title">商品</h4>
+    </li>
+    <li class="item item-lg">
+      <canvas id="J_chart_order" width="300" height="200"></canvas>
+      <h4 class="title">订单</h4>
+    </li>
+    <li class="item item-lg">
+      <canvas id="J_chart_user" width="300" height="200"></canvas>
+      <h4 class="title">用户</h4>
+    </li>
+  </ul>
+</div>
+
+<script type="text/javascript">
+	var dataItem = JSON.parse('{$info.item}');
+	var dataItem2 = [
+    {
+      value: 0,
+      color:'#27ae60',
+      highlight: '#3bbc6c',
+      label: '食品'
+    },
+    {
+      value: 0,
+      color: '#46BFBD',
+      highlight: '#5AD3D1',
+      label: '干果'
+    }
+  ];
+
+  var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+  var dataOrder = {
+    labels : ['1月','2月','3月','4月','5月','6月'],
+    datasets : [
+      {
+        fillColor : '#27ae60',
+        // strokeColor : 'rgba(39,174,96,1)',
+        highlightFill: '#3bbc6c',
+        // highlightStroke: 'rgba(39,174,96,0.85)',
+        data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+      },
+      {
+        fillColor : '#27ae60',
+        // strokeColor : 'rgba(39,174,96,1)',
+        highlightFill: '#3bbc6c',
+        // highlightStroke: 'rgba(39,174,96,0.85)',
+        data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+      },
+      {
+        fillColor : '#27ae60',
+        // strokeColor : 'rgba(39,174,96,1)',
+        highlightFill: '#3bbc6c',
+        // highlightStroke: 'rgba(39,174,96,0.85)',
+        data : ['23',randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+      }
+    ]
+  }
+
+  var dataUser = {
+    labels : ['1月','2月','3月','4月','5月','6月'],
+    datasets : [
+      {
+        fillColor : '#27ae60',
+        // strokeColor : 'rgba(39,174,96,1)',
+        highlightFill: '#3bbc6c',
+        // highlightStroke: 'rgba(39,174,96,0.85)',
+        data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+      }
+    ]
+  }
+
+  window.onload = function(){
+    var ctxItem = document.getElementById('J_chart_item').getContext('2d');
+    var ctxOrder = document.getElementById('J_chart_order').getContext('2d');
+    var ctxUser = document.getElementById('J_chart_user').getContext('2d');
+
+    // 商品
+    window.chartItem = new Chart(ctxItem).Pie(dataItem, {
+    	percentageInnerCutout: 1,
+      responsive : true,
+      animation : true,
+      animationSteps : 50,
+      animationEasing : 'linear',
+    });
+
+    // 订单
+    window.chartOrder = new Chart(ctxOrder).Bar(dataOrder, {
+      responsive : true
+    });
+
+    // 会员
+    window.chartUser = new Chart(ctxUser).Bar(dataUser, {
+      responsive : true
+    });
+  };
+</script>

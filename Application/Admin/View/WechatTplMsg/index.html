@@ -1,0 +1,66 @@
+<extend name="Public/base" />
+
+<block name="body">
+  <!-- 标题栏 -->
+  <div class="main-title">
+    <h2>微信模板消息列表</h2>
+  </div>
+    <!-- 数据列表 -->
+  <div class="data-table table-striped">
+    <table class="">
+      <thead>
+        <tr>
+          <th>分组</th>
+          <th>标题</th>
+          <th>调用标识</th>
+          <th>模板ID</th>
+          <th width="160">状态</th>
+          <th width="130">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <foreach name="tpl_msg" key="type" item="vo">
+          <volist name="vo" id="vv">
+            <tr class="status_trclass_{$vv.data.status|default=0}">
+              <td>{$type}</td>
+              <td><a href="{:U('edit', array('type' => $type, 'tpl_key' => $key))}">{$vv.title}</a></td>
+              <td>{$type}.{$key}</td>
+              <td>{$vv.data.tpl_id|default='-'}</td>
+              <td>
+              <if condition="$vv['data']['status'] eq 1">
+                <span class="text-success">正常</span>
+              <else/>
+                <span class="text-cancel">已禁用</span>
+              </if>
+              </td>
+              <td>
+              <notempty name="vv.data.id">
+                <if condition="$vv['data']['status'] eq 1">
+                  <a href="{:U('setStatus?status=0&ids='.$vv['data']['id'])}" class="ajax-get">[禁用]</a>
+                  <else/>
+                  <a href="{:U('setStatus?status=1&ids='.$vv['data']['id'])}" class="ajax-get">[启用]</a>
+                </if>
+                <else/>
+                  <a href="javascript:UI.error('请先在 [编辑] 中配置模板ID', 1.5);" class="text-cancel">[启用]</a>
+              </notempty>
+                
+                
+                <a href="{:U('edit', array('type' => $type, 'tpl_key' => $key))}">[编辑]</a>
+              </td>
+            </tr>
+          </volist>
+        </foreach>
+      </tbody>
+    </table>
+  </div>
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //导航高亮
+    highlight_subnav("{:U('User/index')}");
+  </script>
+</block>

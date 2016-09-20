@@ -1,0 +1,57 @@
+<extend name="Public/base" />
+
+<!-- 桌面商家新增和编辑页面 -->
+<block name="body">
+  <div class="main-title">
+    <h2>{$data['id']?'编辑':'新增'}立减优惠商品</h2>
+  </div>
+  <form action="{:U('update')}" enctype="application/x-www-form-urlencoded" method="POST" class="form-horizontal">
+    <div class="form-item">
+      <label for="auth-title" class="item-label">商品</label>
+      <div class="controls">
+        {:hook('itemSel', array('name' => 'item_id', 'items' => $data['item_id'], 'type' => 'radio', 'changed_fun' => 'item_changed'))}
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">原售价 <span class="check-tips">（原价格）</span></label>
+      <div class="controls">
+        <span class="J_item_price_text text-danger">...</span> 元
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">优惠金额 <span class="check-tips">（立减金额，不大于原售价）</span></label>
+      <div class="controls">
+        <input type="text" name="dis_price" class="text input-mini text-center" value="{$data.dis_price|default=0.01}" placeholder=""/> 元
+      </div>
+    </div>
+    <div class="form-item cf">
+      <label class="item-label">是否启用<span class="check-tips">（不启用则不会进行优惠）</span></label>
+      <div class="controls">
+        <label class="radio"><input type="radio" value="1" name="status">启用</label>
+        <label class="radio"><input type="radio" value="0" name="status">禁用</label>
+      </div>
+    </div>
+
+    <div class="form-item">
+      <input type="hidden" name="id" value="{$data.id}" />
+      <button type="submit" class="btn submit-btn ajax-post" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+  </form>
+<block>
+
+<block name="script">
+  <script type="text/javascript" charset="utf-8">
+    var item_changed = function(){
+      var item_id = $('input[name="item_id"]').val();
+      $.get('{:addons_url("ItemSel://ItemSel/getItemInfo")}', {item_id: item_id}, function(data){
+        $('.J_item_price_text').text(data.price);
+      }, 'json');
+    };
+    $(function(){
+      //导航高亮
+      highlight_subnav('{:U("index")}');
+      Core.setValue('status', '{$data.status|default="1"}');
+    });
+  </script>
+</block>

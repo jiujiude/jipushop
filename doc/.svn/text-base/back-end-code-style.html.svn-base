@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>后端开发中的编码风格约定</title>
+		<style>
+			/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+sup {
+   vertical-align: super;
+   font-size: smaller;
+}
+
+sub {
+  vertical-align: sub;
+  font-size: smaller;
+}
+
+/* Generic styles */
+body {
+	background: #f5f5f5;
+  color: #444;
+  font-family: 'Microsoft Yahei','Book Antiqua',Palatino,FreeSerif,serif;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6,
+code, pre,
+ul, ol,
+p,
+hr {
+  margin: 1.5em 0 0.5em 0;
+}
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.5em;
+}
+
+ul, ol,
+p,
+hr {
+	line-height: 2em;
+}
+
+code, pre {
+  line-height: 1.5em;
+}
+
+*:first-child {
+	margin-top: 0;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+	font-weight: bold;
+}
+
+h1 {
+	font-size: 3.5em;
+}
+
+h2 {
+	font-size: 2.5em;
+}
+
+h3 {
+	font-size: 2em;
+}
+
+h4 {
+	font-size: 1.5em
+}
+
+h5 {
+	font-size: 1.2em;
+}
+
+h6 {
+	font-size: 1em;
+}
+
+/* Lists */
+ul, ol {
+	padding-left: 2em;
+}
+
+ul {
+	list-style-type: disc;	
+}
+
+ol {
+	list-style-type: decimal;
+}
+
+/* Code and pre */
+code, pre {
+	font-family: "Bitstream Vera Sans Mono", "Courier", monospace;
+}
+code {
+	background: none repeat scroll 0 0 #F8F8FF;
+  border: 1px solid #DEDEDE;
+  border-radius: 3px 	;
+  padding: 0 0.2em;
+}
+pre {
+	border-left: 5px solid #eee;
+	margin-left: 2em;	
+	padding-left: 1em;
+}
+pre > code {
+	background: transparent;
+	border: none;
+	padding: 0;
+  word-wrap: break-word;
+}
+
+/* Links */
+a {
+  color: #e91e63;
+}
+
+a:visited {
+  color: #666;
+}
+
+/* Inlines */
+strong {
+	font-weight: bold;
+}
+
+em {
+	font-style: italic;
+}
+
+/* Container */
+.container {
+	background: #FFF;
+	padding: 30px 50px;
+	margin: 0 auto;
+	width: 700px;
+}
+
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h2 id="-">后端开发中的编码风格约定</h2>
+<h3 id="mvc-">MVC分层</h3>
+<p>为了保证更好的扩展性，减少后期维护重构工作，根据目前的业务需求，我们在MVC的基础上增加了Event层，主要用于实现Controller层的业务逻辑处理，数据格式化等工作。详细MVC分层说明如下：</p>
+<h5 id="1-controller">1.Controller</h5>
+<p>Controller主要用于负责外部交互响应，通过URL请求响应，主要完成：接收客户端数据、路由、模板数据绑定等功能。<br>避免在Controller中出现业务逻辑处理、数据存取等操作，相应的处理应交由Model和Event来负责。</p>
+<h5 id="2-model">2.Model</h5>
+<p>Model主要用于完成数据的：自动验证、自动完成和数据存取接口。</p>
+<h5 id="3-event">3.Event</h5>
+<p>Event主要负责内部的事件响应，完成：业务逻辑处理、数据存取等操作。Event并且只能在内部调用，不对客户端提供接口。</p>
+<h5 id="4-view">4.View</h5>
+<p>View层目前采用在HomeController中更改DEFAULT_THEME来切换模板。</p>
+<h3 id="-">变量获取</h3>
+<p>所有的客户端数据获取，统一使用I函数进行变量获取和过滤。具体参照：<a href="http://document.thinkphp.cn/manual_3_2.html#input_var">http://document.thinkphp.cn/manual_3_2.html#input_var</a><br>相应的方法过滤也采用TP框架推荐的：</p>
+<pre><code>I(&#39;get.name&#39;, &#39;&#39;, &#39;htmlspecialchars&#39;);
+I(&#39;post.name&#39;, &#39;&#39;, &#39;htmlspecialchars&#39;); //采用htmlspecialchars方法对$_POST[&#39;name&#39;] 进行过滤，如果不存在则返回空字符串
+I(&#39;session.user_id&#39;, 0); //获取$_SESSION[&#39;user_id&#39;] 如果不存在则默认为0
+I(&#39;cookie.&#39;); //获取整个 $_COOKIE 数组
+I(&#39;server.REQUEST_METHOD&#39;); //获取 $_SERVER[&#39;REQUEST_METHOD&#39;] 
+</code></pre><h3 id="ajax-">Ajax返回</h3>
+<p>Ajax返回采用TP框架自带的：ajaxReturn()方法，具体参照<a href="http://document.thinkphp.cn/manual_3_2.html#ajax_return">http://document.thinkphp.cn/manual_3_2.html#ajax_return</a>  </p>
+<pre><code>$this-&gt;ajaxReturn($data);
+</code></pre><p>ajaxReturn()的返回参数约定为以下形式：
+status：操作状态，一般为1 | 0，也可为y | n(jquery.validate中返回y | n) ，或其他约定的数字；
+info：提示信息；
+data：返回数据； 
+url：跳转地址或回调地址。</p>
+<h3 id="-">模板标签</h3>
+<h5 id="1-">1.模板标签写法</h5>
+<p>模板中的标签在可能的情况下，统一使用以下写法：</p>
+<pre><code>$data.username
+</code></pre><p>不推荐的写法：</p>
+<pre><code>$data[&#39;username&#39;]
+</code></pre><h5 id="2-">2.模板标签赋值命名约定</h5>
+<p>模板标签赋值时，列表数据赋值统一使用：$lists，详情页面统一使用：$data，多个变量时采用如：$lists_item，$data_profile这样的命名方式。</p>
+<h5 id="3-">3.模板标签赋值写法约定</h5>
+<p>$this-&gt;data = $data;  和  $this-&gt;assign(&#39;data&#39;, $data); 都是推荐的赋值写法，注意，$this-&gt;assign(&#39;data&#39;, $data);若为多个变量赋值时，请采用以下数组的写法：</p>
+<pre><code>$this-&gt;assign(array(
+  &#39;data&#39; =&gt; $data,
+  &#39;lists&#39; =&gt; $lists
+));
+</code></pre>
+		</div>
+
+		<script></script>
+	</body>
+</html>

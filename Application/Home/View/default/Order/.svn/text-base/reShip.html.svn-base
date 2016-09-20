@@ -1,0 +1,32 @@
+<div class="form-box form-horizontal clearfix" id="J_reshop_form">
+  <div class="alert">
+    请在保证不影响二次销售的情况下，将货物退回。不接受快递到付哦！
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label">快递公司名称：</label>
+    <div class="col-xs-6">
+      <input type="text" name="company_name" class="form-control" id="inputCompany" placeholder="请您输入快递公司名称">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 control-label">快递单号：</label>
+    <div class="col-xs-6">
+      <input type="text" name="ship_number" class="form-control" id="inputShip" placeholder="请您输入快递单号">
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-xs-3 "></label>
+    <div class="col-xs-6">
+      <a href="javascript:;" class="btn btn-positive J_order_reship_submit" data-id="{$order.id}">提交</a>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  seajs.use('order', function(order){
+    $("input[name='company_name']").focus();
+    $('.J_order_reship_submit').on('click', function(){
+      var id = $(this).data('id');
+      order.reShip(id);
+    });
+  });
+</script>

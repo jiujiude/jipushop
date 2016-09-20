@@ -1,0 +1,53 @@
+<extend name="Base/common"/>
+
+<block name="body">
+  <if condition="empty($data['name']) OR empty($data['logo'])">
+    <p class="alert alert-success">
+      <i class="icon icon-info"></i> 您的分销资质已通过审核，赶紧完善您的店铺信息吧！
+    </p>
+  </if>
+  <div class="shop">
+    <form action="__SELF__" method="POST" class="input-group manage">
+      <div class="input-row">
+        <label>店铺名称</label>
+        <input type="text" name="name" value="{$data.name}" placeholder="请您输入店铺名称">
+      </div>
+      <div class="input-row">
+        <label>店铺简介</label>
+        <input type="text" name="intro" value="{$data.intro}" placeholder="请您输入店铺简介">
+      </div>
+      <div class="input-row set-avatar">
+        <label>店铺头像</label>
+        <a href="javascript:;" class="btn-upload Z_upload_shopavatar">
+          <!-- 上传成功后，i标签替换为图片 -->
+          <notempty name="data.logo">
+            <img src="{:SITE_URL}{:get_image_thumb($data['logo'], 200, 200)}" alt="">
+          <else/>
+            <i class="icon icon-camera-add Z_upload_add"></i>
+          </notempty>
+        </a>
+        <span class="text-info tips">大小：200*200像素</span>
+      </div>
+      <div class="content-padded">
+        <input type="hidden" name="id" value="{$data.id}">
+        <input type="hidden" name="avatar_serverid" value="">
+        <button class="btn btn-block btn-positive">保存店铺信息</button>
+        <a href="{:U('Shop/detail', array('uid' => UID))}" class="btn btn-block">查看我的店铺</a>
+      </div>
+    </form>
+  </div>
+</block>
+<block name="script">
+  <script>
+    C.WECHAT_CONFIG = {:get_jsapi_config('chooseImage,uploadImage')};
+    seajs.use('wechat', function(wechat){
+      $('.Z_upload_shopavatar').on('tap', function(){
+        wechat.chooseImage(function(source_path, server_id){
+          $('.Z_upload_add').remove();
+          $('.Z_upload_shopavatar').html('<img src="'+ source_path +'" alt="">');
+          $('input[name="avatar_serverid"]').val(server_id);
+        });
+      });
+    });
+  </script>
+</block>

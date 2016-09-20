@@ -1,0 +1,30 @@
+<extend name="Base/common"/>
+
+<block name="body">
+  <div class="shop">
+    <div class="item-list clearfix" id="Z_load_itemlist">
+      <include file="itemList"/>
+    </div>
+  </div>
+</block>
+
+<block name="footer">
+  <div class="bar bar-tab item-act">
+    <span class="pull-left">
+      <a href="{:U('Shop/item', array('uid' => UID))}" class="btn btn-block btn-positive btn-tab" id="Z_quick_buy"><i class="icon icon-form"></i>查看已选商品</a>
+    </span>
+    <span class="pull-right">
+      <a href="{:U('Shop/detail', array('uid' => UID))}" class="btn btn-block btn-negative btn-tab"><i class="icon icon-shop"></i> 查看我的店铺</a>
+    </span>
+  </div>  
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use(['common', 'shop'], function(common, shop){
+      var url = window.location.href;
+      common.loadmore(url);
+      shop.selectItem();
+    });
+  </script>
+</block>

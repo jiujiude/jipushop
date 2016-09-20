@@ -1,0 +1,85 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题 -->
+  <div class="main-title">
+    <h2>短信记录({:count($lists)})</h2>
+  </div>
+  <div class="tab-wrap">
+    <ul class="tab-nav nav">
+      <li><a href="{:U('index')}">账号信息</a></li>
+      <li><a href="{:U('listsTpl')}">模板列表</a></li>
+      <li class="current"><a href="{:U('listsSend')}">短信记录</a></li>
+      <li class="fr">
+        <form action="{:U()}" method="GET" id="J_search_form">
+        <div class="search-form fr cf">
+           <div class="fl">
+            <select id="status" name="status">
+              <option value="-1">全部</option>
+              <option value="0">待验证</option>
+              <option value="1">已验证</option>
+            </select>
+          </div>
+          <div class="sleft">
+            <input type="text" name="keywords" class="search-input" value="{:I('get.keywords')}" placeholder="关键词">
+            <a class="sch-btn" href="javascript:;" id="J_search"><i class="btn-search"></i></a>
+          </div>
+        </div>
+        </form>
+      </li>
+    </ul>
+  </div>
+  <!-- 按钮工具栏 -->
+  <div class="data-table table-striped">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>手机号码</th>
+          <th>模板ID</th>
+          <th>短信内容</th>
+          <th>请求IP</th>
+          <th>请求时间</th>
+          <th>验证码</th>
+          <th>验证状态</th>
+          <th>验证时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <notempty name="lists">
+          <volist name="lists" id="vo">
+            <tr>
+              <td>{$vo.id}</td>
+              <td>{$vo.mobile}</td>
+              <td>{$vo.tpl_id}</td>
+              <td>{$vo.content}</td>
+              <td>{$vo.ip}</td>
+              <td>{$vo.create_time|time_format}</td>
+              <td>{$vo.code}</td>
+              <td>{$vo.validate_status_text}</td>
+              <td><notempty name="vo.validate_time">{$vo.validate_time|time_format}</notempty></td>
+            </tr>
+          </volist>
+          <else/>
+          <tr>
+            <td colspan="9" class="text-center">
+              aOh! 暂时还没有短信记录! 
+            </td>
+          </tr>
+        </notempty>
+        </tbody>
+    </table>
+  </div>
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    $(function(){
+      highlight_subnav(Core.U('/Admin/Sms/index'));
+      Core.setValue('status', '{:I("get.status")}');
+    });
+  </script>
+</block>

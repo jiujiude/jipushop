@@ -1,0 +1,79 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>用户详情</h2>
+  </div>
+  <form class="form-horizontal">
+    <notempty name="data.member.avatar">
+      <a href="{$data.member.avatar}" style="position: absolute;left: 580px;" target="_blank"><img src="{$data.member.avatar}" width="100" height="100" class="user-avatar"></a>
+    </notempty>
+    <div class="form-item">
+      <label class="item-label item-info">用户名：</label>
+      <div class="controls">{$data.user.username}</div>
+    </div>
+    <div class="form-item">
+      <label class="item-label item-info">昵称：</label>
+      <div class="controls"><notempty name="data.member.nickname">{$data.member.nickname}<else/><span class="text-cancel">暂无昵称</span></notempty></div>
+    </div>
+    <div class="form-item">
+      <label class="item-label item-info">手机：</label>
+      <div class="controls">
+        <notempty name="data.user.mobile">
+          {$data.user.mobile} 
+          
+          <if condition="$data['user']['mobile_bind_status'] eq 1"><span class="text-success"><strong>[已绑定]</strong></span></if> 
+          <a href="http://www.ip138.com:8080/search.asp?action=mobile&mobile={$data.user.mobile}" title="查看手机号码来源" target="_blank">[查看归属地]</a><else/><span class="text-cancel">暂无手机</span>
+        </notempty>
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label item-info">邮箱：</label>
+      <div class="controls"><notempty name="data.user.email">{$data.user.email}<else/><span class="text-cancel">暂无邮箱</span></notempty></div>
+    </div>
+    <div class="form-item">
+      <label class="item-label item-info">订单：</label>
+      <div class="controls"><notempty name="data.order">共{$data.order}个订单 <a href="{:U('Order/index', array('uid' => $data['user']['id']))}" title="查看订单">[查看订单]</a><else/><span class="text-cancel">暂无订单</span></notempty></div>
+    </div>
+    <div class="form-item">
+      <label class="item-label item-info">账户余额：</label>
+      <div class="controls">
+        <notempty name="data.member.finance">{$data.member.finance}<else/>0.00</notempty>元 
+        <a href="{:U('User/finance',array('uid'=>$data['user']['id']))}">[交易流水]</a> 
+        <a href="javascript:;" onclick="UI.load('{:U('User/rechangeAdd?uid='.$data['user']['id'])}');">[充/扣值]</a>
+      </div>
+    </div>
+    <!-- <div class="form-item">
+      <label class="item-label item-info">会员等级：</label>
+      <div class="controls">
+        {:get_group_name($data['user']['group_id']) ? get_group_name($data['user']['group_id']) : '暂无会员等级'}
+      </div>
+    </div>-->
+    <div class="form-item">
+      <label class="item-label item-info">积分：</label>
+      <div class="controls">
+        <notempty name="data.member.score">{$data.member.score}<else/>0</notempty>分
+        <a href="{:U('User/score',array('uid'=>$data['user']['id']))}">[积分记录]</a> 
+        <a href="javascript:;" onclick="UI.load('{:U('User/scoreAdd?uid='.$data['user']['id'])}');">[充/扣值]</a>
+      </div>
+    </div>
+    <div class="form-item">
+      <label class="item-label item-info">注册时间：</label>
+      <div class="controls">{$data.member.reg_time|time_format}</div>
+    </div>
+    <div class="form-item">
+      <label class="item-label item-info">上次登录时间：</label>
+      <div class="controls">{$data.member.last_login_time|time_format}</div>
+    </div>
+    <div class="form-item">
+      <a class="btn btn-return" href="{:cookie('__forward__')}">返 回</a>
+    </div>
+  </form>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    //导航高亮
+    highlight_subnav("{:U('User/index')}");
+  </script>
+</block>

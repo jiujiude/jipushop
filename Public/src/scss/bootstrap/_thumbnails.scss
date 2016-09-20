@@ -1,0 +1,74 @@
+//
+// Thumbnails
+// --------------------------------------------------
+
+
+// Mixin and adjust the regular image class
+.thumbnail {
+  display: block;
+  // padding: $thumbnail-padding;
+  margin-bottom: $grid-gutter-width;
+  line-height: $line-height-base;
+  background-color: $thumbnail-bg;
+  border: 1px solid $thumbnail-border;
+  // border-radius: $thumbnail-border-radius;
+  @include transition(border .2s ease-in-out);
+
+  > img,
+  a > img {
+    @include img-responsive;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  // &:hover,
+  // &:focus,
+  // &:active {
+  //   border-color: $thumbnail-border-state-color;
+  // }
+
+  // [converter] extracted a&:hover, a&:focus, a&.active to a.thumbnail:hover, a.thumbnail:focus, a.thumbnail.active
+
+  // Image captions
+  .caption {
+    padding: $thumbnail-caption-padding;
+    color: $thumbnail-caption-color;
+    
+    > .thumbnail-label {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    
+  }
+  
+  
+  
+  &.thumbnail-fav {
+    position: relative;
+    height: 330px;
+    
+    .thumbnail-menu {
+      position: absolute;
+      left: -1px;
+      bottom: -10px;
+      padding: 6px 2.5%;
+      width: 100%;
+      background-color: #f9f9f9;
+
+      > .btn {
+        padding: 6px;
+        width: 48%;
+        text-align: center;
+        font-size: 14px;
+      }
+    }
+    
+    &:hover {
+      border-color:#999;
+      .thumbnail-menu{
+        display: block;
+      }
+    }
+  }
+}

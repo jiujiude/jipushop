@@ -1,0 +1,112 @@
+<extend name="Public/base" />
+
+<block name="body">
+  <div class="main-title"><h2>编辑自定义菜单</h2></div>
+  <div class="form-fl">
+    <form id="form" action="{:U('update')}" method="post" class="form-horizontal">
+      <input type="hidden" value="{$mid}" name="mid">
+      <div class="form-item cf">
+        <label class="item-label">菜单名<span class="check-tips">（最多可创建 3 个一级菜单，每个一级菜单下最多可创建 5 个二级菜单）</span></label>
+        <div class="controls">
+          <input type="text" name="title" class="text input-mid" value="{$data.detail.title}">
+        </div>
+      </div>
+      <div class="form-item cf">
+        <label class="item-label">上级菜单<span class="check-tips">（如果是一级菜单，选择“无”即可）</span></label>
+        <div class="controls">
+          <select name="pid">
+            <option value="0">无</option>
+            <notempty name="data.menu">
+            <volist name=":parse_field_attr($data['menu'])" id="vo">
+              <option value="{$key}" <eq name="data.detail.pid" value="$key">selected</eq>>{$vo}</option>
+            </volist>
+            </notempty>
+          </select>
+        </div>
+      </div>
+      <div class="form-item cf">
+        <label class="item-label">按钮类型<span class="check-tips">（参考：<a href="http://dwz.cn/EtnQw" target="_blank">dwz.cn/EtnQw</a>）</span></label>
+        <div class="controls">
+          <select name="type" class="block select J_selecttype">
+            <option value="" selected="">选择类型</option>
+            <option value="view">跳转URL</option>
+            <option value="click">点击推图文</option>
+            <option value="text">点击回消息</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-item cf J_view hidden">
+        <label class="item-label">URL<span class="check-tips">（填写链接的URL）</span></label>
+        <div class="controls">
+          <input type="text" name="url" class="text input-xlarge" value="{$data.detail.url}">
+        </div>
+      </div>
+      <div class="form-item cf J_click hidden">
+        <label class="item-label">图文<span class="check-tips">（<a href="javascript:;" onclick="itm.managePage()">选择</a>）</span></label>
+        <div class="controls">
+          {:hook('imageTextMsg', array('name'=> 'event', 'event'=>$data['detail']['event']))}
+        </div>
+      </div>
+      <div class="form-item cf J_text hidden">
+        <label class="item-label">关联关键字<span class="check-tips"></span></label>
+        <div class="controls">
+          <input type="text" name="keyword" class="text input-xlarge" value="{$data.detail.keyword}">
+        </div>
+      </div>
+      <div class="form-item cf">
+        <label class="item-label">排序编号<span class="check-tips">（数字越小越靠前）</span></label>
+        <div class="controls">
+          <input type="text" name="sort" class="text input-small" value="{$data.detail.sort}">
+        </div>
+      </div>
+      <div class="form-item cf">
+        <button class="btn submit-btn ajax-post hidden" id="submit" type="submit" target-form="form-horizontal">确 定</button>
+        <a class="btn btn-return" href="{:U('WechatMenu/index')}">返 回</a>
+        <input type="hidden" name="id" value="{$data.detail.id|default=''}"/>
+      </div>
+    </form>
+  </div>
+
+  <div class="form-fr">
+    <div class="wechat">
+      <div class="tool-bar">{:session('default_wx_mpname')}</div>
+      <div class="side-bar J_menulist">
+        <ul>
+          <volist name="data.tree" id="vo">
+            <li class="item-{$data.num}">
+            <a href="{$vo.url}" target="_blank"><notempty name='vo.sub'><i class="icon-list"></i></notempty>{$vo.title}</a>
+              <notempty name='vo.sub'>
+                <div class="sub_button">
+                  <ul>
+                    <volist name="vo.sub" id="vl">
+                      <li><a href="{$vl.url}" target="_blank">{$vl.title}</a></li>
+                    </volist>
+                  </ul>
+                  <span class="arrow-bottom"></span>
+                </div>
+              </notempty>
+            </li>
+          </volist>
+        </ul>
+      </div>
+    </div>
+    <p class="preview">预览</p>
+  </div>
+</block>
+
+<block name="script">
+  <script src="__JS__/lib/wechat.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    $(function(){
+      var type = '{$data.detail.type}',
+          selector = '.J_' + type;
+      
+      wechat_menu.init();
+      Core.setValue('type', type);
+      $(selector).show();
+      
+       /*导航高亮*/
+      highlight_subnav('{:U("WechatMenu/index")}');
+    });
+  </script>
+</block>

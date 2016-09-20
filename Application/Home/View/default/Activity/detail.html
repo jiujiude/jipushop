@@ -1,0 +1,36 @@
+<extend name="Base/index"/>
+
+<block name="style">
+  <!-- 暂未判断引入的css -->
+  <link rel="stylesheet" href="__CSS__/activity/{$id}.css">
+   <link rel="stylesheet" href="__CSS__/marketing.css">
+</block>
+
+<block name="body">
+  <div class="activity" <neq name="data.backcolor" value="">style="background:{$data['backcolor']}"</neq>>
+    <notempty name="data.src">
+      <div class="banner">
+        <img src="__ROOT__{$data['src']}" alt="{$data['name']}">
+      </div>
+    </notempty>
+
+    <!-- 专题内容 -->
+    <notempty name="data.content">
+      <div class="content">{$data.content}</div>
+    </notempty>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <!-- 专题商品 -->
+          <notempty name="data.items_list">
+            <php>$lists = $data['items_list'];</php>
+            <div class="row item-list" id="J_load_items">
+            <include file="$theme"/>
+            </div>
+          </notempty>
+        </div>
+      </div>
+    </div>
+  </div>
+</block>

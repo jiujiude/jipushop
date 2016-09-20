@@ -1,0 +1,69 @@
+<extend name="Base/member"/>
+
+<block name="breadcrumb">
+  <ul class="breadcrumb">
+    <li><a href="{:U('/')}">首页</a></li>
+    <li class="active">我的邀请</li>
+  </ul>
+</block>
+
+<block name="body">
+  <div class="user-box user-invite">
+    <h3>我的邀请</h3>
+    <form class="form-inline">
+      <div class="form-group">
+        <label for="input_number">邀请链接：</label>
+        <input type="text" name="number" id="input_number" class="form-control J_path" value="{$invite_path}" readonly="true">
+      </div>
+      <button type="button" id="J_invite_copy" class="btn btn-positive">复制链接</button>
+    </form>
+    <p class="info">复制并分享你的<em class="text-danger">专属邀请链接</em>，邀请一位好友成功注册，既获现金<em class="text-danger">{:C('INVITE_REWARD_MONEY')}元</em>（每天限制{:C('INVITE_MAX_PEOPLE')}人）。</p>
+
+    <h3>邀请记录</h3>
+    <notempty name="lists">
+      <div class="row list-info">
+        <div class="col-xs-12">
+          <div class="hd clearfix">
+            <span class="col-xs-3">用户</span>
+            <span class="col-xs-3">注册时间</span>
+            <span class="col-xs-3">返现</span>
+            <span class="col-xs-3">备注</span>
+          </div>
+        </div>
+        <volist name="lists" id="vo">
+          <div class="col-xs-12">
+            <div class="bd clearfix">
+              <div class="col-xs-3">{$vo.reg_uid|get_nickname}</div>
+              <div class="col-xs-3">{$vo.create_time|time_format}</div>
+              <div class="col-xs-3"><strong class="text-danger">+{$vo.reward_amount}</strong></div>
+              <div class="col-xs-3">
+                <eq name="vo.reward_status" value="1">
+                  <span class="resta-y">奖励已到账</span>
+                <else/>
+                  <span class="resta-n"> 奖励未到账</span>
+                </eq>
+              </div>
+            </div>
+          </div>
+        </volist>
+      </div>
+    <else/>
+      <p class="list-empty">您暂时还没有邀请记录！</p>
+    </notempty>
+  </div>
+</block>
+<block name="script">
+  <script type="text/javascript">
+    seajs.use('jquery.zclip', function(zclip){
+      $('#J_invite_copy').zclip({
+        path: '__JS__/lib/zclip/ZeroClipboard.swf',
+        copy: function(){
+          return $('.J_path').val();
+        },
+        afterCopy: function(){ // 复制成功后的操作
+          $.ui.success('复制成功，马上发给好友！');
+        }
+      });
+    });
+  </script>
+</block>

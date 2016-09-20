@@ -1,0 +1,52 @@
+<extend name="Base/common"/>
+
+<block name="body">
+ <style>.bar-tab{display: none;}
+.province,.district,.city{background:#fff;}
+ </style>
+<div class="receiver-add">
+  <form action="{:U(update)}" method="post">
+    <div class="control-group" style="margin-top:10px;">
+      <input type="text" name="name" id="name" value="{$data.name}" placeholder="收货人姓名" maxlength="20">
+    </div>
+
+    <div class="control-group" style="margin-top:10px;" >
+      <input type="tel" name="mobile" id="mobile" value="{$data.mobile}" maxlength="11" placeholder="收货人手机号码">
+    </div>
+    <div class="control-group" id="Z_area_category" style="background: #fff;margin-top:10px;"></div>
+    <div class="control-group">
+      <input type="text" name="address" id="address" value="{$data.address}" placeholder="收货人详细地址" maxlength="100">
+    </div>
+    <div class="control-group" style="margin-top:10px;display:none">
+      <input type="tel" name="phone" id="phone" value="{$data.phone}" placeholder="电话">
+    </div>
+    <div class="control-group" style="margin-top:10px;display:none">
+      <input type="tel" name="zipcode" id="zipcode" class="last" value="{$data.zipcode}" maxlength="6" placeholder="邮编">
+    </div>
+    <div class="control-group checkbox">
+      <div class="pull-left toggle Z_is_default_ck" data-for="is_default">
+        <div class="toggle-handle"></div>
+      </div>
+      是否设为默认收货地址
+    </div>
+    <div class="control-action">
+      <input type="hidden" name="is_default" value="{$data.is_default}">
+      <input type="hidden" name="redirect" value="{$data.redirect}">
+      <input type="hidden" name="id" value="{$data.id}">
+      <button type="submit" class="btn btn-block btn-positive">保存</button>
+    </div>
+  </form>
+</div>
+</block>
+<block name="script">
+  <script>
+    seajs.use('receiver', function(receiver){
+      receiver.areaType({
+        obj: '#Z_area_category',
+        value1: '{$data.province}',
+        value2: '{$data.district}',
+        value3: '{$data.city}'
+      });
+    });
+  </script>
+</block>

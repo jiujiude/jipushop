@@ -1,0 +1,39 @@
+<extend name="Base/page"/>
+<block name="body">
+  <div class="row page-wrap">
+    <div class="login-form row clearfix">
+      <legend>
+        找回密码
+      </legend>
+      <form class="col-xs-offset-1 col-xs-10 form-horizontal" id="J_resetpwd" action="{:U('User/doResetpwd')}" method="post">
+        <fieldset>
+          <div class="form-group">
+            <label for="mobile" class="col-xs-3 control-label">新登录密码</label>
+            <div class="col-xs-7">
+              <input type="password" name="password" id="password" class="form-control" placeholder="请输入新密码" errormsg="密码为6-20位" nullmsg="请输入密码" datatype="*6-20" value="">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="mobile" class="col-xs-3 control-label">确认新密码</label>
+            <div class="col-xs-7">
+              <input type="password" name="repassword" id="repassword" class="form-control" placeholder="请输入新密码" recheck="password" errormsg="密码为6-20位" nullmsg="请输入密码" datatype="*6-20" value="">
+            </div>
+          </div>
+          <input type="hidden" name="rand_code" value="{$rand_code}">
+          <div class="form-group">
+            <div class="col-xs-4 col-xs-offset-3">
+              <button class="btn btn-block btn-positive">确定</button>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</block>
+<block name="script">
+  <script type="text/javascript">
+    seajs.use('jquery.validform', function(){
+      $('#J_resetpwd').Validform();
+    });
+  </script>
+</block>

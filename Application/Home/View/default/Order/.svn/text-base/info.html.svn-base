@@ -1,0 +1,22 @@
+<extend name="Base/common"/>
+<block name="body">
+<div class="payment-con">
+	<div class="pay-info">
+    <div class="title">
+      <h3>温馨提示</h3>
+    </div>
+    <div class="warp pay-msg">
+      <p class="subject">恭喜，订单支付成功！</p>
+      <p class="subject">我们将在24小时内为您发货。</p>
+      <br />
+      <p class="detail"></p>
+      <p class="action">
+        <a href="{:U('Member/order')}" class="btn btn-positive">查看我的订单</a>
+        <a href="{:U('Item/search')}" class="btn btn-default">继续购物</a>
+      </p>
+    </div>
+	</div>
+</div>
+</block>
+<block name="script">
+</block>

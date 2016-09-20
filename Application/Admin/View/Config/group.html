@@ -1,0 +1,98 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>系统设置</h2>
+  </div>
+  <div class="tab-wrap">
+    <ul class="tab-nav nav">
+      <volist name="Think.config.CONFIG_GROUP_LIST" id="group">
+        <li <eq name="id" value="$key">class="current"</eq>><a href="{:U('?id='.$key)}">{$group}配置</a></li>
+      </volist>
+    </ul>
+    <div class="tab-content">
+      <form action="{:U('save')}" method="post" class="form-horizontal">
+        <volist name="list" id="config">
+          <div class="form-item">
+            <label class="item-label">{$config.title}
+              <notempty name="config.remark"><span class="check-tips">（{$config.remark}）</span> </notempty>
+            </label>
+            <div class="controls">
+            <switch name="config.type">
+            <case value="0">
+            <input type="text" class="text input-small" name="config[{$config.name}]" value="{$config.value}">
+            </case>
+            <case value="1">
+            <input type="text" class="text input-large" name="config[{$config.name}]" value="{$config.value}">
+            </case>
+            <case value="2">
+            <label class="textarea input-large">
+              <textarea name="config[{$config.name}]">{$config.value}</textarea>
+            </label>
+            </case>
+            <case value="3">
+            <label class="textarea input-large">
+              <textarea name="config[{$config.name}]">{$config.value}</textarea>
+            </label>
+            </case>
+            <case value="4">
+            <select name="config[{$config.name}]">
+              <volist name=":parse_config_attr($config['extra'])" id="vo">
+                <option value="{$key}" <eq name="config.value" value="$key">selected</eq>>{$vo}</option>
+              </volist>
+            </select>
+            </case>
+            <case value="5">
+            {:hook('uploadImages', array('name' => "config[".$config['name']."]", 'value' => $config['value'] ,'tpl'=>'one'))}
+            </case>
+            <case value="6">
+            {:W('Editor/dateTime',array(array('time'=>$config['value'],'name'=>"config[".$config['name']."]")))}
+            </case>
+            <case value="7">
+            <textarea id="editor" name="config[{$config.name}]">{$config['value']}</textarea>
+            {:W('Editor/editor',array(array('id'=>'editor')))}
+            </case>
+            </switch>
+            </div>
+          </div>
+        </volist>
+        <!-- 微信公众号接口地址 -->
+        <eq name="Think.get.id" value="2">
+          <div class="form-item">
+            <label class="item-label">微信接口URL<span class="check-tips">（在微信公众平台开发模式下填写以下地址）</span> </label>
+            <div class="controls">
+              您的微信接口URL是：<span style="color:#f00" id="token_link">{:SITE_URL}/Wechat/index.html&amp;token={$token}</span>
+              <a href="javascript:;" class="copy">[复制地址]</a>
+            </div>
+          </div>
+        </eq>
+        <div class="form-item">
+          <label class="item-label"></label>
+          <div class="controls">
+            <empty name="list"><button type="submit" disabled class="btn submit-btn disabled" target-form="form-horizontal">确 定</button><else/><button type="submit" class="btn submit-btn ajax-post" target-form="form-horizontal">确 定</button></empty>
+            <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript" src="__JS__/jquery/zclip/jquery.zclip.min.js"></script>
+  <script type="text/javascript">
+    $('.copy').zclip({
+      path: '__JS__/jquery/zclip/ZeroClipboard.swf',
+      copy: function(){
+        return $('#token_link').text();
+      },
+      beforeCopy: function(){ // 按住鼠标时的操作
+        $(this).css('color', 'orange');
+      },
+      afterCopy: function(){ // 复制成功后的操作
+        UI.success('地址复制成功！');
+        $(this).css('color', 'orange');
+      }
+    }); 
+  </script>
+</block>

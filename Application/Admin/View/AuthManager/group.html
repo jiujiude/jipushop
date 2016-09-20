@@ -1,0 +1,47 @@
+<extend name="Public/base" />
+
+<block name="body">
+  <div class="main-title">
+    <h2>用户组授权</h2>
+  </div>
+  <div id="auth_groups">
+    <form class="form-horizontal" action="{:U('addToGroup')}" method="post" enctype="application/x-www-form-urlencoded" >
+      <label class="item-label">{$nickname} 所属的后台用户组列表</label>
+      <volist name="auth_groups" id="vo">
+        <label class="checkbox">
+          <input class="auth_groups" type="checkbox" name="group_id[]" value="{$vo.id}">
+          {$vo.title} </label>
+      </volist>
+      <input type="hidden" name="uid" value="{:I('uid')}">
+      <input type="hidden" name="batch" value="true">
+
+      <label class="item-label" style="display: none;">{$nickname} 所属的会员等级列表</label>
+      <select name="user_group_id" style="display: none;">
+        <option>请选择会员等级</option>
+        <volist name="lists_user_group" id="vo">
+          <option value="{$vo.id}" <if condition="$vo['id'] eq $user_group_id">selected="selected"</if>>{$vo.title}</option>
+        </volist>
+      </select>
+      
+      <div style="margin-top: 10px;">
+        <button type="submit" class="btn submit-btn ajax-post" target-form="form-horizontal">确 定</button>
+        <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+      </div>
+    </form>
+  </div>
+<block>
+
+<block name="script"> 
+  <script type="text/javascript">
+    $(function(){
+      var group = [{$user_groups}];
+      $('.auth_groups').each(function(){
+        if($.inArray(parseInt(this.value,10),group )>-1){
+          $(this).prop('checked',true);
+        }
+      });
+      // 导航高亮
+      highlight_subnav('{:U('User/index')}');
+    });
+  </script> 
+</block>

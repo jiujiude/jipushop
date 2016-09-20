@@ -1,0 +1,501 @@
+/**
+ * 用户模块
+ */
+.user-nav {
+  padding: 10px 0;
+
+  > .list {
+
+    li {
+      height: 40px;
+      line-height: 40px;
+      padding-left: 15px;
+
+      a {
+        display: inline-block;
+      }
+
+      &.active {
+        background-color: #f2f2f2;
+
+        a {
+          color: darken($brand-primary, 10%);
+        }
+      }
+    }
+  }
+}
+
+.user-box {
+  margin-left: -1px;
+  padding: 10px 30px 0 30px;
+  min-height: 600px;
+  border-left: 1px solid $border-color;
+
+  > form {
+    margin-top: 20px;
+  }
+  
+  > .nav-tabs {
+    margin-bottom: 15px;
+  }
+
+  > .page-header {
+
+    > h3 {
+
+      > small {
+
+        > .btn-link {
+          padding-right: 0;
+        }
+      }
+    }
+  }
+
+  .text-space {
+    line-height: 30px;
+
+    > span {
+      margin-right: 20px;
+    }
+  }
+
+  .list-info {
+    line-height: 50px;
+
+    .hd {
+      background-color: $border-color;
+      line-height: 40px;
+    }
+
+    .bd {
+      border-bottom: 1px solid $border-color;
+
+      &:hover {
+        background-color: #f9f9f9;
+      }
+
+      .disabled {
+        background-color: $background-color;
+        color: #ccc;
+      }
+
+      .text-success {
+        color: #1abc9c
+      }
+
+      .text-error {
+        color: #fe5955
+      }
+    }
+  }
+
+  .box-nav {
+    display: inline-block;
+
+    li {
+      float: left;
+      padding: 0 15px;
+
+      &.active {
+        a {
+          color: darken($brand-primary, 10%);
+          font-weight: 700;
+        }
+      }
+    }
+  }
+
+  .address-item {
+
+    .edit-btn {
+      display: inline-block;
+    }
+  }
+
+  /*user-index*/
+  > .user-info {
+    position: relative;
+    margin-top: 20px;
+    padding-left: 100px;
+    height: 100px;
+    border-bottom: 1px solid $border-color;
+
+    > .avatar {
+      position: absolute;
+      left: 0;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      overflow: hidden;
+
+      > img {
+        width: 80px;
+        height: 80px;
+        display: block;
+      }
+    }
+
+    > .detail {
+
+      > .name {
+        margin-top: 5px;
+        line-height: 24px;
+
+        small {
+          vertical-align: 2px;
+        }
+      }
+
+      > .info {
+        color: #bbb;
+      }
+
+      .space {
+        margin: 0 20px;
+        color: $border-color;
+        border-left: 1px solid $border-color;
+      }
+    }
+  }
+
+  /*user-order*/
+  .user-order {
+
+    > h3 {
+      border-bottom: 1px solid $border-color;
+      padding-bottom: 9px;
+
+      .btn-link {
+        padding: 0;
+        height: 24px;
+        line-height: 24px;
+        text-align: right;
+      }
+      
+      .order-recycle-link {
+        float: right;
+        font-size: 12px;
+        margin-top: 6px;
+        
+        &.active {
+          color: darken($brand-primary, 10%);
+          border-bottom: 1px dotted darken($brand-primary, 10%);
+          padding-bottom: 2px;
+        }
+      }
+    }
+
+    > .list {
+      margin-top: 20px;
+      
+      > .item {
+        border: 1px solid $border-color;
+        margin-bottom: 15px;
+        line-height: 60px;
+        overflow: hidden;
+        
+        .hd {
+          background-color: #f5f5f5;
+          padding: 0 5px;
+          line-height: 35px;
+          font-size: 12px;
+          
+          span.split {
+            width: 40px;
+            display: inline-block;
+          }
+          .order-time {
+            color: #999;
+            padding-right: 30px;
+          }
+        }
+
+        .bd {
+          padding: 10px 10px 5px;
+          
+          .item-more {
+            font-weight: bold;
+            color: #CCC;
+            letter-spacing: 1px;
+          }
+          
+          > div {
+            border-left: 1px solid #f2f2f2;
+            min-height: 62px;
+            
+            &:first-child {
+              border-left: none;
+            }
+
+            .pic {
+              margin-right: 4px;
+              margin-bottom: 5px;
+              display: inline-block;
+              border: 1px solid $border-color;
+              @include opacity(0.8);
+              
+              &:hover {
+                @include opacity(1);
+              }
+              
+              img {
+                height: 56px;
+                width: 56px;
+                padding: 1px;
+              }
+            }
+
+            .text-amount {
+              font-size: 16px;
+            }
+
+            .btn-cancel {
+              margin-left: 10px;
+            }
+            
+            .text-rows { 
+              line-height: 28px;
+              display: inline-block;
+              vertical-align: middle;
+              
+              .msg {
+                color: #777;
+                font-size: 12px;
+                display: block;
+              }
+              
+              .btn {
+                padding: 5px 12px;
+                font-size: 12px;
+              }
+            }
+          }
+        }
+        
+        &:hover {
+          border-color: darken($border-color, 10%);
+          box-shadow: 0 0 3px rgba(0, 0, 0, 0.05);
+
+        }
+      }
+    }
+  }
+}
+  
+    
+/*邀请模块*/
+.user-invite {
+
+  .form-group {
+    .form-control {
+      min-width: 378px;
+      padding: 4px 11px;
+    }
+  }
+
+  .info {
+    line-height: 40px;
+  }
+}
+
+/*手机绑定*/
+.user-bind {
+  .form-group {
+    .text-inline {
+      display: inline-block;
+      width: 50%;
+    }
+  }
+}
+
+/*用户模块*/
+.login-form {
+
+  .legend {
+    margin-bottom: 36px;
+
+    > small {
+      font-size: 18px;
+      color: #999;
+    }
+  }
+
+  form {
+    padding: 30px 0;
+  }
+
+  .randcode {
+    float: left;
+    width: 150px;
+  }
+
+  .btn-send-code {
+    float: left;
+    margin-left: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    min-width: 134px;
+
+    &.disabled {
+      margin-top: 3px;
+      padding-left: 9px;
+      padding-right: 9px;
+      font-size: 12px;
+    }
+  }
+
+  .verifyimg {
+    margin-right: 10px;
+    height: 42px;
+    border: 1px solid #e5e5e5;
+    cursor: pointer;
+  }
+}
+
+/*微信安全登录*/
+.wechat-login{
+  padding: 0 0 10px 40px;
+  width: 210px;
+  text-align: center;
+  border-left: 1px solid #f2f2f2;
+
+  .img{
+    margin: 10px 0;
+  }
+
+  .tiptext{
+    height: 24px;
+    line-height: 24px;
+    background: #ececec;
+    border-radius: 12px;
+    font-size: 12px;
+
+    span {
+      color: #e00;
+    }
+  }
+}
+
+/*第三方登录*/
+.login-third {
+  margin: 10px auto;
+  width: 440px;
+  height: 100px;
+
+  li {
+    float: left;
+    margin-right: 30px;
+    width: 74px;
+    text-align: center;
+
+    .icon {
+      display: inline-block;
+      padding: 20px;
+      width: 72px;
+      height: 72px;
+      border: 1px solid #e5e5e5;
+      border-radius: 50%;
+    }
+
+    &:hover {
+
+      .icon {
+        border-color: #ddd;
+        background-color: #e5e5e5;
+      }
+    }
+
+    i[class^='icon-'] {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      line-height: 1;
+      font-style: normal;
+      font-size: 32px;
+    }
+
+    .icon-qq {
+      color: #f33;
+    }
+
+    .icon-weibo {
+      color: #f33;
+    }
+  }
+}
+
+/*pay-info*/
+.pay-info {
+  margin: 20px 0;
+  padding: 20px;
+  border: 1px solid $border-color;
+  background: #fff;
+
+  .pay-msg {
+    padding: 20px 30px;
+    text-align: center;
+
+    .subject {
+      margin-top: 20px;
+      line-height: 30px;
+      font-size: 25px;
+    }
+  }
+}
+
+/*头像相关*/
+.avatar {
+  > .control-label {
+    padding-top: 23px;
+  }
+
+  .btn-upload {
+    display: inline-block;
+    width: 90px;
+    height: 90px;
+    line-height: 60px;
+    border: 2px dashed #eee;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    text-align: center;
+
+    &:active {
+      background-color: #eee;
+    }
+
+    > .icon-camera-add {
+      font-size: 42px;
+    }
+  }
+
+  .tips {
+    position: absolute;
+    top: 50%;
+    margin-top: -10px;
+    padding: 0 10px;
+    height: 20px;
+    line-height: 20px;
+  }
+}
+
+/*用户提现账户添加*/
+.user-account-edit {
+  
+  .nav-tabs > li {
+    &.active{
+      > a {
+        background: #f8f8f8;
+      }
+    }
+  }
+  
+  > .form-horizontal {
+    ba1ckground: #FFF;
+    padding-top: 15px;
+    bord1er: 1px solid #ddd;
+    border-top: 0;
+  }
+  
+}

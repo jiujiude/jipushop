@@ -1,0 +1,37 @@
+<notempty name="lists">
+<style>
+  .itemListsByCate{background:#F3F3F3;}
+  .itemListsByCate .item-title{height:60px; text-align:center; padding-top:30px; margin-top:0;}
+  .itemListsByCate .item-title .border{border-top:solid 1px #333; height:0px; display:block; margin:0px auto; height:1px; width:68%;}
+  .itemListsByCate .item-title .text{margin:-12px auto; display:block; background:#F3F3F3; width:100px; text-align:center; color:#333; font-weight:normal;}
+</style>
+  <div class="itemListsByCate">
+  <volist name="lists" id="vo">
+    <div class="item-title">
+      <span class="border"><a href="{:U('Item/search', array('cid' => $vo['id']))}"><span class="text">{$vo.name}</span></a></span>
+    </div>
+    <div class="item-list clearfix" id="Z_load_items">
+      <notempty name="vo.item_lists">
+        <volist name="vo.item_lists" id="vl" mod="5">
+          <div class="item <gt name="vl.is_top" value="0">item-top</gt> Z_item_list" data-href="{:U('Item/detail', array('id' => $vl['id']))}">
+            <div class="info-box">
+              <a href="{:U('Item/detail', array('id' => $vl['id']))}"><img src="__IMG__/img-pai-bg.png" data-url="{:get_image_thumb($vl['cover_path'], 300, 300)}" class="lazy" alt="{$vl.name}"></a>
+              <div class="info">
+                <a href="{:U('Item/detail', array('id' => $vl['id']))}" class="name">{$vl.name}</a>
+                <p class="price">
+                  <span class="text-danger"><em class="yen">&yen;</em>{$vl.price}</span>
+                  <a href="{:U('Item/detail', array('id' => $vl['id']))}" class="buy-btn"><span>立即购买</span></a>
+                  <!--del><em class="yen">&yen;</em>{$vl.mprice}</del-->
+                  <!--if condition="C('IS_SHOW_BUYNUM')"><em class="buynum">{$vl.buynum}人已购买</em></if-->
+                </p>
+              </div>
+            </div>
+          </div>
+        </volist>
+      </notempty>
+    </div>
+  </volist>
+  </div>
+<else/>
+  <p class="list-empty">暂无相关商品</p>
+</notempty>

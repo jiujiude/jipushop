@@ -1,0 +1,99 @@
+<extend name="Public/base" />
+
+<block name="body">
+	<!-- 标题栏 -->
+	<div class="main-title">
+		<h2>提现列表({$_total})</h2>
+	</div>
+	<div class="cf">
+    <div class="fl">
+      <a class="btn" href="{:U('index', array('type'=>'export', 'keywords'=>I('keywords'), 'status'=>I('status')))}">导 出</a>
+      <a class="btn" href="{:U('index')}">刷 新 <span style="font-size:12px;font-weight:normal">(清空搜索条件)</span></a>
+    </div>
+
+    <!-- 高级搜索 -->
+    <form id="J_search_form" action="{:U('index')}" method="GET">
+      <div class="search-form fr cf">
+        <div class="fl">
+          <select name="status">
+            <option value="">请选择状态</option>
+            <volist name="status" id="vo">
+              <option value="{$key}">{$vo}</option>
+            </volist>
+          </select>
+        </div>
+        <div class="sleft">
+          <input type="text" name="keywords" class="search-input" value="{:I('keywords')}" placeholder="请输入提现人名称或者账户">
+          <a class="sch-btn" href="javascript:;" id="J_search" url="{:U('index')}"><i class="btn-search"></i></a>
+        </div>
+      </div>
+    </form>
+  </div>
+
+	<!-- 数据列表 -->
+	<div class="data-table table-striped">
+		<table>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>提现用户</th>
+          <th>店铺名称</th>
+          <th>提现账户类型</th>
+					<th>提现人名字</th>
+					<th>提现金额</th>
+					<th>提现人账户</th>
+          <th>手续费</th>
+          <th>拒绝原因</th>
+          <th>申请时间</th>
+					<th>状态</th>
+          <th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<notempty name="lists">
+				<volist name="lists" id="vo">
+				<tr class="status_trclass_1">
+					<td>{$vo.id}</td>
+					<td><a href="{:U('User/view', array('id' => $vo['uid']))}"><if condition="get_nickname($vo['uid']) neq ''">{$vo.uid|get_nickname}<else/>{$vo.uid|get_username}</if></a></td>
+          <td><a href="{:U('Shop/index', array('uid' => $vo['uid']))}">{$vo.uid|get_shop_name}</a></td>
+          <td>
+            <eq name="vo.type" value="alipay">
+              {$vo.type|get_user_account_text}
+              <else />
+              {:C('BANK_LISTS.'.$vo['bankname'])}
+            </eq>
+          </td>
+					<td>{$vo.name}</td>
+          <td>{$vo.amount}</td>
+          <td>{$vo.account}</td>
+          <td>{$vo.fee}</td>
+          <td>{$vo.memo|default="无"}</td>
+					<td>{$vo.create_time|time_format}</td>
+					<td>{$vo.status|get_withdraw_text}</td>
+          <td>
+          <php>$status = array(100, 200);</php>
+          <if condition="in_array($vo['status'], $status)">
+            <a href="javascript:;" onclick="UI.load('{:U('edit?id='.$vo['id'])}', '处理提现')">[处理提现]</a>
+          </if>   
+          </td>
+				</tr>
+				</volist>
+				<else/>
+				<td colspan="6" class="text-center"> aOh! 暂时还没有内容! </td>
+				</notempty>
+			</tbody>
+		</table>
+	</div>
+	<!-- 分页 -->
+  <div class="page">
+      {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script>
+    Core.setValue('status', '{:I('status')}');
+    //导航高亮
+    highlight_subnav('{:U('index')}');
+  </script>
+</block>

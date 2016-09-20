@@ -1,0 +1,52 @@
+<extend name="Public/base" />
+
+<!-- 桌面商家新增和编辑页面 -->
+<block name="body">
+	<div class="main-title">
+		<h2>{$data['id']?'编辑':'新增'}满减活动</h2>
+	</div>
+
+  <form action="{:U('update')}" enctype="application/x-www-form-urlencoded" method="POST" class="form-horizontal">
+    <div class="form-item">
+      <label for="auth-title" class="item-label">满减活动名称</label>
+      <div class="controls">
+        <input id="auth-title" type="text" name="name" class="text input-large" value="{$data.name}"/>
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">活动时间（截止所选当日23时59分59秒）</label>
+      <div class="controls">
+        <input type="text" name="start_time" class="text input-small date_select" value="{:time_format($data['start_time'], 'Y-m-d')}" placeholder="开始时间"/>
+          至
+        <input type="text" name="expire_time" class="text input-small date_select" value="{:$data['expire_time'] ? time_format($data['expire_time'], 'Y-m-d') : null}" placeholder="结束时间"/>
+      </div>
+    </div>
+    <div class="form-item">
+      <label for="auth-title" class="item-label">活动规则</label>
+      <div class="controls">
+        满<input type="text" name="man" class="text input-small" value="{$data.man}" placeholder=""/>元
+        减
+        <input type="text" name="jian" class="text input-small" value="{$data.jian}" placeholder=""/>元
+      </div>
+    </div>
+    <div class="form-item">
+      <input type="hidden" name="id" value="{$data.id}" />
+      <button type="submit" class="btn submit-btn ajax-post" target-form="form-horizontal">确 定</button>
+      <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+    </div>
+  </form>
+<block>
+
+<block name="script">
+  <script language="javascript" type="text/javascript" src="__PUBLIC__/Admin/js/My97Date/WdatePicker.js"></script>
+  <script type="text/javascript" charset="utf-8">
+    $(function(){
+      //导航高亮
+      highlight_subnav('{:U('index')}');
+      //时间选择
+      $('.date_select').focus(function(){
+        WdatePicker({skin: 'twoer', dateFmt: 'yyyy-MM-dd'});
+      });
+    });
+  </script>
+</block>

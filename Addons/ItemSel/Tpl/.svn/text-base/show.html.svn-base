@@ -1,0 +1,89 @@
+<style>
+  .height-itm{height:auto;}
+  .items-box .itm-table{width:570px;}
+  .items-box .itm-table tbody tr{line-height:22px;border-bottom:1px solid #E9E9E9;}
+  .items-box .itm-table tbody tr.tr2 td{background: #F9F9F9;}
+  .items-box .itm-table tbody tr td{padding:5px;}
+  .title_img{height: 30px;}
+  .itm-search{padding:5px 5px 10px;}
+  .submit_h0{height: 31px; line-height: 20px;}
+  .text-short{width: 150px;}
+</style>
+  <form action="{:addons_url('ItemSel://ItemSel/index?tpl=show')}" id="J-itmsearch-form" method="get">
+    <div class="itm-search">
+      <span id="item_type_span"></span>
+      <input type="text" value="{:I('keywords')}" class="text text-short" name="keywords" placeholder="搜索关键词">
+      <input type="submit" value="查找" class="btn btn-mini btn-return J_itmsearch">
+      <input type="hidden" value="{:I('get.items')}" id="manage_items" name="items">
+    </div>
+  </form>
+  <div class="items-box height-itm">
+    <table id="J_itmtab" class="itm-table" data-pageurl="{$page_url}">
+      <thead class="items-tb-hd">
+        <tr>
+          <th class="col-title text-left">商品</th>
+          <th class="text-center" width="150">当前价(￥)</th>
+        </tr>
+      </thead>
+      <tbody>
+      <notempty name="page.list">
+        <volist name="page.list" key="k" id="vo" mod="2">
+          <tr <eq name="mod" value="1"> class="tr2"</eq> > 
+            <td class="title">
+              <notempty name='vo.cover_path_tiny'>
+                <img src="{$vo.cover_path_tiny}" class="title_img" />
+              </notempty>
+              <a href="{:U('/Item/detail', array('id'=>$vo['id']))}" target="_blank">{$vo.name}</a></td>
+            <td class="text-center">{$vo.price}</td>
+          </tr>
+        </volist>
+        <else/>
+        <tr>
+          <td colspan="3">
+            <p class="text-center"> 暂无商品! </p>
+          </td>
+        </tr>
+      </notempty>
+      </tbody>
+    </table>
+  </div>
+  <notempty name="page.list">
+    <div class="page J_ajax-page">
+      {$page.p}
+    </div>
+  </notempty>
+<script>
+  (function(){
+
+    //AJAX分页处理
+    $('.J_ajax-page a').click(function(){
+      UI.load($(this).attr('href'), '商品列表');
+      return false;
+    });
+    $.getScript(Core.PUBLIC + '/Admin/js/jquery/jquery.loadtype.js', function(){
+      //加载分类
+      $('#item_type_span').loadtype({
+        type: 'itemCategory', 
+        name1: 'cid_1',
+        name2: 'cid_2', 
+        name3: 'cid_3',
+        value1: "{:I('get.cid_1')}",
+        value2: "{:I('get.cid_2')}",
+        value3: "{:I('get.cid_3')}"
+      });
+    });
+
+    
+    //提交搜索
+    var search = function(){
+      var _form = $('#J-itmsearch-form');
+      var url = _form.attr('action');
+      val = _form.serialize();
+      url = url + (url.indexOf('?') > -1 ? '&' : '?') + val;
+      UI.load(url);
+      return false;
+    };
+    $('#J-itmsearch-form').submit(search);
+    
+  })();
+</script>

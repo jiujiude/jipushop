@@ -1,0 +1,16 @@
+<title><notempty name="meta_title">{$meta_title|get_short=12}<else/>{:C('WEB_SITE_TITLE')}</notempty></title>
+<meta charset="utf-8">
+<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=0" >
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta name="share-content" data-title="{$meta_share.title}" data-desc="{$meta_share.desc}" data-link="{$meta_share.link}" data-img_url="{$meta_share.img_url}">
+<meta property="qc:admins" content="15205077326011413056375" />
+<meta property="wb:webmaster" content="9668f61721702d43" />
+<meta property="formhash" content="{:create_form_hash()}" />
+<link href="__CSS__/style.min.css?{:time()}" rel="stylesheet">
+<!-- <link href="__CSS__/base.css" rel="stylesheet"> -->
+<block name="style"></block>
+<!-- 页面header钩子，一般用于加载插件CSS文件和代码 -->
+{:hook('pageHeader')}
+<include file="Public/var"/>

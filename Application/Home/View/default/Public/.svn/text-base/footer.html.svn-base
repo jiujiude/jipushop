@@ -1,0 +1,75 @@
+<block name="footer">
+  <!-- 底部 -->
+
+  <div class="footer">
+    <div class="container">
+      <ul class="support clearfix">
+        <think:nav name="nav" position="3" pid="0">
+          <li>
+            <a href="{$nav.url|get_nav_url}" target="<eq name='nav.target' value='1'>_blank<else/>_self</eq>">
+              <i class="icon icon-salable"><img src="{$nav.icon|get_cover='path'}"></i>
+              <h4>{$nav.title}</h4>
+            </a>
+            <p>{$nav.brief}</p>
+          </li>
+        </think:nav>
+      </ul>
+
+      <div class="info">
+        <think:nav name="nav" position="5" pid="0">
+          <gt name="key" value="0"><em>|</em></gt>
+          <a href="{$nav.url|get_nav_url}" target="<eq name='nav.target' value='1'>_blank<else/>_self</eq>"><span class="text">{$nav.title}</span></a>
+        </think:nav>
+      </div>
+
+      <div class="copyright">
+        <p>© &nbsp;{:C('WEB_SITE_TITLE')}&nbsp; {:C('COPYRIGHT')}&nbsp;&nbsp;<a target="_blank" href="http://www.miibeian.gov.cn/">{:C('WEB_SITE_ICP')}</a></p>
+      </div>
+    </div>
+
+    <div class="slde-menu">
+      <ul>
+        <if condition="UID gt 0">
+        <li>
+          <gt name="message_unread" value="0">
+          <span id="J_message_unread">{$message_unread}</span>
+          </gt>
+          <a href="{:U('Member/message')}" title="站内消息"><i class="icon icon-message"></i></a>
+        </li>
+        </if>
+        <li>
+          <notempty name="user_count.cart_count"><span id="J_footer_cart">{$user_count.cart_count}</span><else/><span id="J_footer_cart" style="display:none;">0</span></notempty>
+          <a href="{:U('Cart/index')}" title="我的购物车" target="_blank"><i class="icon icon-cart-fill"></i></a>
+        </li>
+        <li><a href="javascript:;" id="J_qq" title="售后客服"><i class="icon icon-qq"></i></a></li>
+        <li><a href="javascript:;" id="J_wechat" title="官方微信"><i class="icon icon-wechat"></i></a></li>
+        <li><a href="javascript:;" id="J_goto_top" title="返回顶部"><i class="icon icon-arrow-top"></i></a></li>
+      </ul>
+      <div class="slde-box J_qq_box">
+          <a class="icon icon-close J_icon_close" href="javascript:;" title="点击关闭"></a>
+          <h4>售前咨询</h4>
+          <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={:C('ASK_QQ')}&site=qq&menu=yes"><img border="0" class="img" src="http://wpa.qq.com/pa?p=2:3147377229:51" alt="点击咨询" title="点击咨询"></a>
+          <h4>售后服务</h4>
+          <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={:C('SERVE_QQ')}&site=qq&menu=yes"><img border="0" class="img" src="http://wpa.qq.com/pa?p=2:3147377229:51" alt="点击咨询" title="点击咨询"></a>
+      </div>
+      <div class="slde-box slde-box-wechat J_wechat_box">
+          <a class="icon icon-close J_icon_close" href="javascript:;" title="点击关闭"></a>
+          <img src="{:get_cover(C('WX_QRCODE'),'path')}" class="qrcode-img">
+      </div>
+    </div>
+  </div>
+</block>
+
+<block name="script">
+  <script>
+    seajs.use();
+  </script>
+</block>
+<!-- 网站统计代码 -->
+<div class="hidden">
+  <if condition="get_ip() neq '127.0.0.1'">
+  {:C('WEB_SITE_SATACODE')}
+  </if>
+</div>
+<!-- 页面footer钩子，一般用于加载插件JS文件和JS代码 -->
+{:hook('pageFooter', 'widget')}

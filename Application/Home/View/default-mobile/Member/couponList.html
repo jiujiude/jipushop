@@ -1,0 +1,23 @@
+<volist name="lists" id="vo">
+  <div class="item item-bg-1 <if condition="is_get_coupon(UID, $vo['coupon_id'])">has-get<else/>Z_get_coupon</if>" data-id="{$vo.coupon_id}">
+    <div class="bd">
+      <div class="name">{$vo.name}</div>
+      <div class="info">
+        <em class="yen">&yen;</em>
+        <strong>{$vo.amount}</strong>
+      </div>
+      <div class="time">
+        <p><eq name="vo.norm" value="0">单额不限<else/>订单满{$vo.norm}可使用</eq>（{$vo.expire_time|time_format} 前有效）</p>
+      </div>
+    </div>
+    <div class="fd Z_coupon_info">
+      <if condition="is_get_coupon(UID, $vo['coupon_id'])">
+        <em>已经领取</em>
+        <i class="icon icon-round-check-fill"></i>
+      <else/>
+        <em>立即领取</em>
+        <i class="icon icon-round-check"></i>
+      </if>
+    </div>
+  </div>
+</volist>

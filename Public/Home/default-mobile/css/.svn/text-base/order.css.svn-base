@@ -1,0 +1,6 @@
+@CHARSET "UTF-8";
+
+/*发票样式*/
+#m-invoice-nav .m-invoice-nav{ width:100%;}
+#m-invoice-nav ul{ width:100%; padding:20px 0 0 0;}
+#m-invoice-nav ul li {width:30%; justify-content:space-between; text-align:center; float: left;  position: relative;flex-direction:column;cursor: pointer;background: #fff; height:32px !important;}

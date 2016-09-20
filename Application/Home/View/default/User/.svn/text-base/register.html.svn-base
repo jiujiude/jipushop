@@ -1,0 +1,65 @@
+<extend name="Base/page" />
+
+<block name="body">
+  <div class="row page-wrap">
+    <div class="login-form">
+      <legend>
+        用户注册<small class="pull-right">已有账号 <a href="{:U('User/login')}" class="btn btn-sm btn-positive">立即登录</a></small>
+      </legend>
+      <form class="col-xs-8 form-horizontal" action="__SELF__" method="post">
+        <fieldset>
+          <div class="form-group">
+            <label for="inputUser" class="col-xs-3 control-label">手机号码</label>
+            <div class="col-xs-6">
+              <input type="text" name="username" id="inputUser" class="form-control J_mobile" maxlength="11" placeholder="手机号" ajaxurl="{:U('User/checkUsername')}" errormsg="您输入的手机号格式不正确" nullmsg="请输入手机号" datatype="m" value="">
+            </div>
+          </div>
+		  <div class="form-group">
+            <label for="verify" class="col-xs-3 control-label">图形验证</label>
+            <div class="col-xs-6">
+              <input type="text" name="verify" id="verify" class="form-control text-inline randcode J_mobile_randcode" placeholder="请输入验证码" maxlength="4" errormsg="请输入4位验证码" nullmsg="请输入验证码" datatype="*4-4">
+			  <img class="verifyimg J_reload_verify" title="点击更换" src="{:U('verify')}">
+              <!--<a href="javascript:;" class="J_reload_verify" style="padding-left:29px;">看不清？换一个。</a>-->
+            </div>
+          </div>
+          <if condition="C('REGISTER_MOBILE_VALID') eq 1">
+            <div class="form-group">
+              <label for="inputRandcode" class="col-xs-3 control-label">短信验证</label>
+              <div class="col-xs-9">
+                <input type="text" name="randcode" id="inputRandcode" class="form-control text-inline randcode J_mobile_randcode" placeholder="请输入短信验证码" maxlength="6" errormsg="短信验证码为6位数字" nullmsg="请输入短信验证码" datatype="*" value="">
+                <a class="btn btn-positive btn-send-code J_mobile_randcode_button">发送验证码</a>
+              </div>
+            </div>
+          </if>
+          <div class="form-group">
+            <label for="password" class="col-xs-3 control-label">输入密码</label>
+            <div class="col-xs-6">
+              <input type="password" name="password" id="password"  class="form-control" placeholder="请输入密码"  errormsg="密码为6-20位" nullmsg="请输入密码" datatype="*6-20">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="repassword" class="col-xs-3 control-label">确认密码</label>
+            <div class="col-xs-6">
+              <input type="password" name="repassword" id="repassword" class="form-control" placeholder="请再次输入密码" recheck="password" errormsg="您两次输入的密码不一致" nullmsg="请输入确认密码" datatype="*6-20">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <div class="col-xs-6 col-xs-offset-3">
+              <button class="btn btn-block btn-positive">注 册</button>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+
+    seajs.use('user', function(user){
+      user.getRandCode('register');
+    });
+  </script>
+</block>

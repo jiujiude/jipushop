@@ -1,0 +1,56 @@
+<extend name="Base/member"/>
+
+<block name="header">
+  <div class="container breadcrumbs">
+    <a href="/index.php">首页</a><span class="sep">/</span><span>修改密码</span>
+  </div>
+</block>
+
+<block name="body">
+  <div class="xm-line-box uc-box">
+    <div class="box-hd">
+      <h3 class="title">修改密码</h3>
+    </div>
+    <div class="box-bd">
+      <div class="form-field">
+        <div class="alert alert-danger J_mobileBind">
+          <p>互联网账号存在被盗风险，建议您定期更改密码以保护账户安全。</p>
+        </div>
+        <form action="__SELF__" class="J_changepwd" method="post">
+          <div class="control-group">
+            <label class="control-label" for="inputOld">当前密码：</label>
+            <div class="controls">
+              <i class="icon-pwd"></i>
+              <input name="old" type="password" id="inputOld"  class="fl form-text" placeholder="当前密码" errormsg="密码为6-20位" nullmsg="请输入当前密码" datatype="*6-20">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="inputPassword">新密码：</label>
+            <div class="controls">
+              <i class="icon-pwd"></i>
+              <input name="password" type="password" id="inputPassword"  class="fl form-text" placeholder="请输入新密码"  errormsg="密码为6-20位" nullmsg="请输入新密码" datatype="*6-20">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="inputRePassword">再次确认新密码：</label>
+            <div class="controls">
+              <i class="icon-pwd"></i>
+              <input name="repassword" type="password" id="inputRePassword" class="fl form-text" placeholder="请输入确认密码" recheck="password" errormsg="您两次输入的密码不一致" nullmsg="请输入确认密码" datatype="*">
+            </div>
+          </div>
+          <!-- <div class="control-group Validform_checktip text-warning"></div> -->
+          <div class="control-group">
+            <div class="controls">
+              <button type="submit" class="btn btn-large btn-positive">提 交</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</block>
+<block name="script">
+  <script type="text/javascript">
+    $('.J_changepwd').Validform();
+  </script>
+</block>

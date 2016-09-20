@@ -1,0 +1,80 @@
+//
+// Component animations
+// --------------------------------------------------
+
+// Heads up!
+//
+// We don't use the `.opacity()` mixin here since it causes a bug with text
+// fields in IE7-8. Source: https://github.com/twbs/bootstrap/pull/3552.
+
+@-webkit-keyframes scaleIn {
+  from { -webkit-transform: scale(1.2); opacity: 0; }
+  to { -webkit-transform: scale(1); opacity: 1 }
+}
+@keyframes scaleIn {
+  from { transform: scale(1.2); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+// Scale Out
+// Scale from (1) to (0.8) (1 in this case)
+// -------------------------------
+
+@-webkit-keyframes scaleOut {
+  from { -webkit-transform: scale(1); opacity: 1; }
+  to { -webkit-transform: scale(0.8); opacity: 0; }
+}
+@keyframes scaleOut {
+  from { transform: scale(1); opacity: 1; }
+  to { transform: scale(0.8); opacity: 0; }
+}
+
+@-webkit-keyframes fadeOutScale {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -100px, 0) scale3d(1.5, 1.5, 1.5);
+    transform: translate3d(0, -100px, 0) scale3d(1.5, 1.5, 1.5);
+  }
+}
+@keyframes fadeOutScale {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translate3d(0, -100px, 0) scale3d(1.5, 1.5, 1.5);
+    transform: translate3d(0, -100px, 0) scale3d(1.5, 1.5, 1.5);
+  }
+}
+
+.fade {
+  opacity: 0;
+  @include transition(opacity .25s linear);
+  &.in {
+    opacity: 1;
+  }
+}
+
+.collapse {
+  display: none;
+
+  &.in      { display: block; }
+  // [converter] extracted tr&.in to tr.collapse.in
+  // [converter] extracted tbody&.in to tbody.collapse.in
+}
+
+tr.collapse.in    { display: table-row; }
+
+tbody.collapse.in { display: table-row-group; }
+
+.collapsing {
+  position: relative;
+  height: 0;
+  overflow: hidden;
+  @include transition-property(height, visibility);
+  @include transition-duration(.35s);
+  @include transition-timing-function(ease);
+}

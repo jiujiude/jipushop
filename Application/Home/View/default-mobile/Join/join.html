@@ -1,0 +1,52 @@
+<extend name="Base/common"/>
+<block name="header"> {:hook('mobileTopNav',array('title'=>$meta_title))} </block>
+<block name="body">
+  <!-- 中间的内容部分 -->
+    <div class="purchase-list">
+        <div class="purchase-list-top">
+            <div class="p-list-left">
+
+            </div>
+            <div class="p-list-right">
+                <h3>测试数据，请勿购买绿色农家新鲜无公害水果2.500kg装</h3>
+                <p>单买：<span>￥1563.00 </span>　2人团</p>
+                <label>￥153.00</label><a href="javascript:;">参团</a>
+            </div>
+        </div>
+    </div>
+    <div class="count-down">
+        倒计时：<span>24：20：10</span>
+        <a href="javascript:;">差 <label>1</label> 人成团</a>
+    </div>
+    <div class="their-head-m">
+        <div class="m-head-l">
+            <img src="../../../../../Public/Home/default/images/shop_item_remove.png" />
+            <span>团长</span>
+        </div>
+        <div class="m-head-r">
+            <img src="../../../../../Public/Home/default/images/sheir-img.png" />
+            <a href="javascript:;">
+                小虫子  <span>湖北 武汉</span>
+                <label>2016-07-12  12:22:10开团</label>
+            </a>
+            <p> <label></label>我望穿秋水，等着你来~</p>
+        </div>
+    </div>
+</block>
+
+<!-- 底部tab -->
+<block name="footer">
+    <div class="bar bar-tab their-bottom">
+        <!--<span class="tab-text"> 应付总额：<strong class="text-danger" id="Z_total_price"><em class="yen">&yen;</em> {:sprintf('%.2f', $order_count['total_price'])}</strong> </span>
+        <span class="pull-right cart-checkout"> <a href="javascript:;" class="btn btn-negative btn-tab" id="Z_order_submit">提交订单</a> </span>-->
+        <span>更多拼团</span>
+        <span>参团<label>(还差1人组团成功)</label></span>
+    </div>
+</block>
+<block name="script">
+  <script>
+    seajs.use(['join'], function(join){
+    	
+    });
+  </script> 
+</block>

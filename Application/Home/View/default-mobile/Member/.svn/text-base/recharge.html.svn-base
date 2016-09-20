@@ -1,0 +1,54 @@
+<extend name="Base/common" />
+
+<block name="body">
+<section class="user-form">
+  <form action="{:U('Recharge/index')}" method="post">
+    <div class="control-group">
+      账户余额：<span class="text-danger">&yen;<em class="money">{$member['finance']}</em></span>元
+    </div>
+    <div class="control-group">
+      <div class="form-title">请输入充值金额：</div>
+      <input name="amount" type="text" id="inputAmount" class="form-text" placeholder="请输入充值金额" nullmsg="请输入充值金额"  required="required" />
+    </div>
+    <div class="control-group">
+      <div class="form-title">请选择充值方式：</div>
+      <ul class="recharge J_recharge">
+        <if condition="is_weixin()">
+          <li class="selected">
+          <label for="wechatpay">
+            <input id="wechatpay" type="radio" name="payment_type" value="wechatpay" hidefocus="" checked="checked" />
+            <i class="icon wechatpay"></i>
+          </label>
+          </li>
+          <li>
+          <label for="alipaywap">
+            <input id="alipaywap" type="radio" name="payment_type" value="alipaywap" hidefocus="" />
+            <i class="icon alipaywap"></i>
+          </label>
+          </li>
+        <else/>
+          <li class="selected">
+          <label for="alipaywap">
+            <input id="alipaywap" type="radio" name="payment_type" value="alipaywap" hidefocus="" checked="checked" />
+            <i class="icon alipaywap"></i>
+          </label>
+          </li>
+        </if>
+      </ul>
+    </div>
+    
+    <div class="control-action">
+      <button type="submit" class="btn btn-block btn-negative">充 值</button>
+    </div>
+  </form>
+</section>
+</block>
+<block name="script">
+  <script type="text/javascript"> 
+    // 初始化充值方式
+    $('.J_recharge > li').on('tap', function(){
+      $(this).addClass('selected').children('input').prop('checked', !0);
+      $(this).siblings().removeClass('selected');
+    });
+  </script>
+</block>

@@ -1,0 +1,62 @@
+<input type="hidden" value="{$param.event}" name="{$param.name}"/>
+<style>
+  .itm_showlist{width: 360px;margin:5px;border-radius: 1px;overflow:hidden;padding:0 1px;background:#FFFFFF;box-shadow:0px 0px 4px rgba(0, 0, 0, 0.2);}
+  .itm_showlist p{color: #AAA;}
+  .itm_showlist li{padding:7px 5px; border-bottom:1px solid #EEEEEE;overflow: hidden;position:relative;}
+  .itm_showlist li:hover{background: #F9F9F9;border-bottom: 1px dotted #CCCCCC;}
+  .itm_showlist li.sortable-dragging{height:30px;background:#FFFAAC;}
+  .itm_showlist li div.li_title{float:left;width:275px;}
+  .itm_showlist li div.li_img{float:right;width:45px;} 
+  .itm_showlist li div.li_img img{width:45px;height:45px;}   
+  .itm_showlist li a.icon-close{z-index:100;padding:0 2px;position: absolute;background:#F2F2F2; color: #666;right: 10px;opacity:0.8; top: 2px;font-size:12px;text-decoration: none;display: none;}
+  .itm_showlist li:hover a.icon-close{display: block;}
+  .itm_showlist li:hover a.icon-close:hover{background: #DFDFDF;}
+  .itm_showlist li:first-child{height:100px;margin:6px 6px 0;}
+  .itm_showlist li:first-child a.icon-close{right:2px;}
+  .itm_showlist li:first-child div.li_title{float:none; z-index:2;position:absolute; color:#FFFFFF;background:#000000;width:100%;left:0;bottom:0; opacity:0.6;padding:4px;}
+  .itm_showlist li:first-child div.li_img{float:none; position:absolute; height:100px;width:100%;top:0;left:0;z-index:1;}
+  .itm_showlist li:first-child div.li_img img{width:420px;height:120px;}  
+  .itm_showlist li:last-child{border-bottom: 0;}
+</style>
+<ul class="itm_showlist J_itm_showlist">
+  <p class="empty">Loading...</p>
+</ul>
+<script src="__JS__/jquery/jquery.dragsort-0.5.1.min.js"></script>
+<script>
+  var itm = {
+    managePage: function(param){
+      url = '{$param.manage_page}';
+      url = url + (url.indexOf('?') > -1 ? '&' : '?') + param;
+      UI.load(url, '内容选择');
+    },
+    detailPage: function(){
+      var drag_end = function(){
+        var val_data = [];
+        vs = $('.J_itm_showlist .li_title').each(function(){
+          val_data.push($(this).data('value'));
+        });
+        $.post('{$param.saveorder_page}',{order_data:val_data},function(json){
+          if(json.status === 1){
+            console.log('排序保存成功！');
+          }
+        },'json');
+      };
+      $.get('{$param.detail_page}', function(data){
+        show_box = $('.J_itm_showlist');
+        show_box.html(data);
+        show_box.dragsort('destroy');
+        show_box.dragsort({dragEnd:drag_end});
+      });
+    },
+    removeItm: function(v){
+      var _self = this;
+      url = "{:addons_url('ImageTextMsg://ImageTextMsg/sel', array('event' => $param['event']))}";
+      $.post(url, {val: v,checked: false}, function(json){
+        if(json.status === 1){
+          _self.detailPage();
+        }
+      }, 'json');
+    }
+  };
+  itm.detailPage();
+</script>

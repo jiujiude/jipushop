@@ -1,0 +1,106 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <div class="main-title">
+    <h2>发货单({$_total})</h2>
+  </div>
+  
+  <!-- 按钮工具栏 -->
+  <div class="cf">
+    <div class="fl">
+      <button class="btn ajax-post confirm" target-form="ids" url="{:U('setStatus',array('status'=>-1))}">删 除</button>
+      <a class="btn" href="{:U('index')}">刷 新</a>（点击"刷新"按钮清除搜索条件，显示全部信息。）
+    </div>
+    
+    <!-- 高级搜索 -->
+    <div class="search-form fr cf">
+      <div class="sleft">
+        <input type="text" name="keywords" class="search-input w-260" value="{:I('keywords')}" placeholder="请输入订单编号或物流单号">
+        <a class="sch-btn" href="javascript:;" id="search" url="{:U()}"><i class="btn-search"></i></a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 数据表格 -->
+  <div class="data-table table-striped">
+    <form class="ids">
+      <table>
+        <thead>
+          <tr>
+            <th class="row-selected"> <input class="checkbox check-all" type="checkbox"></th>
+            <th>订单编号</th>
+            <th>快递公司</th>
+            <th>快递单号</th>
+            <!--<th>收 货 人</th>-->
+            <th>发货时间</th>
+            <th width="80">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <notempty name="lists">
+            <volist name="lists" id="vo">
+              <tr>
+                <td><input class="ids row-selected" type="checkbox" name="ids[]" value="{$vo.id}"></td>
+                <td><a title="查看" href="{:U('Order/view?id='.$vo['order_id'])}">{$vo.order_id}</a></td>
+                <td>{$vo.delivery_name}</td>
+                <td>{$vo.delivery_sn} <a href="https://www.baidu.com/s?wd={$vo.delivery_name}%20{$vo.delivery_sn}" target="_blank">[追踪]</a></td>
+                <!--<td>{$vo.ship_name}</td>-->
+                <td>{$vo.create_time|time_format}</td>
+                <td>
+                  <a title="查看" href="{:U('view?id='.$vo['id'])}">[查看]</a> 
+                  <a class="confirm ajax-get" title="删除" href="{:U('setStatus?status=-1&ids='.$vo['id'])}">[删除]</a>
+                </td>
+              </tr>
+            </volist>
+          <else/>
+              <tr><td colspan="7" class="text-center"> aOh! 暂时还没有内容! </td></tr>
+          </notempty>
+        </tbody>
+      </table>
+    </form>
+    <!-- 分页 -->
+    <div class="page">{$_page}</div>
+  </div>
+</block>
+
+<block name="script"> 
+  <script type="text/javascript">
+    $(function(){
+      //搜索功能
+      $("#search").click(function(){
+        var url = $(this).attr('url');
+        var query  = $('.search-form').find('input').serialize();
+
+        var delivery_corp = $("#delivery_corp").val();
+
+        query = query.replace(/(&|^)(\w*?\d*?\-*?_*?)*?=?((?=&)|(?=$))/g,'');
+        query = query.replace(/^&/g,'');
+
+        if(delivery_corp != ''){
+          query += '&delivery_corp=' + delivery_corp;
+        }
+
+        if(url.indexOf('?')>0){
+          url += '&' + query;
+        }else{
+          url += '?' + query;
+        }
+
+        window.location.href = url;
+      });
+
+      //回车自动提交
+      $('.search-form').find('input').keyup(function(event){
+        if(event.keyCode===13){
+          $("#search").click();
+        }
+      });
+
+      //设置单选，复选，下拉菜单的值
+      Core.setValue('delivery_corp', '{$delivery_corp|default = ""}');
+
+      //导航高亮
+      highlight_subnav("{:U('index')}");
+    });
+  </script> 
+</block>

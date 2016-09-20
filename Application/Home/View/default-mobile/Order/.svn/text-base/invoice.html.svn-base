@@ -1,0 +1,108 @@
+<form action="{:U('Invoice/save')}" method="POST" >
+<div id="invoice" class="modal modal-spec">
+  <header class="bar bar-nav"> <a class="icon icon-close pull-right" href="#invoice"></a>
+      <h1 class="title">发票信息</h1>
+    </header>
+  <div class="content content-padded" id="m-invoice-main">
+        <div class="spec-box text " id="m-invoice-nav">
+              <dl class="sku-box Z_sku_box">
+                <dd>
+                    <ul class="Z_spec_item text ">
+                    <volist name="invoiceType" id="vo">
+                      <li data-key="{$key}" title="10kg" class="choose Z_sale_porp <eq name='key' value='1'> select </eq> "> 
+                      <a href="javascript:;"> {$vo} <span class="triangle"></span></a>
+                      <span class="option">{$vo}</span>
+                      </li>
+                     </volist>
+                     </ul>
+                     <input type="hidden" name="type" value="1" />
+                  </dd> 
+                   </dl>
+            </div>
+
+        <div id="m-invoice-box"> 
+          <!---普通发票--->
+          <div class="form" style="display: block;">
+            <div class="control-group">
+              <input type="text" name="normal_title" value="" placeholder="发票抬头" maxlength="100">
+            </div>
+            <div class="control-group" id="Z_area_category">
+              <select name="normal_content" >
+                <option value="0">发票内容</option>
+                <volist name="invoiceContent" id="vo">
+                  <option value="{$key}">{$vo}</option>
+                </volist>
+              </select>
+            </div>
+            <div class="control-action">
+      <button type="button" class="btn btn-submit btn-positive btn-block">保 存</button>
+           </div>
+           <div class="control-action">
+      温馨提示：发票的开票金额不包含优惠券、积分支付及余额支付部分。
+           </div>
+          </div>
+          <!---电子发票--->
+           <div class="form" style="display: none;">
+            <div class="text-warning">
+     电子发票是税局认可的有效凭证，其法律效力、基本用途及使用规定同纸质发票，如需纸质票可自行下载打印。如您本次购买的商品暂未实现电子发票开具，我们将自动更换为普通发票（纸质）同商品一并送达，请您注意查收。
+           </div>
+            <div class="control-group">
+              <input type="text" name="ele_title" value="" placeholder="发票抬头" maxlength="100">
+            </div>
+            <div class="control-group" id="Z_area_category">
+              <select name="ele_content" >
+                <option value="0">发票内容</option>
+                <volist name="invoiceContent" id="vo">
+                  <option value="{$key}">{$vo}</option>
+                </volist>
+              </select>
+            </div>
+            <div class="control-action">
+      <button type="button" class="btn btn-submit btn-positive btn-block">保 存</button>
+           </div>
+           <div class="control-action">
+      温馨提示：发票的开票金额不包含优惠券、积分支付及余额支付部分。
+           </div>
+          </div>
+          <!---增值税发票--->
+          <div class="form" style="display: none;" >
+            <div class="text-warning">
+     我公司依法开具发票，如您购买的商品按税法规定属于不得从增值税销项税额中抵扣的项目（例如集体福利或个人消费等），请您选择普通发票。
+           </div>
+            <div class="control-group">
+              <input type="text" name="unit"   value="" placeholder="单位名称" maxlength="100">
+            </div>
+            <div class="control-group">
+              <input type="text" name="code"   value="" placeholder="纳税人识别码" maxlength="100">
+            </div>
+            <div class="control-group">
+              <input type="text" name="address"   value="" placeholder="注册地址" maxlength="100">
+            </div>
+            <div class="control-group">
+              <input type="text" name="tel"   value="" placeholder="注册电话" maxlength="100">
+            </div>
+            <div class="control-group">
+              <input type="text" name="bank"   value="" placeholder="开户银行" maxlength="100">
+            </div>
+             <div class="control-group">
+              <input type="text" name="account"   value="" placeholder="银行账户" maxlength="100">
+            </div>
+            <div class="control-group" id="Z_area_category">
+              <select name="inc_content" >
+                <option value="0">发票内容</option>
+                <volist name="invoiceContent" id="vo">
+                  <option value="{$key}">{$vo}</option>
+                </volist>
+              </select>
+            </div>
+            <div class="control-action">
+      <button type="button" class="btn btn-submit btn-positive btn-block">保 存</button>
+           </div>
+           <div class="control-action">
+      温馨提示：发票的开票金额不包含优惠券、积分支付及余额支付部分。
+           </div>
+        </div>
+      </div>
+  </div>
+  </div>
+  </form>

@@ -1,0 +1,27 @@
+<extend name="Base/common"/>
+<block name="header">
+{:hook('mobileTopNav',array('title'=>$meta_title))}
+</block>
+
+<block name="body">
+  <div class="content-padded">
+    <notempty name="lists">
+      <div class="coupon-list" id="Z_load_itemlist">
+        <include file="couponList"/>
+      </div>
+    <else />
+      <p class="list-empty">暂无优惠券！</p>
+    </notempty>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    (function(){
+      <eq name="_hasmore" value="1">
+        var url = window.location.href;
+        core.loadmore(url);
+      </eq>
+    })();
+  </script>
+</block>

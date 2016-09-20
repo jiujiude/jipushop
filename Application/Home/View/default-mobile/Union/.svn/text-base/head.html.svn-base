@@ -1,0 +1,15 @@
+<div class="sdp">
+  <div class="head bg-1">
+    <div class="text-center hd">
+      <p>总返现(元)</p>
+      <h2><a href="{:U('Member/finance/type/union')}">{$data.union_cashback|default=0}</a></h2>
+    </div>
+  </div>
+</div>
+
+<if condition="$data_union['type'] eq 1">
+  <div class="nav-tabs-wb">
+    <a <if condition="(CONTROLLER_NAME eq 'Member') And (ACTION_NAME eq 'union')">class="active"</if> href="{:U('Member/union')}">关注数</a>
+    <a <if condition="(CONTROLLER_NAME eq 'Union') And (ACTION_NAME eq 'order')">class="active"</if> href="{:U('Union/order')}">订单数</a>
+  </div>
+</if>

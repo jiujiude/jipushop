@@ -1,0 +1,94 @@
+<extend name="Public/base"/>
+
+<block name="body">
+  <!-- 标题栏 -->
+  <div class="main-title">
+    <h2>广告管理({:count($lists)})</h2>
+  </div>
+  
+  <div class="cf">
+    <!-- 按钮工具栏 -->
+    <div class="fl">
+      <a class="btn item_add" href="{:U('Advertise/add', array('model' => $model_list['id']))}">新 增</a>
+      <button url="{:U('Advertise/del')}" class="btn ajax-post confirm" target-form="ids">删 除</button>
+    </div>
+    <form action="{:U()}" method="GET" id="J_search_form">
+      <div class="search-form fr cf">
+        <div class="fl">
+          <if condition="C('SDP_IS_OPEN')">
+            <select name="tid">
+              <option value="0">全部广告</option>
+              <volist name="type_list" id="vo">
+                <option value="{$vo.tid}" <eq name="vo.tid" value="$data.tid">selected="selected"</eq> data-info="{$vo.info}">{$vo.name}</option>
+              </volist>
+            </select>
+          </if>
+        </div>
+      </div>
+    </form>
+  </div>
+  
+  <!-- 数据表格 -->
+  <div class="data-table">
+    <table>
+      <!-- 表头 -->
+      <thead>
+        <tr>
+          <th class="row-selected row-selected">
+            <input class="check-all" type="checkbox">
+          </th>
+          <th>广告标题</th>
+          <th width="120">广告位置</th>
+          <th width="100">广告图片</th>
+          <th>链接地址</th>
+          <th>排序</th>
+          <th width="50">状态</th>
+          <th width="140">操作</th>
+        </tr>
+      </thead>
+
+      <!-- 列表 -->
+      <tbody class="category">
+        <notempty name="lists">
+          <volist name="lists" id="vo">
+            <tr class="status_trclass_{$vo.status}">
+              <td><input class="ids" type="checkbox" value="{$vo['id']}" name="ids[]"></td>
+              <td><a href="{:U('edit', array('id' => $vo['id']))}">{$vo.title}</a></td>
+              <td>{$vo.tid_text}</td>
+              <td><a href="{$vo.src}" target="_blank"><img src="{:get_image_thumb($vo['src'], 128, 30)}" height="30" alt=""></a></td>
+              <td><a href="{$vo.link}" target="_blank">{$vo.link}</a></td>
+              <td>
+                <input type="text" data-action="{:U('Advertise/setFieldValue')}" name="sort" data-id="{$vo.id}" title="修改排序" class="text input-mini J_ajax_updatefield" value="{$vo.sort}">
+              </td>
+              <td>{$vo.status_text}</td>
+              <td>
+                <if condition="$vo.status eq 0">
+                  <a href="{:U('setStatus?status=1&ids='.$vo['id'])}" class='ajax-get'>[启用]</a>
+                <else/>
+                  <a href="{:U('setStatus?status=0&ids='.$vo['id'])}" class='ajax-get'>[禁用]</a>
+                </if>
+                <a href="{:U('edit', array('id' => $vo['id']))}">[编辑]</a>
+                <a href="{:U('del', array('ids' => $vo['id']))}" class="confirm ajax-get">[删除]</a>
+              </td>
+            </tr>
+          </volist>
+        <else />
+          <td colspan="6" class="text-center"> aOh! 暂时没有广告! <a href="{:U('add')}">立即添加&gt;</a></td>
+        </notempty>
+      </tbody>
+    </table>
+  </div>
+  <!-- 分页 -->
+  <div class="page">
+    {$_page}
+  </div>
+</block>
+
+<block name="script">
+  <script>
+    $(function(){
+      highlight_subnav("{:U('index')}");
+      Core.setValue('tid', '{:I("get.tid", 0)}');
+    });
+  </script>
+</block>

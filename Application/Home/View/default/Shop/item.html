@@ -1,0 +1,28 @@
+<extend name="Base/member"/>
+
+<block name="body">
+  <div class="user-box shop">
+    <include file="Sdp/topbar" />
+    <!-- 已添加商品列表 -->
+    <div class="row item-list" id="J_item_list">
+      <div class="col-xs-3 item item-add">
+        <div class="thumbnail thumbnail-fav">
+          <a href="{:U('Shop/selectItem')}" class="btn btn-link btn-add"><i class="icon icon-add"></i> 添加商品</a>
+        </div>
+      </div>
+      <include file="itemList"/>
+      
+      <div style="clear: both">
+        <div class="page">{$_page}</div>
+      </div>
+    </div>
+  </div>
+</block>
+
+<block name="script">
+  <script type="text/javascript">
+    seajs.use(['shop'], function(shop){
+      shop.removeItem();
+    });
+  </script>
+</block>

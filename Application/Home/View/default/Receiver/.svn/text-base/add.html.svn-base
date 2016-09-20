@@ -1,0 +1,54 @@
+<extend name="Base/common"/>
+<block name="style">
+	<link rel="stylesheet" type="text/css" href="__CSS__/app.receiver.css">
+</block>
+
+<block name="header">
+  <div class="ui-toolbar-wrap titleHead">
+    <div class="ui-toolbar-left">
+      <a href="javascript:window.history.back(-1);" class="button ui-btn ui-btn-icon-left" data-icon="arrow-l"><span class="ui-btn-text">返回</span><span class="ui-icon white ui-icon-arrow-l"></span></a>
+    </div>
+    <h2 class="ui-toolbar-title">{$meta_title}</h2>
+  </div>
+</block>
+
+<block name="body">
+<div class="receiver-add">
+  <form action="{:U(update)}" method="post">
+  	<ul>
+  		<li>
+        <input type="text" name="name" id="name" class="form-text" value="" placeholder="收货人姓名" maxlength="20">
+        </li>
+  		<li>
+        {:hook('areaSelect', array('province' => '', 'district' => '', 'city' => ''))}
+      </li>
+      <li>
+        <input type="text" name="address" id="address" class="form-text" value="" placeholder="详细地址" maxlength="100">
+      </li>
+      <li>
+        <input type="tel" name="mobile" id="mobile" class="form-text" value="" placeholder="手机">
+      </li>
+    	<li>
+        <input type="tel" name="phone" id="phone" class="form-text" value="" placeholder="电话">
+      </li>
+      <li>
+        <input type="tel" name="zipcode" id="zipcode" class="form-text" value="" placeholder="邮编">
+      </li>
+    	<li id="isDefault">
+        <p>
+          <label>
+            <span>是否设为常用地址</span>
+            <input type="checkbox" name="is_default" class="setdefaultaddress">
+          </label>
+        </p>
+      </li>
+    	<li>
+        <button type="submit" class="button ui-btn ui-btn-lg ui-btn-flex ui-btn-danger">保存</button>
+      </li>
+    </ul>
+  </form>
+</div>
+</block>
+<block name="script">
+	<script src="__JS__/app/home.receiver.js"></script>
+</block>
